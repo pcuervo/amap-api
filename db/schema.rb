@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160802192200) do
+ActiveRecord::Schema.define(version: 20160802230958) do
+
+  create_table "agencies", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "auth_token",             default: ""
@@ -27,6 +33,9 @@ ActiveRecord::Schema.define(version: 20160802192200) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.boolean  "is_member_amap"
+    t.integer  "agency_id"
+    t.index ["agency_id"], name: "index_users_on_agency_id"
     t.index ["auth_token"], name: "index_users_on_auth_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

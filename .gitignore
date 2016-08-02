@@ -59,3 +59,8 @@ bower.json
 
 # Ignore Byebug command history file.
 .byebug_history
+
+config/database.yml
+log/development.log
+config/s3.yml
+
