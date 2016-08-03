@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   before_create :generate_authentication_token!
 
-  validates :first_name, :last_name, :email, :role, presence: true
+  validates :email, :role, presence: true
   validates :role, inclusion: { in: [1, 2, 3, 4, 5], message: "%{value} is not a valid role" }
   validates :auth_token, uniqueness: true
   validates :email, uniqueness: { :case_sensitive => true }
