@@ -5,7 +5,7 @@ FactoryGirl.define do
     last_name             'Cabral'
     password              'holama123'
     password_confirmation 'holama123' 
-    is_member_amap        1
+    is_member_amap        false
     agency
   end
 end

@@ -15,14 +15,14 @@ module Api::V1
 
     # POST /agencies
     def create
-      puts 'we are creting'
       @user = User.new(user_params)
 
       if @user.save
         render json: @user, status: :created, location: [:api, @user]
-      else
-        render json: @user.errors, status: :unprocessable_entity
+        return
       end
+
+      render json: @user.errors, status: :unprocessable_entity
     end
 
     private
@@ -33,7 +33,7 @@ module Api::V1
 
       # Only allow a trusted parameter "white list" through.
       def user_params
-        params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :role, :agency_id)
+        params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :role, :is_member_amap, :agency_id)
       end
 
   end 

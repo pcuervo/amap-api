@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+
   include ActionController::RequestForgeryProtection
 
   # Prevent CSRF attacks by raising an exception.
@@ -16,4 +17,5 @@ class ApplicationController < ActionController::API
     devise_parameter_sanitizer.for(:sign_up) << :name
     devise_parameter_sanitizer.for(:sign_up) << :last_name
   end
+
 end

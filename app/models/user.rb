@@ -5,6 +5,7 @@ class User < ApplicationRecord
   validates :role, inclusion: { in: [1, 2, 3, 4, 5], message: "%{value} is not a valid role" }
   validates :auth_token, uniqueness: true
   validates :email, uniqueness: { :case_sensitive => true }
+  validates :password, presence: true, :length => { :within => 6..40 }
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

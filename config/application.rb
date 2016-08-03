@@ -38,6 +38,8 @@ module AmapApiDev
       end
     end
 
-    
+    # Set language to Spanish by default
+    config.i18n.enforce_available_locales = false
+    config.i18n.default_locale = :es
   end
 end
