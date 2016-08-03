@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
+#ruby "2.3.1"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -24,8 +25,11 @@ gem 'puma', '~> 3.0'
 gem 'pg'
 
 group :test do
+  gem 'sqlite3'
   gem "shoulda-matchers", require: false
   gem 'ffaker'
+  # Use Factory Girl for generating random test data
+  gem 'factory_girl_rails'
 end
 
 group :development, :test do
@@ -33,8 +37,7 @@ group :development, :test do
   gem 'byebug', platform: :mri
   # Use RSpec for specs
   gem 'rspec-rails', '3.1.0'
-  # Use Factory Girl for generating random test data
-  gem 'factory_girl_rails'
+  
 end
 
 group :development do
@@ -55,3 +58,4 @@ gem 'active_model_serializers'
 gem 'rack-cors'
 # Rate limiting and throttling
 gem 'rack-attack'
+
