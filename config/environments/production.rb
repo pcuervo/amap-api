@@ -48,6 +48,21 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "amap-api-dev_#{Rails.env}"
   config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = { host: "startupmexico.com"}
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "gator4150.hostgator.com",
+    port: 465,
+    domain: "startupmexi.co",
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: "info@startupmexi.co",
+    password: "NuevoLeon112",
+    ssl:true
+    #user_name: ENV["GMAIL_USERNAME"],
+    #password: ENV["GMAIL_PASSWORD"]
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

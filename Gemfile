@@ -27,9 +27,6 @@ gem 'pg'
 group :test do
   gem 'sqlite3'
   gem "shoulda-matchers", require: false
-  gem 'ffaker'
-  # Use Factory Girl for generating random test data
-  gem 'factory_girl_rails'
 end
 
 group :development, :test do
@@ -37,6 +34,9 @@ group :development, :test do
   gem 'byebug', platform: :mri
   # Use RSpec for specs
   gem 'rspec-rails', '3.1.0'
+  # Use Factory Girl for generating random test data
+  gem 'factory_girl_rails'
+  gem 'ffaker'
   
 end
 
