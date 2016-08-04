@@ -21,8 +21,18 @@ module Api::V1
         render json: @user, status: :created, location: [:api, @user]
         return
       end
+      render json: { errors: @user.errors }, status: :unprocessable_entity
+    end
 
-      render json: @user.errors, status: :unprocessable_entity
+    def update
+      user = User.find( params[:id] )
+
+      if user.update( user_params )
+        render json: user, status: 200, location: [:api, user]
+        return        
+      end
+
+      render json: { errors: user.errors }, status: :unprocessable_entity
     end
 
     private

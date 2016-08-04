@@ -41,12 +41,14 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
       end
 
       it "renders the json representation for the user record just created" do
-        expect(json_response[:email]).to eql @user_attributes[:email]
-        expect(json_response[:is_member_amap]).to eql @user_attributes[:is_member_amap]
+        user_response = json_response
+        expect(user_response[:email]).to eql @user_attributes[:email]
+        expect(user_response[:is_member_amap]).to eql @user_attributes[:is_member_amap]
       end
 
       it "is part of an agency" do
-        expect(json_response[:agency][:id]).to eql @agency.id
+        user_response = json_response
+        expect(user_response[:agency][:id]).to eql @agency.id
       end
 
       it { should respond_with 201 }
@@ -62,39 +64,58 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
       end
 
       it "renders an errors json" do
-        puts json_response.to_yaml
         user_response = json_response
         expect(user_response).to have_key(:errors)
       end
 
-      # it "renders the json errors when no email is present" do
-      #   user_response = json_response
-      #   expect(user_response[:errors][:email]).to include "can't be blank"
-      # end
-
-      # it "renders the json errors when the role is invalid" do
-      #   @invalid_user_attributes = { email: "test@test.com", first_name: 'Mic', last_name: 'Cab', password: 'holama123', password_confirmation: 'holama123', role: 8 }
-      #   post :create, { user: @invalid_user_attributes }, format: :json
-      #   user_response = json_response
-      #   expect(user_response[:errors][:role]).to include "#{@invalid_user_attributes[:role]} is not a valid role"
-      # end
-
-      # it "renders the json errors when the name is missing" do
-      #   @invalid_user_attributes = { email: "test@test.com", last_name: 'Cab', password: 'holama123', password_confirmation: 'holama123', role: 2 }
-      #   post :create, { user: @invalid_user_attributes }, format: :json
-      #   user_response = json_response
-      #   expect(user_response[:errors][:first_name]).to include "can't be blank"
-      # end
-
-      # it "renders the json errors when the last name is missing" do
-      #   @invalid_user_attributes = { email: "test@test.com", first_name: 'Mig', password: 'holama123', password_confirmation: 'holama123', role: 2 }
-      #   post :create, { user: @invalid_user_attributes }, format: :json
-      #   user_response = json_response
-      #   expect(user_response[:errors][:last_name]).to include "can't be blank"
-      # end
+      it "renders the json errors when no agency is present" do
+        user_response = json_response
+        expect(user_response[:errors][:agency]).to include "La agencia es obligatoria"
+      end
 
       it { should respond_with 422 }
     end
-  end
+  end # POST create
+
+  describe "POST #update" do
+    context "when is successfully updated" do
+      before(:each) do
+        @user = FactoryGirl.create :user
+        @new_email = FFaker::Internet.email
+        api_authorization_header @user.auth_token
+        patch :update, { id: @user.id,
+                         user: { email: @new_email, first_name: 'Juan' } }, format: :json
+      end
+
+      it "renders the json representation for the updated user" do
+        user_response = json_response
+        expect(user_response[:email]).to eql @new_email
+        expect(user_response[:first_name]).to eql 'Juan'
+      end
+
+      it { should respond_with 200 }
+    end
+
+    # context "when is not updated" do
+    #   before(:each) do
+    #     @user = FactoryGirl.create :user
+    #     api_authorization_header @user.auth_token
+    #     patch :update, { id: @user.id,
+    #                      user: { email: "bademail.com", role: 5 } }, format: :json
+    #   end
+
+    #   it "renders an errors json" do
+    #     user_response = json_response
+    #     expect(user_response).to have_key(:errors)
+    #   end
+
+    #   it "renders the json errors when the email is invalid" do
+    #     user_response = json_response
+    #     expect(user_response[:errors][:email]).to include "is invalid"
+    #   end
+
+    #   it { should respond_with 422 }
+    # end
+  end # POST update
 
 end

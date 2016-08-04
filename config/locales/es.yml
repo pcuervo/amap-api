@@ -19,5 +19,15 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
-en:
+es:
   hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            agency:
+              blank: "foo blank in nl bar baz"
+              required: "La agencia es obligatoria"
+            email:
+              taken: "Ya existe un usuario con ese email"
