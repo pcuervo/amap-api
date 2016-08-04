@@ -13,6 +13,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
       end
 
       it "renders the json representation for the new_user_request record just created" do
+        puts json_response.to_yaml
         new_user_request_response = json_response
         expect(new_user_request_response[:email]).to eql @new_user_request_attributes[:email]
       end

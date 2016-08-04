@@ -34,5 +34,8 @@ es:
           attributes:
             email:
               blank: "El email no puede estar vacío"
+              taken: "Ya existe un usuario con ese email"
+            agency:
+              blank: "El nombre de la agencia no puede estar vacío"
       messages:
           record_invalid: "es inválido"
