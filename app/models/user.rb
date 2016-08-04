@@ -1,16 +1,22 @@
 class User < ApplicationRecord
   before_create :generate_authentication_token!
 
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable, :recoverable, 
+          :rememberable, :trackable, :validatable
+
   validates :email, :role, presence: true
   validates :role, inclusion: { in: [1, 2, 3, 4, 5], message: "%{value} is not a valid role" }
   validates :auth_token, uniqueness: true
-  validates :email, uniqueness: { :case_sensitive => true }
-  validates :password, presence: true, :length => { :within => 6..40 }, :on => :create
-
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  validates :email,   
+              uniqueness: { :case_sensitive => true },
+              format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
+  validates :password, 
+              :length => { :within => 6..40 }, 
+              :on => :create,
+              :confirmation => true
+  validates :password_confirmation, presence: true
 
   belongs_to :agency
 

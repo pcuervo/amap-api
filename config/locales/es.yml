@@ -30,6 +30,12 @@ es:
               required: "La agencia es obligatoria"
             email:
               taken: "Ya existe un usuario con ese email"
+            password:
+              invalid: "Es inválido"
+              confirmation: "Por favor confirma el password"
+            password_confirmation:
+              invalid: "Es inválido"
+              confirmation: "Por favor confirma el password"
         new_user_request:
           attributes:
             email:
