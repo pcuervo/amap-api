@@ -5,8 +5,7 @@ module Api::V1
     # GET /agencies
     def index
       @agencies = Agency.all
-
-      render json: @agencies
+      render json: { agencies: @agencies }
     end
 
     # GET /agencies/1

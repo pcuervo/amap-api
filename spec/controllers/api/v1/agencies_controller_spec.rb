@@ -36,12 +36,18 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
   # AgenciesController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe "GET index" do
-    it "assigns all agencies as @agencies" do
-      agency = Agency.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:agencies)).to eq([agency])
+  describe "GET #index" do
+    before(:each) do
+      @total_agencies = Agency.all.count
+      get :index
     end
+
+    it "returns 5 unit items from the database" do
+      agencies_response = json_response
+      expect(agencies_response[:agencies].size).to eq( @total_agencies )
+    end
+
+    it { should respond_with 200 }
   end
 
   describe "GET #show" do
@@ -51,7 +57,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
     end
 
     it "returns the information about a agency on a hash" do
-      expect(json_response[:email]).to eql @agency.email
+      expect(json_response[:name]).to eql @agency.name
     end
 
     it { should respond_with 200 }

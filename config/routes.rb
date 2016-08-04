@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     scope module: :v1 do
       resources :users, :only => [:index, :show, :create, :update, :destroy] 
       resources :agencies, :only => [:index, :show, :create, :update, :destroy] 
+      resources :new_user_requests, :only => [:create] 
     end
   end
 end

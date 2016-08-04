@@ -31,3 +31,5 @@ es:
               required: "La agencia es obligatoria"
             email:
               taken: "Ya existe un usuario con ese email"
+      messages:
+          record_invalid: "es inválido"
