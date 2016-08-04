@@ -4,7 +4,7 @@ module Api::V1
     def create
       @new_user_request = NewUserRequest.new( new_user_request_params )
 
-      if @new_user_request.save!
+      if @new_user_request.save
         UserRequestMailer.new_user_request_email( @new_user_request ).deliver_now
         render json: @new_user_request, status: :created
         return

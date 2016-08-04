@@ -27,9 +27,12 @@ es:
         user:
           attributes:
             agency:
-              blank: "foo blank in nl bar baz"
               required: "La agencia es obligatoria"
             email:
               taken: "Ya existe un usuario con ese email"
+        new_user_request:
+          attributes:
+            email:
+              blank: "El email no puede estar vacío"
       messages:
           record_invalid: "es inválido"
