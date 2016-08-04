@@ -1,5 +1,11 @@
 module Api::V1
   class NewUserRequestsController < ApiController
+    # GET /new_user_requests
+    def index
+      @new_user_requests = NewUserRequest.all
+      render json: @new_user_requests
+    end
+
     # POST /agencies
     def create
       @new_user_request = NewUserRequest.new( new_user_request_params )
