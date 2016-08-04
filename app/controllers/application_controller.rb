@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::API
+  before_action :restrict_access
 
   include ActionController::RequestForgeryProtection
+  include ActionController::HttpAuthentication::Token::ControllerMethods
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -17,5 +19,13 @@ class ApplicationController < ActionController::API
     devise_parameter_sanitizer.for(:sign_up) << :name
     devise_parameter_sanitizer.for(:sign_up) << :last_name
   end
+
+  private 
+
+    def restrict_access
+      authenticate_or_request_with_http_token do |token, options|
+        ApiKey.exists?(access_token: token)
+      end
+    end
 
 end
