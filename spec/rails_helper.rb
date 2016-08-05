@@ -7,6 +7,8 @@ require 'spec_helper'
 require File.expand_path("../../config/environment", __FILE__)
 ActiveRecord::Base.establish_connection
 
+
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -52,7 +54,6 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
-  config.include Devise::Test::ControllerHelpers, type: :controller
-
+  #config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Request::JsonHelpers, :type => :controller
 end

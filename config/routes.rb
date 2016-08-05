@@ -13,6 +13,11 @@ Rails.application.routes.draw do
       resources :users, :only => [:index, :show, :create, :update, :destroy] 
       resources :agencies, :only => [:index, :show, :create, :update, :destroy] 
       resources :new_user_requests, :only => [:index, :create] 
+      resources :sessions, :only => [:create, :destroy] do
+        collection do
+          post 'destroy/', :action => 'destroy'
+        end
+      end
     end
   end
 end
