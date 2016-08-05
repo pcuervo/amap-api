@@ -40,7 +40,6 @@ module Api::V1
     private
       # Only allow a trusted parameter "white list" through.
       def new_user_request_params
-        puts params.to_yaml
         params.require(:new_user_request).permit(:email, :agency, :user_type)
       end
 

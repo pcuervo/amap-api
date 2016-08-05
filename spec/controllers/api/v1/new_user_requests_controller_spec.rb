@@ -30,7 +30,6 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
 
         @new_user_request = FactoryGirl.create :new_user_request
         @invalid_user_attributes = { agency: 'Flock' }
-        api_authorization_header @user.auth_token
         post :create, { auth_token: @admin.auth_token, new_user_request: @invalid_user_attributes }, format: :json
       end
 
