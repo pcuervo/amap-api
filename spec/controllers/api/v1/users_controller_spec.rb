@@ -17,6 +17,8 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
 
   describe "GET #show" do
     before(:each) do
+      api_key = ApiKey.create
+      api_authorization_header 'Token ' + api_key.access_token
       @user = FactoryGirl.create :user
       get :show, { id: @user.id }, format: :json
     end
@@ -32,12 +34,14 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
 
     context "when is successfully created" do
       before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+
+        @admin = FactoryGirl.create :user
         @user_attributes = FactoryGirl.attributes_for :user
-        @user = FactoryGirl.create :user
         @agency = FactoryGirl.create :agency
         @user_attributes[:agency_id] = @agency.id
-        api_authorization_header @user.auth_token
-        post :create, { id: @user.id, user: @user_attributes }, format: :json
+        post :create, { auth_token: @admin.auth_token, user: @user_attributes }, format: :json
       end
 
       it "renders the json representation for the user record just created" do
@@ -56,11 +60,13 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
 
     context "when is not created because agency is not present" do
       before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+
         @user_attributes = FactoryGirl.attributes_for :user
         @user_attributes[:agency_id] = -1
         @user = FactoryGirl.create :user
-        api_authorization_header @user.auth_token
-        post :create, { id: @user.id, user: @user_attributes }, format: :json
+        post :create, { auth_token: @user.auth_token, user: @user_attributes }, format: :json
       end
 
       it "renders an errors json" do
@@ -74,6 +80,32 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
       end
 
       it { should respond_with 422 }
+    end
+
+    context "when is not created because User authorization token is invalid or not present" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+
+        @user_attributes = FactoryGirl.attributes_for :user
+        @agency = FactoryGirl.create :agency
+        @user_attributes[:agency_id] = @agency.id
+        @user = FactoryGirl.create :user
+        post :create, { token: @user.auth_token, user: @user_attributes }, format: :json
+      end
+
+      it "renders an errors json" do
+        user_response = json_response
+        expect(user_response).to have_key(:errors)
+      end
+
+      it "renders the json errors when no User authorization token is present" do
+        puts json_response.to_yaml
+        user_response = json_response
+        expect(user_response[:errors]).to include "Not authenticated"
+      end
+
+      it { should respond_with 401 }
     end
   end # POST create
 

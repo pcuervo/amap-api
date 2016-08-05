@@ -1,7 +1,9 @@
 module Api::V1
   class UsersController < ApiController
     before_action :set_user, only: [:show, :update, :destroy]
-    #before_action :authenticate_with_token!
+    before_action only: [:create, :update, :confirm_user_request] do 
+      authenticate_with_token! params[:auth_token]
+    end
 
     # GET /users/1
     def show
@@ -14,7 +16,7 @@ module Api::V1
       render json: @users
     end
 
-    # POST /agencies
+    # POST /create
     def create
       @user = User.new(user_params)
 

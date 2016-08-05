@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     scope module: :v1 do
       resources :users, :only => [:index, :show, :create, :update, :destroy] 
       resources :agencies, :only => [:index, :show, :create, :update, :destroy] 
-      resources :new_user_requests, :only => [:index, :create] 
+      resources :new_user_requests, :only => [:index, :create, :show] 
       resources :sessions, :only => [:create, :destroy] do
         collection do
           post 'destroy/', :action => 'destroy'
@@ -20,4 +20,5 @@ Rails.application.routes.draw do
       end
     end
   end
+
 end

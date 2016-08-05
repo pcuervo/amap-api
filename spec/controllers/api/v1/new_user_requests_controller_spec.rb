@@ -5,15 +5,16 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
 
     context "when is successfully created" do
       before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
         @new_user_request_attributes = FactoryGirl.attributes_for :new_user_request
-        @user = FactoryGirl.create :user
         @agency = FactoryGirl.create :agency
-        api_authorization_header @user.auth_token
-        post :create, { id: @user.id, new_user_request: @new_user_request_attributes }, format: :json
+        post :create, { auth_token: @admin.auth_token, new_user_request: @new_user_request_attributes }, format: :json
       end
 
       it "renders the json representation for the new_user_request record just created" do
-        puts json_response.to_yaml
         new_user_request_response = json_response
         expect(new_user_request_response[:email]).to eql @new_user_request_attributes[:email]
       end
@@ -23,11 +24,14 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
 
     context "when is not created because email is not present" do
       before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
         @new_user_request = FactoryGirl.create :new_user_request
         @invalid_user_attributes = { agency: 'Flock' }
-        @user = FactoryGirl.create :user
         api_authorization_header @user.auth_token
-        post :create, { id: @user.id, new_user_request: @invalid_user_attributes }, format: :json
+        post :create, { auth_token: @admin.auth_token, new_user_request: @invalid_user_attributes }, format: :json
       end
 
       it "renders an errors json" do

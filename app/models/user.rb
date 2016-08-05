@@ -16,7 +16,6 @@ class User < ApplicationRecord
               :length => { :within => 6..40 }, 
               :on => :create,
               :confirmation => true
-  validates :password_confirmation, presence: true
 
   belongs_to :agency
 

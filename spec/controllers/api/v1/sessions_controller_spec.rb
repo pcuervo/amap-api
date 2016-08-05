@@ -17,7 +17,7 @@ RSpec.describe Api::V1::SessionsController, :type => :controller do
       end
 
       it "returns the user record corresponding to the given credentials" do
-        expect(json_response[:auth_token]).not_to eql @user.auth_token
+        expect(json_response[:user][:auth_token]).not_to eql @user.auth_token
       end
 
       it { should respond_with 200 }

@@ -36,6 +36,7 @@ es:
             password_confirmation:
               invalid: "Es inválido"
               confirmation: "Por favor confirma el password"
+              blank: "La confirmación de password está vacía"
         new_user_request:
           attributes:
             email:

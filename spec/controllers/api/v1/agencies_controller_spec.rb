@@ -38,6 +38,8 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
   describe "GET #index" do
     before(:each) do
+      api_key = ApiKey.create
+      api_authorization_header 'Token ' + api_key.access_token
       @total_agencies = Agency.all.count
       get :index
     end
@@ -52,6 +54,8 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
   describe "GET #show" do
     before(:each) do
+      api_key = ApiKey.create
+      api_authorization_header 'Token ' + api_key.access_token
       @agency = FactoryGirl.create :agency
       get :show, { id: @agency.id }, format: :json
     end
