@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::API
   before_action :restrict_access
 
+  require 'securerandom'
+
   include ActionController::RequestForgeryProtection
   include ActionController::HttpAuthentication::Token::ControllerMethods
 

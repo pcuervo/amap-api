@@ -12,7 +12,11 @@ Rails.application.routes.draw do
     scope module: :v1 do
       resources :users, :only => [:index, :show, :create, :update, :destroy] 
       resources :agencies, :only => [:index, :show, :create, :update, :destroy] 
-      resources :new_user_requests, :only => [:index, :create, :show] 
+      resources :new_user_requests, :only => [:index, :create, :show] do
+        collection do
+          post 'confirm_request', :action => 'confirm_request'
+        end
+      end
       resources :sessions, :only => [:create, :destroy] do
         collection do
           post 'destroy/', :action => 'destroy'
