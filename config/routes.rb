@@ -10,7 +10,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     scope module: :v1 do
-      resources :users, :only => [:index, :show, :create, :update, :destroy] 
+      resources :users, :only => [:index, :show, :create, :update] do
+        collection do
+          post 'update',            :action => 'update'
+          post 'send_email_reset',  :action => 'send_email_reset'
+        end
+      end
       resources :agencies, :only => [:index, :show, :create, :update, :destroy] 
       resources :new_user_requests, :only => [:index, :create, :show] do
         collection do

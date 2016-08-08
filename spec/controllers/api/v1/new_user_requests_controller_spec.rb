@@ -44,6 +44,31 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
 
       it { should respond_with 422 }
     end
+
+    context "when is not created because user already exists" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @existing_user = FactoryGirl.create :user
+        @new_user_request_attributes = FactoryGirl.attributes_for :new_user_request
+        @new_user_request_attributes[:email] = @existing_user.email
+        post :create, { auth_token: @admin.auth_token, new_user_request: @new_user_request_attributes }, format: :json
+      end
+
+      it "renders an errors json" do
+        user_response = json_response
+        expect(user_response).to have_key(:errors)
+      end
+
+      it "renders the json errors saying email already exists" do
+        user_response = json_response
+        expect(user_response[:errors][:email]).to include "Ya existe una cuenta con ese email"
+      end
+
+      it { should respond_with 422 }
+    end
   end #POST create
 
   describe "POST #confirm_request" do

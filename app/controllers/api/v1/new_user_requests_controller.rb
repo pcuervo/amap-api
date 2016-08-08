@@ -1,6 +1,7 @@
 module Api::V1
   class NewUserRequestsController < ApiController
     before_action :set_new_user_request, only: [:show, :update, :destroy]
+    before_action :check_if_user_exists, only: [:create]
     after_action :send_confirmation_email, only: [:confirm_request]
 
     # GET /new_user_requests/1
@@ -16,8 +17,12 @@ module Api::V1
 
     # POST /agencies
     def create
-      @new_user_request = NewUserRequest.new( new_user_request_params )
+      if @user_exists
+        render json: { errors: { 'email' => 'Ya existe una cuenta con ese email' } }, status: :unprocessable_entity
+        return
+      end
 
+      @new_user_request = NewUserRequest.new( new_user_request_params )
       if @new_user_request.save
         UserRequestMailer.new_user_request_email( @new_user_request ).deliver_now
         render json: @new_user_request, status: :created
@@ -58,9 +63,17 @@ module Api::V1
         @new_user_request = NewUserRequest.find(params[:id])
       end
 
+      def check_if_user_exists
+        user = User.find_by_email( params[:new_user_request][:email] )
+        if user.present?
+          @user_exists = true
+        end
+      end
+
       def send_confirmation_email
         return if ! @user.valid?
         UserRequestMailer.new_user_confirmation_email( @user, @password ).deliver_now
       end
+
   end
 end

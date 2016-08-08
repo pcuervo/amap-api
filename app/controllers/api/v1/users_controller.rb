@@ -38,6 +38,15 @@ module Api::V1
       render json: { errors: user.errors }, status: :unprocessable_entity
     end
 
+    def send_password_reset
+      user = User.find_by_email( params[:email] )
+      if user
+        render json: { success: 'Se ha enviado un correo con instrucciones para restablecer contraseña' }, status: 200, location: [:api, user]
+        return
+      end
+      render json: { errors: 'No existe ningún usuario con ese email' }, status: :unprocessable_entity
+    end
+
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_user
