@@ -12,8 +12,8 @@ Rails.application.routes.draw do
     scope module: :v1 do
       resources :users, :only => [:index, :show, :create, :update] do
         collection do
-          post 'update',            :action => 'update'
-          post 'send_email_reset',  :action => 'send_email_reset'
+          post 'update',              :action => 'update'
+          post 'send_password_reset', :action => 'send_password_reset'
         end
       end
       resources :agencies, :only => [:index, :show, :create, :update, :destroy] 

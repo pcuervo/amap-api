@@ -26,4 +26,16 @@ class User < ApplicationRecord
     end while self.class.exists?(auth_token: auth_token)
   end
 
+  def generate_password_reset_token!
+    begin
+      self.reset_password_token = Devise.friendly_token
+    end while self.class.exists?(reset_password_token: reset_password_token)
+  end
+
+  def send_password_reset
+    generate_password_reset_token!
+    self.reset_password_sent_at = Time.zone.now
+    save!
+    m = UserMailer.password_reset( self ).deliver_now
+  end
 end

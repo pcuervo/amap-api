@@ -41,10 +41,11 @@ module Api::V1
     def send_password_reset
       user = User.find_by_email( params[:email] )
       if user
+        user.send_password_reset
         render json: { success: 'Se ha enviado un correo con instrucciones para restablecer contraseña' }, status: 200, location: [:api, user]
         return
       end
-      render json: { errors: 'No existe ningún usuario con ese email' }, status: :unprocessable_entity
+      render json: { errors: { email: 'No existe ningún usuario con ese email' } }, status: :unprocessable_entity
     end
 
     private

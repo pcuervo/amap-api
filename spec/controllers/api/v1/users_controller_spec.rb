@@ -100,7 +100,6 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
       end
 
       it "renders the json errors when no User authorization token is present" do
-        puts json_response.to_yaml
         user_response = json_response
         expect(user_response[:errors]).to include "Not authenticated"
       end
@@ -162,7 +161,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
         api_authorization_header 'Token ' + api_key.access_token
 
         @user = FactoryGirl.create :user
-        post :create, { email: @user.email }, format: :json
+        post :send_password_reset, { email: @user.email }, format: :json
       end
 
       it "renders a success messsage" do
@@ -172,36 +171,32 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
 
       it "renders a message confirming that password reset has been sent" do
         user_response = json_response
-        expect(user_response[:email]).to eql @user_attributes[:email]
-        expect(user_response[:is_member_amap]).to eql @user_attributes[:is_member_amap]
+        expect(user_response[:success]).to eql 'Se ha enviado un correo con instrucciones para restablecer contraseña'
       end
 
-      it { should respond_with 201 }
+      it { should respond_with 200 }
     end
 
-    # context "when is not created because agency is not present" do
-    #   before(:each) do
-    #     api_key = ApiKey.create
-    #     api_authorization_header 'Token ' + api_key.access_token
+    context "when is not created because user does not exist" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
 
-    #     @user_attributes = FactoryGirl.attributes_for :user
-    #     @user_attributes[:agency_id] = -1
-    #     @user = FactoryGirl.create :user
-    #     post :create, { auth_token: @user.auth_token, user: @user_attributes }, format: :json
-    #   end
+        post :send_password_reset, { email: 'invalid@email.com' }, format: :json
+      end
 
-    #   it "renders an errors json" do
-    #     user_response = json_response
-    #     expect(user_response).to have_key(:errors)
-    #   end
+      it "renders an errors json" do
+        user_response = json_response
+        expect(user_response).to have_key(:errors)
+      end
 
-    #   it "renders the json errors when no agency is present" do
-    #     user_response = json_response
-    #     expect(user_response[:errors][:agency]).to include "La agencia es obligatoria"
-    #   end
+      it "renders the json errors when no user is present" do
+        user_response = json_response
+        expect(user_response[:errors][:email]).to include "No existe ningún usuario con ese email"
+      end
 
-    #   it { should respond_with 422 }
-    # end
+      it { should respond_with 422 }
+    end
 
   end # POST send_password_reset
 end

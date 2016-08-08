@@ -18,7 +18,8 @@ module Api::V1
     # POST /agencies
     def create
       if @user_exists
-        render json: { errors: { 'email' => 'Ya existe una cuenta con ese email' } }, status: :unprocessable_entity
+        puts @user.errors.to_yaml
+        render json: { errors: @user.errors }, status: :unprocessable_entity
         return
       end
 
@@ -64,8 +65,9 @@ module Api::V1
       end
 
       def check_if_user_exists
-        user = User.find_by_email( params[:new_user_request][:email] )
-        if user.present?
+        @user = User.find_by_email( params[:new_user_request][:email] )
+        if @user.present?
+          @user.errors.add(:email, "Ya existe una cuenta con ese email")
           @user_exists = true
         end
       end
