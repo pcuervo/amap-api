@@ -45,7 +45,8 @@ module Api::V1
         render json: { success: 'Se ha enviado un correo con instrucciones para restablecer contraseña' }, status: 200, location: [:api, user]
         return
       end
-      render json: { errors: { email: 'No existe ningún usuario con ese email' } }, status: :unprocessable_entity
+      user.errors.add(:email, "No existe ningún usuario con ese email")
+      render json: { errors: user.errors }, status: :unprocessable_entity
     end
 
     private
