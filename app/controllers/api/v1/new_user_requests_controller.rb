@@ -15,7 +15,7 @@ module Api::V1
       render json: @new_user_requests
     end
 
-    # POST /agencies
+    # POST /new_user_requests
     def create
       if @user_exists
         puts @user.errors.to_yaml
@@ -35,12 +35,20 @@ module Api::V1
     # POST /confirm_request
     def confirm_request
       @new_user_request = NewUserRequest.find_by_email( params[:email] )
-      @user = User.new( user_request_params )
+
+      if ! @new_user_request.present?
+        invalid_user_request = NewUserRequest.new
+        invalid_user_request.errors.add(:email, "No existe ninguna solicitud pendiente con ese email")
+        render json: { errors: invalid_user_request.errors }, status: :unprocessable_entity
+        return
+      end
+      puts params[:role].to_yaml
+      @user = User.new( :email => @new_user_request.email, :role => params[:role].to_i, :is_member_amap => params[:is_member_amap], :agency_id => params[:agency_id] )
       @password = SecureRandom.hex
       @user.password = @password
       @user.password_confirmation = @password
 
-      if @user.save
+      if @user.save!
         @new_user_request.destroy
         render json: @user, status: :created, location: [:api, @user]
         return
@@ -73,6 +81,7 @@ module Api::V1
       end
 
       def send_confirmation_email
+        return if ! @user.present?
         return if ! @user.valid?
         UserRequestMailer.new_user_confirmation_email( @user, @password ).deliver_now
       end

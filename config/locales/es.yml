@@ -40,6 +40,8 @@ es:
               invalid: "Es inválido"
               confirmation: "Por favor confirma el password"
               blank: "La confirmación de password está vacía"
+            role: 
+              blank: "No puede estar vacío"
         new_user_request:
           attributes:
             email:

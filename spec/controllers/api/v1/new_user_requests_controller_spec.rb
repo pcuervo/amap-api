@@ -84,7 +84,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
         @user_attributes = FactoryGirl.attributes_for :user 
         @user_attributes[:email] = @new_user_request.email
         @user_attributes[:agency_id] = @agency.id
-        post :confirm_request, { auth_token: @admin.auth_token, email: @new_user_request.email,  user: @user_attributes }, format: :json
+        post :confirm_request, { auth_token: @admin.auth_token, email: @new_user_request.email, agency_id: @agency.id, role: 3, is_member_amap: 0  }, format: :json
       end
 
       it "renders the json representation for the new_user_request record just created" do
