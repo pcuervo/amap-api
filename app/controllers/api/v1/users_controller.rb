@@ -50,6 +50,25 @@ module Api::V1
       render json: { errors: user.errors }, status: :unprocessable_entity
     end
 
+    def reset_password
+      @user = User.find_by_reset_password_token(params[:token])
+
+      if ! @user.present?
+        invalid_user = User.new
+        invalid_user.errors.add(:reset_password_token, "¡El código para cambiar tu contraseña es inválido!")
+        render json: { errors: invalid_user.errors }, status: :unprocessable_entity
+        return
+      end
+
+      @user.password = params[:password]
+      if @user.save!
+        render json: { success: '¡Se ha cambiado tu contraseña exitosamente!' }, status: 200, location: [:api, @user]
+        return
+      end
+      
+      render json: { errors: @user.errors }, status: :unprocessable_entity
+    end
+
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_user

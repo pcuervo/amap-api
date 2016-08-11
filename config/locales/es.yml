@@ -36,6 +36,8 @@ es:
             password:
               invalid: "Es inválido"
               confirmation: "Por favor confirma el password"
+              too_short: "Es demasiado corto"
+              too_long: "Es demasiado largo"
             password_confirmation:
               invalid: "Es inválido"
               confirmation: "Por favor confirma el password"

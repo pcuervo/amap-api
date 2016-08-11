@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         collection do
           post 'update',              :action => 'update'
           post 'send_password_reset', :action => 'send_password_reset'
+          post 'reset_password',      :action => 'reset_password'
         end
       end
       resources :agencies, :only => [:index, :show, :create, :update, :destroy] 

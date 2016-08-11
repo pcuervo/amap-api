@@ -17,6 +17,9 @@ class User < ApplicationRecord
               :length => { :within => 6..40 }, 
               :on => :create,
               :confirmation => true
+  validates :password, 
+              :length => { :within => 6..40 }, 
+              :on => :update
 
   belongs_to :agency
 
@@ -34,7 +37,7 @@ class User < ApplicationRecord
 
   def send_password_reset
     generate_password_reset_token!
-    self.reset_password_sent_at = Time.zone.now
+    self.reset_password_sent_at = Time.now
     save!
     m = UserMailer.password_reset( self ).deliver_now
   end

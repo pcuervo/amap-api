@@ -48,7 +48,7 @@ module Api::V1
       @user.password = @password
       @user.password_confirmation = @password
 
-      if @user.save!
+      if @user.save
         @new_user_request.destroy
         render json: @user, status: :created, location: [:api, @user]
         return
