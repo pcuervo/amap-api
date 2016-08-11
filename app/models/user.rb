@@ -17,9 +17,9 @@ class User < ApplicationRecord
               :length => { :within => 6..40 }, 
               :on => :create,
               :confirmation => true
-  validates :password, 
-              :length => { :within => 6..40 }, 
-              :on => :update
+  # validates :password, 
+  #             :length => { :within => 6..40 }, 
+  #             :on => :update
 
   belongs_to :agency
 
