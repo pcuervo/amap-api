@@ -1,6 +1,9 @@
 module Api::V1
   class AgenciesController < ApiController
     before_action :set_agency, only: [:show, :update, :destroy]
+    before_action only: [:create, :update] do 
+      authenticate_with_token! params[:auth_token]
+    end
 
     # GET /agencies
     def index
@@ -16,21 +19,21 @@ module Api::V1
     # POST /agencies
     def create
       @agency = Agency.new(agency_params)
-
       if @agency.save
-        render json: @agency, status: :created, location: @agency
-      else
-        render json: @agency.errors, status: :unprocessable_entity
+        render json: @agency, status: :created
+        return
       end
+
+      render json: { errors: @agency.errors },status: :unprocessable_entity
     end
 
-    # PATCH/PUT /agencies/1
+    # POST /agencies/update/1
     def update
       if @agency.update(agency_params)
-        render json: @agency
-      else
-        render json: @agency.errors, status: :unprocessable_entity
+        render json: @agency, status: :ok
+        return 
       end
+      render json: { errors: @agency.errors }, status: :unprocessable_entity
     end
 
     # DELETE /agencies/1
@@ -46,7 +49,7 @@ module Api::V1
 
       # Only allow a trusted parameter "white list" through.
       def agency_params
-        params.fetch(:agency, {})
+        params.require(:agency).permit( :name, :phone, :contact_name, :contact_email, :address, :latitude, :longitude, :website_url, :num_employees, :golden_pitch, :silver_pitch, :medium_risk_pitch, :high_risk_pitch, :agency )
       end
   end
 end

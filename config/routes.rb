@@ -17,7 +17,11 @@ Rails.application.routes.draw do
           post 'reset_password',      :action => 'reset_password'
         end
       end
-      resources :agencies, :only => [:index, :show, :create, :update, :destroy] 
+      resources :agencies, :only => [:index, :show, :create, :update] do
+        collection do
+          post 'update', :action => 'update'
+        end
+      end
       resources :new_user_requests, :only => [:index, :create, :show] do
         collection do
           post 'confirm_request', :action => 'confirm_request'

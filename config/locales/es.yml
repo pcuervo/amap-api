@@ -51,5 +51,10 @@ es:
               taken: "Ya existe una solicitud con ese email"
             agency:
               blank: "El nombre de la agencia no puede estar vacío"
+        agency:
+          attributes:
+            name:
+              blank: "El nombre de la agencia no puede estar vacío"
+              taken: "Ya existe una agencia con ese nombre"
       messages:
           record_invalid: "es inválido"

@@ -67,37 +67,122 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
     it { should respond_with 200 }
   end
 
-  # describe "POST create" do
-  #   describe "with valid params" do
-  #     it "creates a new Agency" do
-  #       expect {
-  #         post :create, {:agency => valid_attributes}, valid_session
-  #       }.to change(Agency, :count).by(1)
-  #     end
+  describe "POST #create" do
+    context "when is successfully created" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
 
-  #     it "assigns a newly created agency as @agency" do
-  #       post :create, {:agency => valid_attributes}, valid_session
-  #       expect(assigns(:agency)).to be_a(Agency)
-  #       expect(assigns(:agency)).to be_persisted
-  #     end
+        @agency_attributes = FactoryGirl.attributes_for :agency
+        post :create, { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
+      end
 
-  #     it "redirects to the created agency" do
-  #       post :create, {:agency => valid_attributes}, valid_session
-  #       expect(response).to redirect_to(Agency.last)
-  #     end
-  #   end
+      it "renders the json representation for the agency record just created" do
+        agency_response = json_response
+        expect(agency_response[:name]).to eql @agency_attributes[:name]
+      end
 
-  #   describe "with invalid params" do
-  #     it "assigns a newly created but unsaved agency as @agency" do
-  #       post :create, {:agency => invalid_attributes}, valid_session
-  #       expect(assigns(:agency)).to be_a_new(Agency)
-  #     end
+      it { should respond_with 201 }
+    end
 
-  #     it "re-renders the 'new' template" do
-  #       post :create, {:agency => invalid_attributes}, valid_session
-  #       expect(response).to render_template("new")
-  #     end
-  #   end
-  # end
+    context "when is not created because name is not present" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @agency_attributes = FactoryGirl.attributes_for :agency
+        @agency_attributes[:name] = ''
+        post :create, { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
+      end
+
+      it "renders an errors json" do
+        agency_response = json_response
+        expect(agency_response).to have_key(:errors)
+      end
+
+      it "renders the json errors when no agency name is present" do
+        agency_response = json_response
+        expect(agency_response[:errors][:name]).to include "El nombre de la agencia no puede estar vacío"
+      end
+
+      it { should respond_with 422 }
+    end
+
+    context "when is not created because name already exists" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        existing_agency = FactoryGirl.create :agency
+        @agency_attributes = FactoryGirl.attributes_for :agency
+        @agency_attributes[:name] = existing_agency.name
+        post :create, { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
+      end
+
+      it "renders an errors json" do
+        agency_response = json_response
+        expect(agency_response).to have_key(:errors)
+      end
+
+      it "renders the json errors saying an agency already exists with that name" do
+        agency_response = json_response
+        expect(agency_response[:errors][:name]).to include "Ya existe una agencia con ese nombre"
+      end
+
+      it { should respond_with 422 }
+    end
+
+  end #POST create
+
+  describe "POST #update" do
+    context "when is successfully created" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @agency = FactoryGirl.create :agency
+        @new_name = 'SuperCoolAgency' + Random.rand(1000).to_s
+        post :update, { auth_token: @admin.auth_token, id: @agency.id,
+                        agency: { num_employees: 10, name: @new_name } }, format: :json
+      end
+
+      it "renders the json representation for the agency record just updated" do
+        agency_response = json_response
+        expect(agency_response[:name]).to eql @new_name
+      end
+
+      it { should respond_with 200 }
+    end
+
+    context "when is not updated because name already exists" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @agency = FactoryGirl.create :agency
+        @another_agency = FactoryGirl.create :agency
+        post :update, { auth_token: @admin.auth_token, id: @agency.id,
+                        agency: { num_employees: 10, name: @another_agency.name } }, format: :json
+      end
+
+      it "renders an errors json" do
+        agency_response = json_response
+        expect(agency_response).to have_key(:errors)
+      end
+
+      it "renders the json errors when no agency name is present" do
+        agency_response = json_response
+        expect(agency_response[:errors][:name]).to include "Ya existe una agencia con ese nombre"
+      end
+
+      it { should respond_with 422 }
+    end
+
+  end #POST update
 
 end

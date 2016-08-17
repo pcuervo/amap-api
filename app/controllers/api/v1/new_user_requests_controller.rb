@@ -122,7 +122,7 @@ module Api::V1
       def send_rejection_email
         return if ! @rejected_user_email.present?
         puts 'send rejectio email...'
-        #UserRequestMailer.new_user_rejection_email().deliver_now
+        UserRequestMailer.new_user_rejection_email( @rejected_user_email ).deliver_now
       end
 
   end

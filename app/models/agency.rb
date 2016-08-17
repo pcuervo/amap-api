@@ -4,4 +4,5 @@ class Agency < ApplicationRecord
   
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
   validates :name, uniqueness: true
+  validates :name, presence: true
 end
