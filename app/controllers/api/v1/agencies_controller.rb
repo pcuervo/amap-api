@@ -19,6 +19,13 @@ module Api::V1
     # POST /agencies
     def create
       @agency = Agency.new(agency_params)
+
+      if params[:logo].present?
+        logo = Paperclip.io_adapters.for(params[:logo])
+        logo.original_filename = params[:filename]
+        @agency.logo = logo
+      end
+      
       if @agency.save
         render json: @agency, status: :created
         return

@@ -25,6 +25,7 @@ gem 'puma', '~> 3.0'
 gem 'pg'
 
 gem "paperclip", "~> 5.0.0"
+gem 'aws-sdk', '~> 2.3'
 
 group :test do
   gem 'sqlite3'
