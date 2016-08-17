@@ -2,7 +2,9 @@ module Api::V1
   class NewUserRequestsController < ApiController
     before_action :set_new_user_request, only: [:show, :update, :destroy]
     before_action :check_if_user_exists, only: [:create]
+    before_action :check_if_agency_user_exists, only: [:create]
     after_action :send_confirmation_email, only: [:confirm_request]
+    after_action :send_rejection_email, only: [:reject_request]
 
     # GET /new_user_requests/1
     def show
@@ -18,7 +20,11 @@ module Api::V1
     # POST /new_user_requests
     def create
       if @user_exists
-        puts @user.errors.to_yaml
+        render json: { errors: @user.errors }, status: :unprocessable_entity
+        return
+      end
+
+      if @agency_user_exists
         render json: { errors: @user.errors }, status: :unprocessable_entity
         return
       end
@@ -42,7 +48,6 @@ module Api::V1
         render json: { errors: invalid_user_request.errors }, status: :unprocessable_entity
         return
       end
-      puts params[:role].to_yaml
       @user = User.new( :email => @new_user_request.email, :role => params[:role].to_i, :is_member_amap => params[:is_member_amap], :agency_id => params[:agency_id] )
       @password = SecureRandom.hex
       @user.password = @password
@@ -55,6 +60,21 @@ module Api::V1
       end
 
       render json: { errors: @user.errors }, status: :unprocessable_entity
+    end
+
+    # POST /reject_request
+    def reject_request
+      @new_user_request = NewUserRequest.find_by_email( params[:email] )
+      if ! @new_user_request.present?
+        invalid_user_request = NewUserRequest.new
+        invalid_user_request.errors.add(:email, "No existe ninguna solicitud pendiente con ese email")
+        render json: { errors: invalid_user_request.errors }, status: :unprocessable_entity
+        return
+      end
+
+      @rejected_user_email = @new_user_request.email
+      @new_user_request.destroy
+      render json: { success: "Se ha rechazado el usuario con el correo " + @rejected_user_email + " correctamente."}, status: :ok
     end
 
     private
@@ -80,10 +100,29 @@ module Api::V1
         end
       end
 
+      def check_if_agency_user_exists
+        return if ! params[:new_user_request][:email].present?
+
+        agency_domain = params[:new_user_request][:email].split('@')[1]
+        agency_admin = User.where('email LIKE ? AND role = ?', '%'+agency_domain, User::AGENCY_ADMIN )
+
+        if agency_admin.present?
+          @user = agency_admin.first
+          @user.errors.add(:email, "Ya existe un usuario de tu agencia registrado")
+          @agency_user_exists = true
+        end
+      end
+
       def send_confirmation_email
         return if ! @user.present?
         return if ! @user.valid?
         UserRequestMailer.new_user_confirmation_email( @user, @password ).deliver_now
+      end
+
+      def send_rejection_email
+        return if ! @rejected_user_email.present?
+        puts 'send rejectio email...'
+        #UserRequestMailer.new_user_rejection_email().deliver_now
       end
 
   end

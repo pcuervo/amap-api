@@ -24,6 +24,8 @@ gem 'puma', '~> 3.0'
 # Use Postgres as databse
 gem 'pg'
 
+gem "paperclip", "~> 5.0.0"
+
 group :test do
   gem 'sqlite3'
   gem "shoulda-matchers", require: false

@@ -10,15 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160808201738) do
+ActiveRecord::Schema.define(version: 20160816230746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "agencies", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",                              null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.string   "phone",             default: "-"
+    t.string   "contact_name"
+    t.string   "contact_email"
+    t.string   "address"
+    t.decimal  "latitude"
+    t.decimal  "longitude"
+    t.string   "website_url"
+    t.integer  "num_employees"
+    t.boolean  "golden_pitch",      default: false
+    t.boolean  "silver_pitch",      default: false
+    t.boolean  "medium_risk_pitch", default: false
+    t.boolean  "high_risk_pitch",   default: false
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
+    t.datetime "logo_updated_at"
   end
 
   create_table "api_keys", force: :cascade do |t|
@@ -52,8 +68,6 @@ ActiveRecord::Schema.define(version: 20160808201738) do
     t.string   "last_sign_in_ip"
     t.boolean  "is_member_amap",         default: false
     t.integer  "agency_id"
-    t.string   "password_reset_token"
-    t.datetime "password_reset_sent_at"
     t.index ["agency_id"], name: "index_users_on_agency_id", using: :btree
     t.index ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree

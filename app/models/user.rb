@@ -23,6 +23,11 @@ class User < ApplicationRecord
 
   belongs_to :agency
 
+  AMAP_ADMIN = 1
+  AGENCY_ADMIN = 2
+  AGENCY_USER = 3
+  BRAND = 4
+  
   def generate_authentication_token!
     begin
       self.auth_token = Devise.friendly_token
