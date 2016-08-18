@@ -36,6 +36,12 @@ module Api::V1
 
     # POST /agencies/update/1
     def update
+      if params[:logo].present?
+        logo = Paperclip.io_adapters.for(params[:logo])
+        logo.original_filename = params[:filename]
+        @agency.logo = logo
+      end
+      
       if @agency.update(agency_params)
         render json: @agency, status: :ok
         return 
