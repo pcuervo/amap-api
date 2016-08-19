@@ -56,5 +56,13 @@ es:
             name:
               blank: "El nombre de la agencia no puede estar vacío"
               taken: "Ya existe una agencia con ese nombre"
+        success_case:
+          attributes:
+            agency:
+              required: "La agencia es obligatoria"
+            description:
+              blank: "La descripción no puede estar vacía"
+            name:
+              blank: "El nombre del caso no puede estar vacío"
       messages:
           record_invalid: "es inválido"

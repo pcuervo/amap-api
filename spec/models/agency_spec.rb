@@ -10,4 +10,5 @@ RSpec.describe Agency, :type => :model do
   it { should have_many(:users) }
 
   it { should be_valid }
+  
 end
