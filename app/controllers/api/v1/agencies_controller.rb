@@ -13,6 +13,10 @@ module Api::V1
 
     # GET /agencies/1
     def show
+      if ! @agency.present? 
+        render json: { errors: 'No agency found with id: ' + params[:id] },status: :unprocessable_entity
+        return
+      end
       render json: @agency
     end
 
@@ -57,7 +61,7 @@ module Api::V1
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_agency
-        @agency = Agency.find(params[:id])
+        @agency = Agency.find_by_id(params[:id])
       end
 
       # Only allow a trusted parameter "white list" through.

@@ -64,6 +64,12 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
       expect(json_response[:name]).to eql @agency.name
     end
 
+    it "returns the success cases of the agency" do 
+      agency_response = json_response
+      puts agency_response.to_yaml
+      expect(agency_response).to have_key(:success_cases)
+    end
+
     it { should respond_with 200 }
   end
 

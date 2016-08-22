@@ -10,6 +10,15 @@ class Api::V1::SuccessCasesController < ApplicationController
     render json: { success_cases: @success_cases }
   end
 
+  # GET /success_cases/1
+    def show
+      if ! @success_case.present? 
+        render json: { errors: 'No success case found with id: ' + params[:id] },status: :unprocessable_entity
+        return
+      end
+      render json: @success_case
+    end
+
   # POST /success_cases
   def create
     @success_case = SuccessCase.new(success_case_params)
@@ -46,7 +55,7 @@ class Api::V1::SuccessCasesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_success_case
-      @success_case = SuccessCase.find(params[:id])
+      @success_case = SuccessCase.find_by_id(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.

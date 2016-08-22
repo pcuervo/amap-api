@@ -17,6 +17,21 @@ RSpec.describe Api::V1::SuccessCasesController, :type => :controller do
     it { should respond_with 200 }
   end
 
+  describe "GET #show" do
+    before(:each) do
+      api_key = ApiKey.create
+      api_authorization_header 'Token ' + api_key.access_token
+      @success_case = FactoryGirl.create :success_case
+      get :show, { id: @success_case.id }, format: :json
+    end
+
+    it "returns the information about a success_case on a hash" do
+      expect(json_response[:name]).to eql @success_case.name
+    end
+
+    it { should respond_with 200 }
+  end
+
   describe "POST #create" do
     context "when is successfully created" do
       before(:each) do
@@ -26,7 +41,9 @@ RSpec.describe Api::V1::SuccessCasesController, :type => :controller do
 
         @success_case_attributes = FactoryGirl.attributes_for :success_case
         success_case = FactoryGirl.create :success_case
-        @success_case_attributes[:success_case_id] = success_case.id
+        #@success_case_attributes[:success_case_id] = success_case.id
+        agency = FactoryGirl.create :agency
+        @success_case_attributes[:agency_id] = agency.id
         post :create, { auth_token: @admin.auth_token, success_case: @success_case_attributes }, format: :json
       end
 

@@ -33,7 +33,7 @@ Rails.application.routes.draw do
           post 'destroy/', :action => 'destroy'
         end
       end
-      resources :success_cases, :only => [:index, :create] do
+      resources :success_cases, :only => [:index, :create, :show] do
         collection do
           post 'update/', :action => 'update'
         end
