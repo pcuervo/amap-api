@@ -128,6 +128,44 @@ RSpec.describe Api::V1::SuccessCasesController, :type => :controller do
 
       it { should respond_with 422 }
     end
-
   end #POST update
+
+  describe "POST #destroy" do
+    context "when is successfully destroyed" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @success_case = FactoryGirl.create :success_case
+        post :destroy, { auth_token: @admin.auth_token, id: @success_case.id }, format: :json
+      end
+
+      it { should respond_with 204 }
+    end
+
+    context "when is not destroyed because no SuccessCase was found" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @success_case = FactoryGirl.create :success_case
+        post :destroy, { auth_token: @admin.auth_token, id: 829383 }, format: :json
+      end
+
+      it "renders an errors json" do
+        success_case_response = json_response
+        expect(success_case_response).to have_key(:errors)
+      end
+
+      it "renders the json errors when no success_case name is present" do
+        success_case_response = json_response
+        expect(success_case_response[:errors]).to include "No se encontró ningún case de éxito con id: 829383"
+      end
+
+      it { should respond_with 422 }
+    end
+  end #POST update
+
 end
