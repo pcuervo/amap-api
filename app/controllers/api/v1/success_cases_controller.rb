@@ -11,13 +11,13 @@ class Api::V1::SuccessCasesController < ApplicationController
   end
 
   # GET /success_cases/1
-    def show
-      if ! @success_case.present? 
-        render json: { errors: 'No se encontró ningún case de éxito con id: ' + params[:id] },status: :unprocessable_entity
-        return
-      end
-      render json: @success_case
+  def show
+    if ! @success_case.present? 
+      render json: { errors: 'No se encontró ningún case de éxito con id: ' + params[:id] },status: :unprocessable_entity
+      return
     end
+    render json: @success_case
+  end
 
   # POST /success_cases
   def create

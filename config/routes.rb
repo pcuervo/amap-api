@@ -39,6 +39,8 @@ Rails.application.routes.draw do
           post 'destroy/', :action => 'destroy'
         end
       end
+      resources :skill_categories, :only => [:create, :show, :index]
+      resources :skills, :only => [:create, :show, :index]
     end
   end
 

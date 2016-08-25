@@ -64,5 +64,17 @@ es:
               blank: "La descripción no puede estar vacía"
             name:
               blank: "El nombre del caso no puede estar vacío"
+        skill_category:
+          attributes:
+            name:
+              blank: "El nombre de la categoría no puede estar vacío"
+              taken: "Ya existe una categoría con ese nombre"
+        skill:
+          attributes:
+            name:
+              blank: "El nombre del skill no puede estar vacío"
+              taken: "Ya existe un skill con ese nombre"
+            skill_category: 
+              required: "La categoría es obligatoria"
       messages:
           record_invalid: "es inválido"
