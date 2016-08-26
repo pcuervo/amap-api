@@ -76,5 +76,10 @@ es:
               taken: "Ya existe un skill con ese nombre"
             skill_category: 
               required: "La categoría es obligatoria"
+        agency_skill:
+          attributes:
+            skill:
+              blank: "El skill no puede estar vacío"
+              required: "El skill es obligatorio"
       messages:
           record_invalid: "es inválido"

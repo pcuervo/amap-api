@@ -19,7 +19,8 @@ Rails.application.routes.draw do
       end
       resources :agencies, :only => [:index, :show, :create, :update] do
         collection do
-          post 'update', :action => 'update'
+          post 'update',      :action => 'update'
+          post 'add_skills',  :action => 'add_skills'
         end
       end
       resources :new_user_requests, :only => [:index, :create, :show] do

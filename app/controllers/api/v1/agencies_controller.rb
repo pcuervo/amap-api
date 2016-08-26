@@ -1,6 +1,6 @@
 module Api::V1
   class AgenciesController < ApiController
-    before_action :set_agency, only: [:show, :update, :destroy]
+    before_action :set_agency, only: [:show, :update, :destroy, :add_skills]
     before_action only: [:create, :update] do 
       authenticate_with_token! params[:auth_token]
     end
@@ -14,7 +14,7 @@ module Api::V1
     # GET /agencies/1
     def show
       if ! @agency.present? 
-        render json: { errors: 'No agency found with id: ' + params[:id] },status: :unprocessable_entity
+        render json: { errors: 'No se encontró la agencia con id: ' + params[:id] },status: :unprocessable_entity
         return
       end
       render json: @agency
@@ -41,7 +41,7 @@ module Api::V1
     # POST /agencies/update/1
     def update
       if ! @agency.present? 
-        render json: { errors: 'No agency found with id: ' + params[:id] },status: :unprocessable_entity
+        render json: { errors: 'No se encontró la agencia con id: ' + params[:id] },status: :unprocessable_entity
         return
       end
 
@@ -61,6 +61,21 @@ module Api::V1
     # DELETE /agencies/1
     def destroy
       @agency.destroy
+    end
+
+    # POST /agencies/add_skills
+    def add_skills
+      if ! @agency.present? 
+        render json: { errors: 'No se encontró la agencia con id: ' + params[:id].to_s },status: :unprocessable_entity
+        return
+      end
+      if ! params[:skills].present? 
+        render json: { errors: 'No se encontró ningún skill para agregar' },status: :unprocessable_entity
+        return
+      end
+      
+      @agency.add_skills( params[:skills] )
+      render json: @agency.skills, status: :created
     end
 
     private

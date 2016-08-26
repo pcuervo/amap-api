@@ -191,4 +191,72 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
   end #POST update
 
+  describe "POST #add_skills" do
+    context "when skills are successfully added" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @agency = FactoryGirl.create :agency
+        Skill.delete_all
+        3.times{ FactoryGirl.create :skill }
+
+        skills_arr = []
+        Skill.all.limit(5).each do |s|
+          skill_obj = {}
+          skill_obj['id'] = s.id
+          skill_obj['level'] = Random.rand(5)
+          skills_arr.push( skill_obj )
+        end
+        
+        post :add_skills, { auth_token: @admin.auth_token, id: @agency.id,
+                        skills: skills_arr }, format: :json
+      end
+
+      it "returns the skills added to the agency" do
+        agency_response = json_response
+        expect(agency_response[:skills].count).to eql 3
+      end
+
+      it { should respond_with 201 }
+    end
+
+    context "when skills are not added because agency does not exist" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @agency = FactoryGirl.create :agency
+        Skill.delete_all
+        3.times{ FactoryGirl.create :skill }
+
+        skills_arr = []
+        Skill.all.limit(5).each do |s|
+          skill_obj = {}
+          skill_obj['id'] = s.id
+          skill_obj['level'] = Random.rand(5)
+          skills_arr.push( skill_obj )
+        end
+        
+        post :add_skills, { auth_token: @admin.auth_token, id: -1,
+                        skills: skills_arr }, format: :json
+      end
+
+      it "renders an errors json" do
+        agency_response = json_response
+        expect(agency_response).to have_key(:errors)
+      end
+
+      it "renders the json errors when no agency name is present" do
+        agency_response = json_response
+        expect(agency_response[:errors]).to include 'No se encontró la agencia con id: -1' 
+      end
+
+      it { should respond_with 422 }
+    end
+
+  end #POST add_skills
+
 end

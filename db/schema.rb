@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160824212232) do
+ActiveRecord::Schema.define(version: 20160825202809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,16 @@ ActiveRecord::Schema.define(version: 20160824212232) do
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
+  end
+
+  create_table "agency_skills", force: :cascade do |t|
+    t.integer  "agency_id"
+    t.integer  "skill_id"
+    t.integer  "level"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agency_id"], name: "index_agency_skills_on_agency_id", using: :btree
+    t.index ["skill_id"], name: "index_agency_skills_on_skill_id", using: :btree
   end
 
   create_table "api_keys", force: :cascade do |t|
@@ -102,6 +112,8 @@ ActiveRecord::Schema.define(version: 20160824212232) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "agency_skills", "agencies"
+  add_foreign_key "agency_skills", "skills"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"
   add_foreign_key "users", "agencies"
