@@ -5,6 +5,7 @@ class AgencySerializer < ActiveModel::Serializer
     success_cases = []
     object.success_cases.each do |sc|
       success_case = {}
+      success_case[:id]         = sc.id
       success_case[:name]         = sc.name
       success_case[:description]  = sc.description
       success_case[:url]          = sc.url
