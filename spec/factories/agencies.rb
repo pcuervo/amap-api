@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :agency do
-    name { FFaker::CompanyIT.name + Time.now.to_s }
+    name { FFaker::Name.name + rand(1000).to_s }
     phone { FFaker::PhoneNumberMX.home_work_phone_number }
     contact_name { FFaker::Name.name }
     contact_email { FFaker::Internet.email }

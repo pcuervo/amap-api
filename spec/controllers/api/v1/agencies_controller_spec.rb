@@ -66,7 +66,6 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
     it "returns the success cases of the agency" do 
       agency_response = json_response
-      puts agency_response.to_yaml
       expect(agency_response).to have_key(:success_cases)
     end
 
@@ -257,6 +256,50 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
       it { should respond_with 422 }
     end
 
+    context "when skills are updated because they already exist" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @agency = FactoryGirl.create :agency
+        Skill.delete_all
+        3.times{ FactoryGirl.create :skill }
+
+        skills_arr = []
+        Skill.all.limit(2).each do |s|
+          skill_obj = {}
+          skill_obj['id'] = s.id
+          skill_obj['level'] = 1
+          skills_arr.push( skill_obj )
+        end
+        @agency.add_skills( skills_arr )
+        Skill.all.limit(2).each do |s|
+          skill_obj = {}
+          skill_obj['id'] = s.id
+          skill_obj['level'] = 3
+          skills_arr.push( skill_obj )
+        end
+        
+        post :add_skills, { auth_token: @admin.auth_token, id: @agency.id,
+                        skills: skills_arr }, format: :json
+      end
+
+      it "returns the skills added to the agency" do
+        agency_response = json_response
+        expect(agency_response[:skills].count).to eql 2
+      end
+
+      it "renders the json errors when no agency name is present" do
+        agency_response = json_response
+        expect( agency_response[:skills][0].level ).to eq 3
+      end
+
+      it { should respond_with 422 }
+    end
+
   end #POST add_skills
+
+
 
 end
