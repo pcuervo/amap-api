@@ -215,7 +215,8 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
       it "returns the skills added to the agency" do
         agency_response = json_response
-        expect(agency_response[:skills].count).to eql 3
+        puts json_response.to_yaml
+        expect(agency_response.count).to eql 3
       end
 
       it { should respond_with 201 }
@@ -229,7 +230,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
         @agency = FactoryGirl.create :agency
         Skill.delete_all
-        3.times{ FactoryGirl.create :skill }
+        #3.times{ FactoryGirl.create :skill }
 
         skills_arr = []
         Skill.all.limit(5).each do |s|
@@ -264,7 +265,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
         @agency = FactoryGirl.create :agency
         Skill.delete_all
-        3.times{ FactoryGirl.create :skill }
+        #3.times{ FactoryGirl.create :skill }
 
         skills_arr = []
         Skill.all.limit(2).each do |s|
