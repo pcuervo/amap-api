@@ -75,7 +75,7 @@ module Api::V1
       end
       
       @agency.add_skills( params[:skills] )
-      render json: @agency.skills, status: :created
+      render json: @agency.agency_skills, status: :created
     end
 
     private

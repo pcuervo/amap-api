@@ -14,19 +14,42 @@ RSpec.describe Agency, :type => :model do
   describe "#add_skills" do
     it "adds a skill with level to an agency" do
       agency = FactoryGirl.create :agency
-      5.times{ FactoryGirl.create :skill }
+      Skill.delete_all
+      2.times{ FactoryGirl.create :skill }
       skills_arr = []
-      Skill.all.limit(5).each do |s|
+      Skill.all.limit(2).each do |s|
         skill_obj = {}
         skill_obj[:id] = s.id
-        skill_obj[:level] = Random.rand(5)
+        skill_obj[:level] = Random.rand(2)
         skills_arr.push( skill_obj )
       end
       agency.skills.delete_all
       agency.add_skills( skills_arr )
-      expect( agency.agency_skills.count ).to eql 5
+      expect( agency.agency_skills.count ).to eql 2
     end
 
+    it "updates a skill with level to an agency" do
+      agency = FactoryGirl.create :agency
+      Skill.delete_all
+      FactoryGirl.create :skill
+
+      skills_arr = []
+      skill_obj = {}
+      skill_obj[:id] = Skill.first.id
+      skill_obj[:level] = 1
+      skills_arr.push( skill_obj )
+      agency.add_skills( skills_arr )
+
+      skills_arr = []
+      skill_obj = {}
+      skill_obj[:id] = Skill.first.id
+      skill_obj[:level] = 2
+      skills_arr.push( skill_obj )
+      agency.add_skills( skills_arr )
+
+      expect( agency.agency_skills.count ).to eql 1
+      expect( agency.agency_skills.first.level ).to eql 2
+    end
   end
   
 end
