@@ -1,7 +1,7 @@
 class Agency < ApplicationRecord
     extend ActiveModel::Naming
 
-  has_many :users
+  has_and_belongs_to_many :users
   has_many :success_cases
   has_many :agency_skills
   has_many :skills, :through => :agency_skills

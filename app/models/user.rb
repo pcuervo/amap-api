@@ -21,7 +21,7 @@ class User < ApplicationRecord
   #             :length => { :within => 6..40 }, 
   #             :on => :update
 
-  belongs_to :agency
+  has_and_belongs_to_many :agencies
 
   AMAP_ADMIN = 1
   AGENCY_ADMIN = 2

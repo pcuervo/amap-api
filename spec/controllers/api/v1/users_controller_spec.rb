@@ -20,7 +20,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
       api_key = ApiKey.create
       api_authorization_header 'Token ' + api_key.access_token
       @user = FactoryGirl.create :user
-      get :show, { id: @user.id }, format: :json
+      get :show, params: { id: @user.id }, format: :json
     end
 
     it "returns the information about a user on a hash" do
@@ -32,7 +32,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
 
   describe "POST #create" do
 
-    context "when is successfully created" do
+    context "when is successfully created for an agency" do
       before(:each) do
         api_key = ApiKey.create
         api_authorization_header 'Token ' + api_key.access_token
@@ -40,8 +40,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
         @admin = FactoryGirl.create :user
         @user_attributes = FactoryGirl.attributes_for :user
         @agency = FactoryGirl.create :agency
-        @user_attributes[:agency_id] = @agency.id
-        post :create, { auth_token: @admin.auth_token, user: @user_attributes }, format: :json
+        post :create, params: { auth_token: @admin.auth_token, user: @user_attributes, agency_id: @agency.id }, format: :json
       end
 
       it "renders the json representation for the user record just created" do
@@ -52,34 +51,10 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
 
       it "is part of an agency" do
         user_response = json_response
-        expect(user_response[:agency][:id]).to eql @agency.id
+        expect(user_response[:agency_id]).to eql @agency.id
       end
 
       it { should respond_with 201 }
-    end
-
-    context "when is not created because agency is not present" do
-      before(:each) do
-        api_key = ApiKey.create
-        api_authorization_header 'Token ' + api_key.access_token
-
-        @user_attributes = FactoryGirl.attributes_for :user
-        @user_attributes[:agency_id] = -1
-        @user = FactoryGirl.create :user
-        post :create, { auth_token: @user.auth_token, user: @user_attributes }, format: :json
-      end
-
-      it "renders an errors json" do
-        user_response = json_response
-        expect(user_response).to have_key(:errors)
-      end
-
-      it "renders the json errors when no agency is present" do
-        user_response = json_response
-        expect(user_response[:errors][:agency]).to include "La agencia es obligatoria"
-      end
-
-      it { should respond_with 422 }
     end
 
     context "when is not created because User authorization token is invalid or not present" do
@@ -91,7 +66,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
         @agency = FactoryGirl.create :agency
         @user_attributes[:agency_id] = @agency.id
         @user = FactoryGirl.create :user
-        post :create, { token: @user.auth_token, user: @user_attributes }, format: :json
+        post :create, params: { token: @user.auth_token, user: @user_attributes }, format: :json
       end
 
       it "renders an errors json" do
@@ -117,12 +92,11 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
 
         @user = FactoryGirl.create :user
         @new_email = FFaker::Internet.email
-        post :update, { auth_token: @admin.auth_token, id: @user.id,
+        post :update, params: { auth_token: @admin.auth_token, id: @user.id,
                          user: { email: @new_email, first_name: 'Juan' } }, format: :json
       end
 
       it "renders the json representation for the updated user" do
-        puts json_response.to_yaml
         user_response = json_response
         expect(user_response[:email]).to eql @new_email
         expect(user_response[:first_name]).to eql 'Juan'
@@ -161,7 +135,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
         api_authorization_header 'Token ' + api_key.access_token
 
         @user = FactoryGirl.create :user
-        post :send_password_reset, { email: @user.email }, format: :json
+        post :send_password_reset, params: { email: @user.email }, format: :json
       end
 
       it "renders a success messsage" do
@@ -182,7 +156,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
         api_key = ApiKey.create
         api_authorization_header 'Token ' + api_key.access_token
 
-        post :send_password_reset, { email: 'invalid@email.com' }, format: :json
+        post :send_password_reset, params: { email: 'invalid@email.com' }, format: :json
       end
 
       it "renders an errors json" do

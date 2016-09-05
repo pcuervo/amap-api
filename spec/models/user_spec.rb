@@ -22,7 +22,7 @@ RSpec.describe User, :type => :model do
 
   it { should validate_uniqueness_of( :auth_token )}
 
-  it { should belong_to(:agency) }
+  it { should have_and_belong_to_many(:agencies) }
 
   it { should be_valid }
 

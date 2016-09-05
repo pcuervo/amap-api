@@ -6,6 +6,5 @@ FactoryGirl.define do
     password              'holama123'
     password_confirmation 'holama123' 
     is_member_amap        false
-    agency
   end
 end

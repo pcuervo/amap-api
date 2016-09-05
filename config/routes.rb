@@ -42,6 +42,8 @@ Rails.application.routes.draw do
       end
       resources :skill_categories, :only => [:create, :show, :index]
       resources :skills, :only => [:create, :show, :index]
+      resources :companies, :only => [:create, :show, :index]
+      resources :brands, :only => [:create, :show, :index]
     end
   end
 

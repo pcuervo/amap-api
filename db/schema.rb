@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160825202809) do
+ActiveRecord::Schema.define(version: 20160902212615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,11 @@ ActiveRecord::Schema.define(version: 20160825202809) do
     t.datetime "logo_updated_at"
   end
 
+  create_table "agencies_users", id: false, force: :cascade do |t|
+    t.integer "agency_id", null: false
+    t.integer "user_id",   null: false
+  end
+
   create_table "agency_skills", force: :cascade do |t|
     t.integer  "agency_id"
     t.integer  "skill_id"
@@ -53,12 +58,29 @@ ActiveRecord::Schema.define(version: 20160825202809) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "brands", force: :cascade do |t|
+    t.string   "name"
+    t.string   "contact_name"
+    t.string   "contact_email"
+    t.string   "contact_position"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.integer  "company_id"
+    t.index ["company_id"], name: "index_brands_on_company_id", using: :btree
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "new_user_requests", force: :cascade do |t|
-    t.string   "email",                          null: false
-    t.string   "agency",     default: "",        null: false
-    t.string   "user_type",  default: "agencia", null: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.string   "email",                            null: false
+    t.string   "agency_brand", default: "",        null: false
+    t.string   "user_type",    default: "agencia", null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   create_table "skill_categories", force: :cascade do |t|
@@ -105,8 +127,6 @@ ActiveRecord::Schema.define(version: 20160825202809) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.boolean  "is_member_amap",         default: false
-    t.integer  "agency_id"
-    t.index ["agency_id"], name: "index_users_on_agency_id", using: :btree
     t.index ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
@@ -114,7 +134,7 @@ ActiveRecord::Schema.define(version: 20160825202809) do
 
   add_foreign_key "agency_skills", "agencies"
   add_foreign_key "agency_skills", "skills"
+  add_foreign_key "brands", "companies"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"
-  add_foreign_key "users", "agencies"
 end

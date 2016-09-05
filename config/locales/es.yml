@@ -81,5 +81,15 @@ es:
             skill:
               blank: "El skill no puede estar vacío"
               required: "El skill es obligatorio"
+        company:
+          attributes:
+            name:
+              blank: "El nombre de la compañía no puede estar vacío"
+        brand:
+          attributes:
+            name:
+              blank: "El nombre de la marca no puede estar vacío"
+            company:
+              required: "La compañía es obligatoria"
       messages:
           record_invalid: "es inválido"

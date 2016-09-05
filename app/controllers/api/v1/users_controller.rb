@@ -20,7 +20,12 @@ module Api::V1
     def create
       @user = User.new(user_params)
 
-      if @user.save
+      if params[:agency_id].present?
+        agency = Agency.find(params[:agency_id])
+        @user.agencies << agency
+      end
+
+      if @user.save!
         render json: @user, status: :created, location: [:api, @user]
         return
       end
@@ -29,6 +34,11 @@ module Api::V1
 
     def update
       user = User.find( params[:id] )
+
+      if params[:agency_id].present?
+        agency = Agency.find(params[:agency_id])
+        user.agencies << agency
+      end
 
       if user.update( user_params )
         render json: user, status: 200, location: [:api, user]
@@ -77,7 +87,7 @@ module Api::V1
 
       # Only allow a trusted parameter "white list" through.
       def user_params
-        params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :role, :is_member_amap, :agency_id)
+        params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :role, :is_member_amap)
       end
 
   end 
