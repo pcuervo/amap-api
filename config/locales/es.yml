@@ -49,7 +49,7 @@ es:
             email:
               blank: "El email no puede estar vacío"
               taken: "Ya existe una solicitud con ese email"
-            agency:
+            agency_brand:
               blank: "El nombre de la agencia no puede estar vacío"
         agency:
           attributes:

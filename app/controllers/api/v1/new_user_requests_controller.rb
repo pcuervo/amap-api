@@ -48,7 +48,17 @@ module Api::V1
         render json: { errors: invalid_user_request.errors }, status: :unprocessable_entity
         return
       end
-      @user = User.new( :email => @new_user_request.email, :role => params[:role].to_i, :is_member_amap => params[:is_member_amap], :agency_id => params[:agency_id] )
+
+      @user = User.new( :email => @new_user_request.email, :role => params[:role].to_i, :is_member_amap => params[:is_member_amap] )
+
+      if User::AGENCY_ADMIN == params[:role].to_i
+        agency = Agency.find(params[:agency_id])
+        @user.agencies << agency
+      elsif User::BRAND == params[:role].to_i
+        brand = Brand.find(params[:brand_id])
+        @user.brands << brand
+      end
+
       @password = SecureRandom.hex
       @user.password = @password
       @user.password_confirmation = @password
@@ -77,19 +87,33 @@ module Api::V1
       render json: { success: "Se ha rechazado el usuario con el correo " + @rejected_user_email + " correctamente."}, status: :ok
     end
 
+    # GET /reject_request/agency_users
+    def agency_users
+      @new_user_requests = NewUserRequest.where('user_type = ?', "2")
+      render json: @new_user_requests
+    end
+
+    # GET /reject_request/brand_users
+    def brand_users
+      @new_user_requests = NewUserRequest.where('user_type = ?', "4")
+      render json: @new_user_requests
+    end
+
+
     private
       # Only allow a trusted parameter "white list" through.
       def new_user_request_params
-        params.require(:new_user_request).permit(:email, :agency, :user_type)
+        params.require(:new_user_request).permit(:email, :agency_brand, :user_type)
       end
 
       def user_request_params
-        params.require(:user).permit(:email, :agency_id, :role, :is_member_amap)
+        params.require(:user).permit(:email, :role, :is_member_amap)
       end
 
       # Use callbacks to share common setup or constraints between actions.
       def set_new_user_request
         @new_user_request = NewUserRequest.find(params[:id])
+        puts @new_user_request.updated_at.to_yaml
       end
 
       def check_if_user_exists
@@ -121,7 +145,6 @@ module Api::V1
 
       def send_rejection_email
         return if ! @rejected_user_email.present?
-        puts 'send rejectio email...'
         UserRequestMailer.new_user_rejection_email( @rejected_user_email ).deliver_now
       end
 

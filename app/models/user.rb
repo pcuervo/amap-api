@@ -22,6 +22,7 @@ class User < ApplicationRecord
   #             :on => :update
 
   has_and_belongs_to_many :agencies
+  has_and_belongs_to_many :brands
 
   AMAP_ADMIN = 1
   AGENCY_ADMIN = 2

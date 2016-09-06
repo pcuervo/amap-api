@@ -30,4 +30,5 @@ class Agency < ApplicationRecord
     agency_skill = AgencySkill.create(:agency_id => self.id, :skill_id => id, :level => level )
     self.agency_skills << agency_skill
   end
+
 end

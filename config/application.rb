@@ -44,6 +44,6 @@ module AmapApiDev
 
     # Set timezone to Mexico City
     config.time_zone = 'America/Mexico_City'
-    config.active_record.default_timezone = 'America/Mexico_City'
+    config.active_record.default_timezone = :local
   end
 end

@@ -26,7 +26,9 @@ Rails.application.routes.draw do
       resources :new_user_requests, :only => [:index, :create, :show] do
         collection do
           post 'confirm_request', :action => 'confirm_request'
-          post 'reject_request', :action => 'reject_request'
+          post 'reject_request',  :action => 'reject_request'
+          get 'agency_users',     :action => 'agency_users'
+          get 'brand_users',      :action => 'brand_users'
         end
       end
       resources :sessions, :only => [:create, :destroy] do

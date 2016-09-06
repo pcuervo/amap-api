@@ -10,7 +10,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
 
         @new_user_request_attributes = FactoryGirl.attributes_for :new_user_request
         @agency = FactoryGirl.create :agency
-        post :create, { auth_token: @admin.auth_token, new_user_request: @new_user_request_attributes }, format: :json
+        post :create, params: { auth_token: @admin.auth_token, new_user_request: @new_user_request_attributes }, format: :json
       end
 
       it "renders the json representation for the new_user_request record just created" do
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
 
         @new_user_request = FactoryGirl.create :new_user_request
         @invalid_user_attributes = { agency: 'Flock' }
-        post :create, { auth_token: @admin.auth_token, new_user_request: @invalid_user_attributes }, format: :json
+        post :create, params: { auth_token: @admin.auth_token, new_user_request: @invalid_user_attributes }, format: :json
       end
 
       it "renders an errors json" do
@@ -54,7 +54,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
         @existing_user = FactoryGirl.create :user
         @new_user_request_attributes = FactoryGirl.attributes_for :new_user_request
         @new_user_request_attributes[:email] = @existing_user.email
-        post :create, { auth_token: @admin.auth_token, new_user_request: @new_user_request_attributes }, format: :json
+        post :create, params: { auth_token: @admin.auth_token, new_user_request: @new_user_request_attributes }, format: :json
       end
 
       it "renders an errors json" do
@@ -64,7 +64,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
 
       it "renders the json errors saying email already exists" do
         user_response = json_response
-        expect(user_response[:errors][:email]).to include "Ya existe una cuenta con ese email"
+        expect(user_response[:errors][:email]).to include "Ya existe un usuario de tu agencia registrado"
       end
 
       it { should respond_with 422 }
@@ -81,7 +81,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
         @existing_user.save
         @new_user_request_attributes = FactoryGirl.attributes_for :new_user_request
         @new_user_request_attributes[:email] = 'impostor@pcuervo.com'
-        post :create, { auth_token: @admin.auth_token, new_user_request: @new_user_request_attributes }, format: :json
+        post :create, params: { auth_token: @admin.auth_token, new_user_request: @new_user_request_attributes }, format: :json
       end
 
       it "renders an errors json" do
@@ -99,7 +99,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
   end #POST create
 
   describe "POST #confirm_request" do
-    context "when is successfully confirmed and new user is created" do
+    context "when is successfully confirmed and new Agency user is created" do
       before(:each) do
         api_key = ApiKey.create
         api_authorization_header 'Token ' + api_key.access_token
@@ -111,7 +111,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
         @user_attributes = FactoryGirl.attributes_for :user 
         @user_attributes[:email] = @new_user_request.email
         @user_attributes[:agency_id] = @agency.id
-        post :confirm_request, { auth_token: @admin.auth_token, email: @new_user_request.email, agency_id: @agency.id, role: 3, is_member_amap: 0  }, format: :json
+        post :confirm_request, params: { auth_token: @admin.auth_token, email: @new_user_request.email, agency_id: @agency.id, role: 2, is_member_amap: 0  }, format: :json
       end
 
       it "renders the json representation for the new_user_request record just created" do
@@ -126,29 +126,37 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
       it { should respond_with 201 }
     end
 
-    # context "when is not created because email is not present" do
-    #   before(:each) do
-    #     api_key = ApiKey.create
-    #     api_authorization_header 'Token ' + api_key.access_token
-    #     @admin = FactoryGirl.create :user
+    context "when is successfully confirmed and new Brand user is created" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
 
-    #     @new_user_request = FactoryGirl.create :new_user_request
-    #     @invalid_user_attributes = { agency: 'Flock' }
-    #     post :create, { auth_token: @admin.auth_token, new_user_request: @invalid_user_attributes }, format: :json
-    #   end
+        @brand = FactoryGirl.create :brand
+        @new_user_request = FactoryGirl.create :new_user_request
+        @new_user_request.save!
+        @user_attributes = FactoryGirl.attributes_for :user 
+        @user_attributes[:email] = @new_user_request.email
+        @user_attributes[:brand_id] = @brand.id
+        post :confirm_request, params: { auth_token: @admin.auth_token, email: @new_user_request.email, brand_id: @brand.id, role: 4, is_member_amap: 0  }, format: :json
+      end
 
-    #   it "renders an errors json" do
-    #     user_response = json_response
-    #     expect(user_response).to have_key(:errors)
-    #   end
+      it "renders the json representation for the new_user_request record just created" do
+        user_request_response = json_response
+        expect(user_request_response[:email]).to eql @user_attributes[:email]
+      end
 
-    #   it "renders the json errors when no agency is present" do
-    #     user_response = json_response
-    #     expect(user_response[:errors][:email]).to include "El email no puede estar vacío"
-    #   end
+      it "adds a new user to the brand" do
+        user_request_response = json_response
+        expect(@brand.users.count).to eql 1
+      end
 
-    #   it { should respond_with 422 }
-    # end
+      it "deletes NewUserRequest after User is created" do 
+        expect( NewUserRequest.last.id ).to_not eql @new_user_request.id
+      end
+
+      it { should respond_with 201 }
+    end
   end # POST confirm_request
 
   describe "POST #reject_request" do
@@ -164,7 +172,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
         @user_attributes = FactoryGirl.attributes_for :user 
         @user_attributes[:email] = @new_user_request.email
         @user_attributes[:agency_id] = @agency.id
-        post :reject_request, { auth_token: @admin.auth_token, email: @new_user_request.email }, format: :json
+        post :reject_request, params: { auth_token: @admin.auth_token, email: @new_user_request.email }, format: :json
       end
 
       it "renders a success message saying the user was rejected" do
@@ -185,7 +193,7 @@ RSpec.describe Api::V1::NewUserRequestsController, :type => :controller do
         api_authorization_header 'Token ' + api_key.access_token
         @admin = FactoryGirl.create :user
 
-        post :reject_request, { auth_token: @admin.auth_token, email:  'invalid@email.com' }, format: :json
+        post :reject_request, params: { auth_token: @admin.auth_token, email:  'invalid@email.com' }, format: :json
       end
 
       it "renders an errors json" do

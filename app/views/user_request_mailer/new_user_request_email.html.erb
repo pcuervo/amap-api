@@ -6,7 +6,11 @@
   <body>
     <h1>Nueva solicitud de usuario</h1>
     <p>
-      Alguien de :<%= @user_request.agency %> con el correo <%= @user_request.email %> desea crear su cuenta para la app de Happitch. 
+      <% if 2 == @user_request.user_type %>
+        Alguien de la agencia "<%= @user_request.agency_brand %>" con el correo <%= @user_request.email %> desea crear su cuenta para la app de Happitch. 
+      <% else %>
+        Alguien de la marca "<%= @user_request.agency_brand %>" con el correo <%= @user_request.email %> desea crear su cuenta para la app de Happitch. 
+      <% end %>
     </p>
     <p>
       Entra <a href="#">aquí</a> para aprobar la solicitud o rechazarla.
