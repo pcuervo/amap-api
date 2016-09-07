@@ -15,5 +15,18 @@ class AgencySerializer < ActiveModel::Serializer
     end
     success_cases
   end
+
+  def skills
+    skills = []
+    object.agency_skills.each do |as|
+      skill = Skill.find(as.skill_id)
+      skill_obj = {}
+      skill_obj[:id]    = skill.id
+      skill_obj[:name]  = skill.name
+      skill_obj[:level] = as.level
+      skills.push( skill_obj )
+    end
+    skills
+  end
 end
 
