@@ -7,7 +7,7 @@ class Api::V1::SkillsController < ApplicationController
   # GET /skills
   def index
     @skills = Skill.all
-    render json: { skills: @skills }
+    render json: { skills: @skills },  :include => { :skill_category => { :only => [:name, :id] } }, :except => [:updated_at]
   end
 
   # GET /skills/1

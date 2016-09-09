@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160905224424) do
+ActiveRecord::Schema.define(version: 20160908234604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,11 +81,45 @@ ActiveRecord::Schema.define(version: 20160905224424) do
   end
 
   create_table "new_user_requests", force: :cascade do |t|
-    t.string   "email",                            null: false
-    t.string   "agency_brand", default: "",        null: false
-    t.string   "user_type",    default: "agencia", null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.string   "email",                      null: false
+    t.string   "agency_brand", default: "",  null: false
+    t.string   "user_type",    default: "2", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  create_table "pitch_evaluations", force: :cascade do |t|
+    t.integer  "pitch_id"
+    t.integer  "user_id"
+    t.boolean  "evaluation_status",              default: false
+    t.integer  "pitch_status",                   default: 0
+    t.boolean  "are_objectives_clear",           default: false
+    t.string   "days_to_present",                default: "0"
+    t.boolean  "is_budget_known",                default: false
+    t.string   "number_of_agencies",             default: "0"
+    t.boolean  "are_deliverables_clear",         default: false
+    t.boolean  "is_marketing_involved",          default: false
+    t.string   "days_to_know_decision",          default: "0"
+    t.string   "deliver_copyright_for_pitching", default: "no"
+    t.string   "know_presentation_rounds",       default: "0"
+    t.integer  "number_of_rounds",               default: 0
+    t.integer  "score",                          default: 0
+    t.integer  "activity_status",                default: 0
+    t.boolean  "was_won",                        default: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.index ["pitch_id"], name: "index_pitch_evaluations_on_pitch_id", using: :btree
+    t.index ["user_id"], name: "index_pitch_evaluations_on_user_id", using: :btree
+  end
+
+  create_table "pitches", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "skill_category_id"
+    t.date     "brief_date"
+    t.string   "brief_email_contact"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["skill_category_id"], name: "index_pitches_on_skill_category_id", using: :btree
   end
 
   create_table "skill_categories", force: :cascade do |t|
@@ -140,6 +174,9 @@ ActiveRecord::Schema.define(version: 20160905224424) do
   add_foreign_key "agency_skills", "agencies"
   add_foreign_key "agency_skills", "skills"
   add_foreign_key "brands", "companies"
+  add_foreign_key "pitch_evaluations", "pitches"
+  add_foreign_key "pitch_evaluations", "users"
+  add_foreign_key "pitches", "skill_categories"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"
 end
