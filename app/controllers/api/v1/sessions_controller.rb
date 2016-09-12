@@ -15,7 +15,7 @@ class Api::V1::SessionsController < ApplicationController
       sign_in user, store: false
       user.generate_authentication_token!
       user.save
-      render json: { user: user }, status: 200, location: [:api, user]
+      render json: { user: user }, :include => { :agencies => { :only => [:id] }, :brands => { :only => [:id] } }, status: 200, location: [:api, user]
       return
     end
     user.errors.add(:email, "Email o password incorrecto")
