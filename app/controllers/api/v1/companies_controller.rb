@@ -21,16 +21,16 @@ class Api::V1::CompaniesController < ApplicationController
   end
 
   # POST /companies
-    def create
-      @company = Company.new(company_params)
-      
-      if @company.save
-        render json: @company, status: :created
-        return
-      end
-
-      render json: { errors: @company.errors },status: :unprocessable_entity
+  def create
+    @company = Company.new(company_params)
+    
+    if @company.save
+      render json: @company, status: :created
+      return
     end
+
+    render json: { errors: @company.errors },status: :unprocessable_entity
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160908234604) do
+ActiveRecord::Schema.define(version: 20160912004625) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20160908234604) do
     t.string   "know_presentation_rounds",       default: "0"
     t.integer  "number_of_rounds",               default: 0
     t.integer  "score",                          default: 0
-    t.integer  "activity_status",                default: 0
+    t.integer  "activity_status",                default: 1
     t.boolean  "was_won",                        default: false
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
@@ -119,6 +119,8 @@ ActiveRecord::Schema.define(version: 20160908234604) do
     t.string   "brief_email_contact"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
+    t.integer  "brand_id"
+    t.index ["brand_id"], name: "index_pitches_on_brand_id", using: :btree
     t.index ["skill_category_id"], name: "index_pitches_on_skill_category_id", using: :btree
   end
 
@@ -176,6 +178,7 @@ ActiveRecord::Schema.define(version: 20160908234604) do
   add_foreign_key "brands", "companies"
   add_foreign_key "pitch_evaluations", "pitches"
   add_foreign_key "pitch_evaluations", "users"
+  add_foreign_key "pitches", "brands"
   add_foreign_key "pitches", "skill_categories"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"

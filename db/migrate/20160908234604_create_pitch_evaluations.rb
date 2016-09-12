@@ -16,7 +16,7 @@ class CreatePitchEvaluations < ActiveRecord::Migration[5.0]
       t.string :know_presentation_rounds,       default: '0'
       t.integer :number_of_rounds,              default: 0
       t.integer :score,                         default: 0
-      t.integer :activity_status,               default: '-'
+      t.integer :activity_status,               default: 1
       t.boolean :was_won,                       default: false
 
       t.timestamps

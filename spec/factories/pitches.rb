@@ -1,8 +1,9 @@
 FactoryGirl.define do
   factory :pitch do
-    name "The pitch"
+    name { FFaker::Product.product }
     skill_category
-    brief_date Date.now
+    brand
+    brief_date Date.today
     brief_email_contact { FFaker::Internet.email }
   end
 end

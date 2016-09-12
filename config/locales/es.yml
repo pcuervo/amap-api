@@ -91,5 +91,21 @@ es:
               blank: "El nombre de la marca no puede estar vacío"
             company:
               required: "La compañía es obligatoria"
+        pitch:
+          attributes:
+            name:
+              blank: "El nombre no puede estar vacío"
+            skill_category:
+              required: "La categoría de skill es obligatoria"
+            brand:
+              required: "La marca es obligatoria"
+        pitch_evaluation:
+          attributes:
+            pitch:
+              required: "El pitch es obligatorio"
+            skill_category:
+              required: "La categoría de skill es obligatoria"
+            brand:
+              required: "La marca es obligatoria"
       messages:
           record_invalid: "es inválido"

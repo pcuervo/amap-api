@@ -46,6 +46,8 @@ Rails.application.routes.draw do
       resources :skills, :only => [:create, :show, :index]
       resources :companies, :only => [:create, :show, :index]
       resources :brands, :only => [:create, :show, :index]
+      resources :pitches, :only => [:index, :show, :create, :update]
+      resources :pitch_evaluations, :only => [:create, :update]
     end
   end
 
