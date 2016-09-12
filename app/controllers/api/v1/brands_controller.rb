@@ -21,16 +21,27 @@ class Api::V1::BrandsController < ApplicationController
   end
 
   # POST /brands
-    def create
-      @brand = Brand.new(brand_params)
-      
-      if @brand.save
-        render json: @brand, status: :created
-        return
-      end
-
-      render json: { errors: @brand.errors },status: :unprocessable_entity
+  def create
+    @brand = Brand.new(brand_params)
+    
+    if @brand.save
+      render json: @brand, status: :created
+      return
     end
+
+    render json: { errors: @brand.errors },status: :unprocessable_entity
+  end
+
+  # GET /brands/by_company
+  def by_company
+    @brand = Brand.find_by_company_id( params[:id] )
+    if ! @brand.present? 
+      render json: { errors: 'No se encontró la marca con id de compañía: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+
+    render json: @brand
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

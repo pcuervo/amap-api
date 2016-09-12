@@ -104,6 +104,25 @@ RSpec.describe Api::V1::BrandsController, :type => :controller do
 
       it { should respond_with 422 }
     end
-
   end #POST create
+
+  describe "GET #by_company" do
+    before(:each) do
+      api_key = ApiKey.create
+      api_authorization_header 'Token ' + api_key.access_token
+      @brand = Brand.last
+      get :by_company, params: { id: @brand.company_id }, format: :json
+    end
+
+    it "returns the information about a Brand on a hash" do
+      expect(json_response[:name]).to eql @brand.name
+    end
+
+    it "returns the Company of the Brand" do 
+      brand_response = json_response
+      expect(brand_response).to have_key(:company)
+    end
+
+    it { should respond_with 200 }
+  end
 end
