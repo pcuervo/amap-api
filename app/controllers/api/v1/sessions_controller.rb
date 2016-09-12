@@ -15,7 +15,7 @@ class Api::V1::SessionsController < ApplicationController
       sign_in user, store: false
       user.generate_authentication_token!
       user.save
-      render json: { user: user }
+      render json: user 
       return
     end
     user.errors.add(:email, "Email o password incorrecto")
