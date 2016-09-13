@@ -22,9 +22,19 @@ class Api::V1::PitchesController < ApplicationController
 
   # POST /pitches
   def create
+    if ! params[:skill_categories].present?
+      render json: { errors: { skill_categories: 'El pitch debe tener al menos una categoría de skills' } },status: :unprocessable_entity
+      return
+    end
+
     @pitch = Pitch.new(pitch_params)
     pitch_eval = PitchEvaluation.new
     @pitch.pitch_evaluations << pitch_eval
+
+    params[:skill_categories].each do |skill_category_id|
+      skill_cat = SkillCategory.find( skill_category_id )
+      @pitch.skill_categories << skill_cat
+    end
 
     if @pitch.save
       render json: @pitch, status: :created
@@ -43,7 +53,7 @@ class Api::V1::PitchesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def pitch_params
-      params.require(:pitch).permit( :name, :skill_category_id, :brief_date, :brief_email_contact, :brand_id )
+      params.require(:pitch).permit( :name, :brief_date, :brief_email_contact, :brand_id )
     end
 
 end

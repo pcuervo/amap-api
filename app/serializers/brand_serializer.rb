@@ -1,5 +1,5 @@
 class BrandSerializer < ActiveModel::Serializer
-  attributes :id, :name, :contact_name, :contact_email, :contact_position, :company
+  attributes :id, :name, :contact_name, :contact_email, :contact_position, :company, :created_at
 
   def company
     c = {}

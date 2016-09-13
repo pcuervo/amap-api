@@ -7,7 +7,7 @@ class Api::V1::CompaniesController < ApplicationController
   # GET /companies
   def index
     @companies = Company.all
-    render json: { companies: @companies }, except: [:created_at, :updated_at]
+    render json: { companies: @companies }, :include => { :brands => { :only => [:name, :id] } }, :except => [:updated_at]
   end
 
   # GET /companies/1
@@ -30,6 +30,20 @@ class Api::V1::CompaniesController < ApplicationController
     end
 
     render json: { errors: @company.errors },status: :unprocessable_entity
+  end
+
+  # POST /companies/update/1
+  def update
+    if ! @company.present? 
+      render json: { errors: 'No se encontró ninguna companía con id: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+    
+    if @company.update(company_params)
+      render json: @company, status: :ok
+      return 
+    end
+    render json: { errors: @company.errors }, status: :unprocessable_entity
   end
 
   private

@@ -7,7 +7,7 @@ class Api::V1::BrandsController < ApplicationController
   # GET /brands
   def index
     @brands = Brand.all
-    render json: { brands: @brands }, :include => { :company => { :only => [:name, :id] } }, except: [:created_at, :updated_at, :company_id]
+    render json: { brands: @brands }, :include => { :company => { :only => [:name, :id] } }, except: [:updated_at, :company_id]
   end
 
   # GET /brands/1

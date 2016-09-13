@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160912004625) do
+ActiveRecord::Schema.define(version: 20160913002938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,14 +114,17 @@ ActiveRecord::Schema.define(version: 20160912004625) do
 
   create_table "pitches", force: :cascade do |t|
     t.string   "name"
-    t.integer  "skill_category_id"
     t.date     "brief_date"
     t.string   "brief_email_contact"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.integer  "brand_id"
     t.index ["brand_id"], name: "index_pitches_on_brand_id", using: :btree
-    t.index ["skill_category_id"], name: "index_pitches_on_skill_category_id", using: :btree
+  end
+
+  create_table "pitches_skill_categories", id: false, force: :cascade do |t|
+    t.integer "pitch_id",          null: false
+    t.integer "skill_category_id", null: false
   end
 
   create_table "skill_categories", force: :cascade do |t|
@@ -179,7 +182,6 @@ ActiveRecord::Schema.define(version: 20160912004625) do
   add_foreign_key "pitch_evaluations", "pitches"
   add_foreign_key "pitch_evaluations", "users"
   add_foreign_key "pitches", "brands"
-  add_foreign_key "pitches", "skill_categories"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"
 end
