@@ -20,10 +20,12 @@ class AgencySerializer < ActiveModel::Serializer
     skills = []
     object.agency_skills.each do |as|
       skill = Skill.find(as.skill_id)
+      skill_category_id = skill.skill_category.id
       skill_obj = {}
       skill_obj[:id]    = skill.id
       skill_obj[:name]  = skill.name
       skill_obj[:level] = as.level
+      skill_obj[:skill_category_id] = skill_category_id
       skills.push( skill_obj )
     end
     skills
