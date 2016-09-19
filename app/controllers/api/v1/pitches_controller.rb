@@ -7,7 +7,7 @@ class Api::V1::PitchesController < ApplicationController
   # GET /pitches
   def index
     @pitches = Pitch.all
-    render json: { pitches: @pitches }, except: [:created_at, :updated_at]
+    render json: { pitches: @pitches },  :include => { :skill_categories => { :only => [:name, :id] } }, except: [:created_at, :updated_at]
   end
 
   # GET /pitches/1
@@ -50,7 +50,7 @@ class Api::V1::PitchesController < ApplicationController
       return
     end
 
-    render json: @pitches
+    render json: @pitches, except: [:pitch_evaluations]
   end
 
   private
