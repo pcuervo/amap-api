@@ -1,6 +1,6 @@
 module Api::V1
   class AgenciesController < ApiController
-    before_action :set_agency, only: [:show, :update, :destroy, :add_skills]
+    before_action :set_agency, only: [:show, :update, :destroy, :add_skills, :add_criteria]
     before_action only: [:create, :update] do 
       authenticate_with_token! params[:auth_token]
     end
@@ -76,6 +76,21 @@ module Api::V1
       
       @agency.add_skills( params[:skills] )
       render json: @agency.agency_skills, status: :created
+    end
+
+    # POST /agencies/add_criteria
+    def add_criteria
+      if ! @agency.present? 
+        render json: { errors: 'No se encontró la agencia con id: ' + params[:id].to_s },status: :unprocessable_entity
+        return
+      end
+      if ! params[:criteria].present? 
+        render json: { errors: 'No se encontró ningún criterio para agregar' },status: :unprocessable_entity
+        return
+      end
+      
+      @agency.add_criteria( params[:criteria] )
+      render json: @agency.criteria, status: :created
     end
 
     private

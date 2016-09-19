@@ -7,8 +7,6 @@ RSpec.describe Agency, :type => :model do
   it { should respond_to(:name) }
   it { should validate_uniqueness_of( :name )}
 
-  it { should have_many(:users) }
-
   it { should be_valid }
 
   describe "#add_skills" do
@@ -50,6 +48,40 @@ RSpec.describe Agency, :type => :model do
       expect( agency.agency_skills.count ).to eql 1
       expect( agency.agency_skills.first.level ).to eql 2
     end
+  end
+
+  describe "#add_criteria" do
+    it "relates Criteria to an agency" do
+      agency = FactoryGirl.create :agency
+      criterium = FactoryGirl.create :criterium
+      another_criterium = FactoryGirl.create :criterium
+      criterium_arr = [ criterium.id, another_criterium.id ]
+      agency.add_criteria( criterium_arr )
+      expect( agency.criteria.count ).to eql 2
+    end
+
+    # it "updates a skill with level to an agency" do
+    #   agency = FactoryGirl.create :agency
+    #   Skill.delete_all
+    #   FactoryGirl.create :skill
+
+    #   skills_arr = []
+    #   skill_obj = {}
+    #   skill_obj[:id] = Skill.first.id
+    #   skill_obj[:level] = 1
+    #   skills_arr.push( skill_obj )
+    #   agency.add_skills( skills_arr )
+
+    #   skills_arr = []
+    #   skill_obj = {}
+    #   skill_obj[:id] = Skill.first.id
+    #   skill_obj[:level] = 2
+    #   skills_arr.push( skill_obj )
+    #   agency.add_skills( skills_arr )
+
+    #   expect( agency.agency_skills.count ).to eql 1
+    #   expect( agency.agency_skills.first.level ).to eql 2
+    # end
   end
   
 end

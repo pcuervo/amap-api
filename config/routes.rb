@@ -21,6 +21,7 @@ Rails.application.routes.draw do
         collection do
           post 'update',      :action => 'update'
           post 'add_skills',  :action => 'add_skills'
+          post 'add_criteria',  :action => 'add_criteria'
         end
       end
       resources :new_user_requests, :only => [:index, :create, :show] do
@@ -56,6 +57,7 @@ Rails.application.routes.draw do
         end
       end
       resources :pitch_evaluations, :only => [:create, :update]
+      resources :criteria, :only => [:index]
     end
   end
 
