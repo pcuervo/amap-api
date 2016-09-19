@@ -34,13 +34,14 @@ class Api::V1::BrandsController < ApplicationController
 
   # GET /brands/by_company
   def by_company
-    @brand = Brand.where( 'company_id = ?', params[:id] )
-    if ! @brand.present? 
+    @brands = Brand.where( 'company_id = ?', params[:id] )
+    puts @brands.to_yaml
+    if ! @brands.present? 
       render json: { errors: 'No se encontró la marca con id de compañía: ' + params[:id] },status: :unprocessable_entity
       return
     end
 
-    render json: @brand
+    render json: @brands
   end
 
   private

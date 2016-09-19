@@ -67,30 +67,6 @@ RSpec.describe Api::V1::PitchEvaluationsController, :type => :controller do
       it { should respond_with 200 }
     end
 
-    # context "when is not updated because name already exists" do
-    #   before(:each) do
-    #     api_key = ApiKey.create
-    #     api_authorization_header 'Token ' + api_key.access_token
-    #     @admin = FactoryGirl.create :user
-
-    #     @pitch_evaluation = FactoryGirl.create :pitch_evaluation
-    #     @another_pitch_evaluation = FactoryGirl.create :pitch_evaluation
-    #     post :update, { auth_token: @admin.auth_token, id: @pitch_evaluation.id,
-    #                     pitch_evaluation: { num_employees: 10, name: @another_pitch_evaluation.name } }, format: :json
-    #   end
-
-    #   it "renders an errors json" do
-    #     pitch_evaluation_response = json_response
-    #     expect(pitch_evaluation_response).to have_key(:errors)
-    #   end
-
-    #   it "renders the json errors when no pitch_evaluation name is present" do
-    #     pitch_evaluation_response = json_response
-    #     expect(pitch_evaluation_response[:errors][:name]).to include "Ya existe una agencia con ese nombre"
-    #   end
-
-    #   it { should respond_with 422 }
-    # end
   end #POST update
 
 end

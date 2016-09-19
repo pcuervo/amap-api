@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160913002938) do
+ActiveRecord::Schema.define(version: 20160919201428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,20 +94,20 @@ ActiveRecord::Schema.define(version: 20160913002938) do
     t.boolean  "evaluation_status",              default: false
     t.integer  "pitch_status",                   default: 0
     t.boolean  "are_objectives_clear",           default: false
-    t.string   "days_to_present",                default: "0"
+    t.string   "time_to_present",                default: "0"
     t.boolean  "is_budget_known",                default: false
     t.string   "number_of_agencies",             default: "0"
     t.boolean  "are_deliverables_clear",         default: false
     t.boolean  "is_marketing_involved",          default: false
-    t.string   "days_to_know_decision",          default: "0"
-    t.string   "deliver_copyright_for_pitching", default: "no"
-    t.string   "know_presentation_rounds",       default: "0"
-    t.integer  "number_of_rounds",               default: 0
+    t.string   "time_to_know_decision",          default: "0"
     t.integer  "score",                          default: 0
     t.integer  "activity_status",                default: 1
     t.boolean  "was_won",                        default: false
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
+    t.string   "number_of_rounds"
+    t.boolean  "deliver_copyright_for_pitching"
+    t.boolean  "has_selection_criteria"
     t.index ["pitch_id"], name: "index_pitch_evaluations_on_pitch_id", using: :btree
     t.index ["user_id"], name: "index_pitch_evaluations_on_user_id", using: :btree
   end

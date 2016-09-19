@@ -4,16 +4,16 @@ FactoryGirl.define do
     evaluation_status false
     pitch_status 1
     are_objectives_clear false
-    days_to_present "0"
-    is_budget_known false
-    number_of_agencies "0"
+    has_selection_criteria true
+    time_to_present "2s"
+    is_budget_known true
+    number_of_agencies ">4"
     are_deliverables_clear false
     is_marketing_involved false
-    days_to_know_decision "0"
-    deliver_copyright_for_pitching "0"
-    know_presentation_rounds "0"
-    number_of_rounds 1
-    score 1
+    time_to_know_decision "2s"
+    deliver_copyright_for_pitching true
+    number_of_rounds "2r"
+    score 0
     activity_status 1
     was_won false
   end

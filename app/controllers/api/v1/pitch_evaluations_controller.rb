@@ -7,8 +7,10 @@ class Api::V1::PitchEvaluationsController < ApplicationController
    # POST /pitch_evaluations
   def create
     @pitch_evaluation = PitchEvaluation.new(pitch_evaluation_params)
+    @pitch_evaluation.user_id = current_user.id
 
     if @pitch_evaluation.save
+      @pitch_evaluation.calculate_score
       render json: @pitch_evaluation, status: :created
       return
     end
@@ -36,6 +38,6 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     end
 
     def pitch_evaluation_params
-      params.require(:pitch_evaluation).permit( :pitch_id, :evaluation_status, :pitch_status, :are_objectives_clear, :days_to_present, :is_budget_known, :number_of_agencies, :are_deliverables_clear, :is_marketing_involved, :days_to_know_decision, :deliver_copyright_for_pitching, :know_presentation_rounds, :number_of_rounds, :score, :activity_status, :was_won )
+      params.require(:pitch_evaluation).permit( :pitch_id, :evaluation_status, :pitch_status, :are_objectives_clear, :time_to_present, :is_budget_known, :number_of_agencies, :are_deliverables_clear, :is_marketing_involved, :time_to_know_decision, :deliver_copyright_for_pitching, :know_presentation_rounds, :number_of_rounds, :score, :activity_status, :was_won, :has_selection_criteria )
     end
 end
