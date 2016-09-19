@@ -42,6 +42,17 @@ class Api::V1::PitchesController < ApplicationController
     render json: { errors: @pitch.errors },status: :unprocessable_entity
   end
 
+  # GET /pitches/by_brand
+  def by_brand
+    @pitches = Pitch.where( 'brand_id = ?', params[:id] )
+    if ! @pitches.present? 
+      render json: { errors: 'No se encontraron proyecto para la marca con id: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+
+    render json: @pitches
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_pitch
