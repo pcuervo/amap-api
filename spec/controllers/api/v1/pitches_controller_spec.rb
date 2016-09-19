@@ -60,12 +60,6 @@ RSpec.describe Api::V1::PitchesController, :type => :controller do
         expect(pitch_response[:name]).to eql @pitch_attributes[:name]
       end
 
-      it "should have at least one PitchEvaluation" do
-        pitch_response = json_response
-        expect(pitch_response).to have_key(:pitch_evaluations)
-        expect(pitch_response[:pitch_evaluations].count).to eq 1
-      end
-
       it "should have at least one SkillCategory" do
         pitch_response = json_response
         expect(pitch_response[:skill_categories].count).to be > 0

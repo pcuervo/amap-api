@@ -34,7 +34,7 @@ class Api::V1::BrandsController < ApplicationController
 
   # GET /brands/by_company
   def by_company
-    @brand = Brand.find_by_company_id( params[:id] )
+    @brand = Brand.where( 'company_id = ?', params[:id] )
     if ! @brand.present? 
       render json: { errors: 'No se encontró la marca con id de compañía: ' + params[:id] },status: :unprocessable_entity
       return

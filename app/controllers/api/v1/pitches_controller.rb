@@ -28,8 +28,6 @@ class Api::V1::PitchesController < ApplicationController
     end
 
     @pitch = Pitch.new(pitch_params)
-    pitch_eval = PitchEvaluation.new
-    @pitch.pitch_evaluations << pitch_eval
 
     params[:skill_categories].each do |skill_category_id|
       skill_cat = SkillCategory.find( skill_category_id )
@@ -41,7 +39,6 @@ class Api::V1::PitchesController < ApplicationController
       return
     end
 
-    pitch_eval.destroy
     render json: { errors: @pitch.errors },status: :unprocessable_entity
   end
 
