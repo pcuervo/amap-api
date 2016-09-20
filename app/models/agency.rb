@@ -14,6 +14,7 @@ class Agency < ApplicationRecord
   validates :name, presence: true
 
   def add_skills skills_array
+    self.agency_skills.delete_all
     skills_array.each do |skill|
       self.add_skill( skill[:id], skill[:level] )
     end
@@ -21,12 +22,6 @@ class Agency < ApplicationRecord
   end
 
   def add_skill id, level
-    existing_skill = self.agency_skills.where('skill_id = ?', id).first
-    if existing_skill.present? 
-      existing_skill.level = level
-      existing_skill.save!
-      return
-    end
     agency_skill = AgencySkill.create(:agency_id => self.id, :skill_id => id, :level => level )
     self.agency_skills << agency_skill
   end

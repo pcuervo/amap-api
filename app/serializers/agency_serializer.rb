@@ -1,5 +1,5 @@
 class AgencySerializer < ActiveModel::Serializer
-  attributes :id, :name, :phone, :contact_name, :contact_email, :address, :latitude, :longitude, :website_url, :num_employees, :golden_pitch, :silver_pitch, :high_risk_pitch, :medium_risk_pitch, :logo, :success_cases, :skills
+  attributes :id, :name, :phone, :contact_name, :contact_email, :address, :latitude, :longitude, :website_url, :num_employees, :golden_pitch, :silver_pitch, :high_risk_pitch, :medium_risk_pitch, :logo, :success_cases, :skills, :criteria
 
   def success_cases
     success_cases = []
@@ -29,6 +29,17 @@ class AgencySerializer < ActiveModel::Serializer
       skills.push( skill_obj )
     end
     skills
+  end
+
+  def criteria
+    criteria = []
+    object.criteria.each do |criterium|
+      criterium_obj = {}
+      criterium_obj[:id]    = criterium.id
+      criterium_obj[:name]  = criterium.name
+      criteria.push( criterium_obj )
+    end
+    criteria
   end
 end
 
