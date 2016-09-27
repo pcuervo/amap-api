@@ -5,6 +5,7 @@ class Agency < ApplicationRecord
   has_many :success_cases
   has_many :agency_skills
   has_many :skills, :through => :agency_skills
+  has_many :exclusivities, :through => :agency_exclusivities
   has_and_belongs_to_many :criteria, :through => :agencies_criteria
 
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "200x200#" }, default_url: "", :path => ":rails_root/storage/agency/:id/:style/:basename.:extension", :url => ":rails_root/storage/#{Rails.env}#{ENV['RAILS_TEST_NUMBER']}/attachments/:id/:style/:basename.:extension"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160919224950) do
+ActiveRecord::Schema.define(version: 20160927030749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,14 @@ ActiveRecord::Schema.define(version: 20160919224950) do
   create_table "agencies_users", id: false, force: :cascade do |t|
     t.integer "agency_id", null: false
     t.integer "user_id",   null: false
+  end
+
+  create_table "agency_exclusivities", force: :cascade do |t|
+    t.integer  "agency_id"
+    t.string   "brand"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agency_id"], name: "index_agency_exclusivities_on_agency_id", using: :btree
   end
 
   create_table "agency_skills", force: :cascade do |t|
@@ -109,7 +117,6 @@ ActiveRecord::Schema.define(version: 20160919224950) do
     t.boolean  "is_budget_known",                default: false
     t.string   "number_of_agencies",             default: "0"
     t.boolean  "are_deliverables_clear",         default: false
-    t.boolean  "is_marketing_involved",          default: false
     t.string   "time_to_know_decision",          default: "0"
     t.integer  "score",                          default: 0
     t.integer  "activity_status",                default: 1
@@ -117,8 +124,9 @@ ActiveRecord::Schema.define(version: 20160919224950) do
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
     t.string   "number_of_rounds"
-    t.boolean  "deliver_copyright_for_pitching"
     t.boolean  "has_selection_criteria"
+    t.string   "is_marketing_involved"
+    t.string   "deliver_copyright_for_pitching"
     t.index ["pitch_id"], name: "index_pitch_evaluations_on_pitch_id", using: :btree
     t.index ["user_id"], name: "index_pitch_evaluations_on_user_id", using: :btree
   end
@@ -131,6 +139,11 @@ ActiveRecord::Schema.define(version: 20160919224950) do
     t.datetime "updated_at",          null: false
     t.integer  "brand_id"
     t.index ["brand_id"], name: "index_pitches_on_brand_id", using: :btree
+  end
+
+  create_table "pitches_skill_categories", id: false, force: :cascade do |t|
+    t.integer "pitch_id",          null: false
+    t.integer "skill_category_id", null: false
   end
 
   create_table "skill_categories", force: :cascade do |t|
@@ -182,6 +195,7 @@ ActiveRecord::Schema.define(version: 20160919224950) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "agency_exclusivities", "agencies"
   add_foreign_key "agency_skills", "agencies"
   add_foreign_key "agency_skills", "skills"
   add_foreign_key "brands", "companies"

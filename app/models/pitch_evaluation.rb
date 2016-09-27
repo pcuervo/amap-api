@@ -5,10 +5,25 @@ class PitchEvaluation < ApplicationRecord
     self.score += 15 if self.are_objectives_clear
     self.score += 8 if self.is_budget_known
     self.score += 15 if self.has_selection_criteria
-    self.score += 6 if self.is_marketing_involved
-    self.score += 5 if self.deliver_copyright_for_pitching
-    self.score += 5 if self.deliver_copyright_for_pitching
     self.score += 6 if self.are_objectives_clear
+
+    case self.deliver_copyright_for_pitching
+    when "si"
+      self.score += 5
+    when "no" 
+      self.score += 0
+    else
+      self.score += 0
+    end
+
+    case self.is_marketing_involved
+    when "si"
+      self.score += 6
+    when "no" 
+      self.score += 0
+    else
+      self.score += 0
+    end
 
     case self.number_of_agencies
     when "2 - 4"

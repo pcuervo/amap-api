@@ -9,9 +9,9 @@ FactoryGirl.define do
     is_budget_known true
     number_of_agencies ">4"
     are_deliverables_clear false
-    is_marketing_involved false
+    is_marketing_involved "si"
     time_to_know_decision "2s"
-    deliver_copyright_for_pitching true
+    deliver_copyright_for_pitching "si"
     number_of_rounds "2r"
     score 0
     activity_status 1
