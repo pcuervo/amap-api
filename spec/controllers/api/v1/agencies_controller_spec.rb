@@ -57,7 +57,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
       api_key = ApiKey.create
       api_authorization_header 'Token ' + api_key.access_token
       @agency = FactoryGirl.create :agency
-      get :show, { id: @agency.id }, format: :json
+      get :show, params: { id: @agency.id }, format: :json
     end
 
     it "returns the information about a agency on a hash" do
@@ -80,7 +80,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
         @admin = FactoryGirl.create :user
 
         @agency_attributes = FactoryGirl.attributes_for :agency
-        post :create, { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
+        post :create, params: { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
       end
 
       it "renders the json representation for the agency record just created" do
@@ -99,7 +99,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
         @agency_attributes = FactoryGirl.attributes_for :agency
         @agency_attributes[:name] = ''
-        post :create, { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
+        post :create, params: { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
       end
 
       it "renders an errors json" do
@@ -124,7 +124,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
         existing_agency = FactoryGirl.create :agency
         @agency_attributes = FactoryGirl.attributes_for :agency
         @agency_attributes[:name] = existing_agency.name
-        post :create, { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
+        post :create, params: { auth_token: @admin.auth_token, agency: @agency_attributes }, format: :json
       end
 
       it "renders an errors json" do
@@ -151,7 +151,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
         @agency = FactoryGirl.create :agency
         @new_name = 'SuperCoolAgency' + Random.rand(1000).to_s
-        post :update, { auth_token: @admin.auth_token, id: @agency.id,
+        post :update, params: { auth_token: @admin.auth_token, id: @agency.id,
                         agency: { num_employees: 10, name: @new_name } }, format: :json
       end
 
@@ -171,7 +171,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
         @agency = FactoryGirl.create :agency
         @another_agency = FactoryGirl.create :agency
-        post :update, { auth_token: @admin.auth_token, id: @agency.id,
+        post :update, params: { auth_token: @admin.auth_token, id: @agency.id,
                         agency: { num_employees: 10, name: @another_agency.name } }, format: :json
       end
 
@@ -209,13 +209,12 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
           skills_arr.push( skill_obj )
         end
         
-        post :add_skills, { auth_token: @admin.auth_token, id: @agency.id,
+        post :add_skills, params: { auth_token: @admin.auth_token, id: @agency.id,
                         skills: skills_arr }, format: :json
       end
 
       it "returns the skills added to the agency" do
         agency_response = json_response
-        puts json_response.to_yaml
         expect(agency_response.count).to eql 3
       end
 
@@ -240,7 +239,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
           skills_arr.push( skill_obj )
         end
         
-        post :add_skills, { auth_token: @admin.auth_token, id: -1,
+        post :add_skills, params: { auth_token: @admin.auth_token, id: -1,
                         skills: skills_arr }, format: :json
       end
 
@@ -255,48 +254,6 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
       end
 
       it { should respond_with 422 }
-    end
-
-    context "when skills are updated because they already exist" do
-      before(:each) do
-        api_key = ApiKey.create
-        api_authorization_header 'Token ' + api_key.access_token
-        @admin = FactoryGirl.create :user
-
-        @agency = FactoryGirl.create :agency
-        Skill.delete_all
-        FactoryGirl.create :skill
-
-        skills_arr = []
-        Skill.all.limit(1).each do |s|
-          skill_obj = {}
-          skill_obj['id'] = s.id
-          skill_obj['level'] = 1
-          skills_arr.push( skill_obj )
-        end
-        @agency.add_skills( skills_arr )
-        Skill.all.limit(1).each do |s|
-          skill_obj = {}
-          skill_obj['id'] = s.id
-          skill_obj['level'] = 3
-          skills_arr.push( skill_obj )
-        end
-        
-        post :add_skills, { auth_token: @admin.auth_token, id: @agency.id,
-                        skills: skills_arr }, format: :json
-      end
-
-      it "returns the skills added to the agency" do
-        agency_response = json_response
-        expect(agency_response.count).to eql 1
-      end
-
-      it "renders the json errors when no agency name is present" do
-        agency_response = json_response
-        expect( agency_response[0][:level] ).to eq 3
-      end
-
-      it { should respond_with 201 }
     end
 
   end #POST add_skills
@@ -347,7 +304,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
     #       skills_arr.push( skill_obj )
     #     end
         
-    #     post :add_criteria, { auth_token: @admin.auth_token, id: -1,
+    #     post :add_criteria, params: { auth_token: @admin.auth_token, id: -1,
     #                     skills: skills_arr }, format: :json
     #   end
 
@@ -389,7 +346,7 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
     #       skills_arr.push( skill_obj )
     #     end
         
-    #     post :add_criteria, { auth_token: @admin.auth_token, id: @agency.id,
+    #     post :add_criteria, params: { auth_token: @admin.auth_token, id: @agency.id,
     #                     skills: skills_arr }, format: :json
     #   end
 
@@ -408,6 +365,107 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
   end #POST add_criteria
 
+
+  describe "POST #add_exclusivity_brands" do
+    context "when brands are successfully added" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @agency = FactoryGirl.create :agency
+        brands_arr = [ 'Pepsi', 'Coca']
+        
+        post :add_exclusivity_brands, params: { auth_token: @admin.auth_token, id: @agency.id,
+                        brands: brands_arr }, format: :json
+      end
+
+      it "returns the brands added to the agency" do
+        agency_response = json_response
+        expect(agency_response.count).to eql 2
+      end
+
+      it { should respond_with 201 }
+    end
+
+    context "when skills are not added because agency does not exist" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        brands_arr = [ 'Pepsi', 'Coca']
+        
+        post :add_exclusivity_brands, params: { auth_token: @admin.auth_token, id: -1,
+                        brands: brands_arr }, format: :json
+      end
+
+      it "renders an errors json" do
+        agency_response = json_response
+        expect(agency_response).to have_key(:errors)
+      end
+
+      it "renders the json errors when no agency name is present" do
+        agency_response = json_response
+        expect(agency_response[:errors]).to include 'No se encontró la agencia con id: -1' 
+      end
+
+      it { should respond_with 422 }
+    end
+
+  end #POST add_exclusivity_brands
+
+
+  describe "POST #remove_exclusivity_brands" do
+    context "when brands are successfully removed" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @agency = FactoryGirl.create :agency
+        brands_arr = [ 'Pepsi', 'Coca']
+        @agency.add_exclusivity_brands( brands_arr )
+        remove_brand_ids = [ AgencyExclusivity.last.id ]
+        
+        post :remove_exclusivity_brands, params: { auth_token: @admin.auth_token, id: @agency.id,
+                        brands: remove_brand_ids }, format: :json
+      end
+
+      it "returns the brands added to the agency" do
+        agency_response = json_response
+        expect(agency_response.count).to eql 1
+      end
+
+      it { should respond_with 201 }
+    end
+
+    # context "when skills are not added because agency does not exist" do
+    #   before(:each) do
+    #     api_key = ApiKey.create
+    #     api_authorization_header 'Token ' + api_key.access_token
+    #     @admin = FactoryGirl.create :user
+
+    #     brands_arr = [ 'Pepsi', 'Coca']
+        
+    #     post :remove_exclusivity_brands, params: { auth_token: @admin.auth_token, id: -1,
+    #                     brands: brands_arr }, format: :json
+    #   end
+
+    #   it "renders an errors json" do
+    #     agency_response = json_response
+    #     expect(agency_response).to have_key(:errors)
+    #   end
+
+    #   it "renders the json errors when no agency name is present" do
+    #     agency_response = json_response
+    #     expect(agency_response[:errors]).to include 'No se encontró la agencia con id: -1' 
+    #   end
+
+    #   it { should respond_with 422 }
+    # end
+
+  end #POST remove_exclusivity_brands
 
 
 end

@@ -5,7 +5,7 @@ class Agency < ApplicationRecord
   has_many :success_cases
   has_many :agency_skills
   has_many :skills, :through => :agency_skills
-  has_many :exclusivities, :through => :agency_exclusivities
+  has_many :exclusivities, foreign_key: "agency_id", class_name: "AgencyExclusivity"
   has_and_belongs_to_many :criteria, :through => :agencies_criteria
 
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "200x200#" }, default_url: "", :path => ":rails_root/storage/agency/:id/:style/:basename.:extension", :url => ":rails_root/storage/#{Rails.env}#{ENV['RAILS_TEST_NUMBER']}/attachments/:id/:style/:basename.:extension"
@@ -38,6 +38,22 @@ class Agency < ApplicationRecord
   def add_criterium id
     criterium = Criterium.find(id)
     self.criteria << criterium
+  end
+
+  def add_exclusivity_brands brands_array
+    brands_array.each do |brand|
+      exclusivity = AgencyExclusivity.create( :brand => brand )
+      self.exclusivities << exclusivity
+    end
+    self.save
+  end
+
+  def remove_exclusivity_brands brand_ids_array
+    brand_ids_array.each do |id|
+      exclusivity = AgencyExclusivity.find( id )
+      exclusivity.destroy
+    end
+    self.save
   end
 
 end

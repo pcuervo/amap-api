@@ -1,4 +1,4 @@
-class Api::V1::PitchEvaluationsController < ApplicationController
+πclass Api::V1::PitchEvaluationsController < ApplicationController
   before_action :set_pitch_evaluation, only: [:show, :update]
   before_action only: [:create, :update] do 
     authenticate_with_token! params[:auth_token]

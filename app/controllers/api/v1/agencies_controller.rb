@@ -1,6 +1,6 @@
 module Api::V1
   class AgenciesController < ApiController
-    before_action :set_agency, only: [:show, :update, :destroy, :add_skills, :add_criteria]
+    before_action :set_agency, only: [:show, :update, :destroy, :add_skills, :add_criteria, :add_exclusivity_brands, :remove_exclusivity_brands]
     before_action only: [:create, :update] do 
       authenticate_with_token! params[:auth_token]
     end
@@ -91,6 +91,36 @@ module Api::V1
       
       @agency.add_criteria( params[:criteria] )
       render json: @agency.criteria, status: :created
+    end
+
+    # POST /agencies/add_exclusivity_brands
+    def add_exclusivity_brands
+      if ! @agency.present? 
+        render json: { errors: 'No se encontró la agencia con id: ' + params[:id].to_s },status: :unprocessable_entity
+        return
+      end
+      if ! params[:brands].present? 
+        render json: { errors: 'No se encontró ninguna marca de exclusividad' },status: :unprocessable_entity
+        return
+      end
+      
+      @agency.add_exclusivity_brands( params[:brands] )
+      render json: @agency.exclusivities, status: :created
+    end
+
+    # POST /agencies/remove_exclusivity_brands
+    def remove_exclusivity_brands
+      if ! @agency.present? 
+        render json: { errors: 'No se encontró la agencia con id: ' + params[:id].to_s },status: :unprocessable_entity
+        return
+      end
+      if ! params[:brands].present? 
+        render json: { errors: 'No se encontró ninguna marca de exclusividad' },status: :unprocessable_entity
+        return
+      end
+      
+      @agency.remove_exclusivity_brands( params[:brands] )
+      render json: @agency.exclusivities, status: :created
     end
 
     private

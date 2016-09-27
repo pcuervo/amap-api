@@ -59,29 +59,26 @@ RSpec.describe Agency, :type => :model do
       agency.add_criteria( criterium_arr )
       expect( agency.criteria.count ).to eql 2
     end
+  end
 
-    # it "updates a skill with level to an agency" do
-    #   agency = FactoryGirl.create :agency
-    #   Skill.delete_all
-    #   FactoryGirl.create :skill
+  describe "#add_exclusivity" do
+    it "relates Exclusitivy to an agency" do
+      agency = FactoryGirl.create :agency
+      exclusivity_arr = [ 'Coca-Cola', 'Pepsi' ]
+      agency.add_exclusivity_brands( exclusivity_arr )
+      expect( agency.exclusivities.count ).to eql 2
+    end
+  end
 
-    #   skills_arr = []
-    #   skill_obj = {}
-    #   skill_obj[:id] = Skill.first.id
-    #   skill_obj[:level] = 1
-    #   skills_arr.push( skill_obj )
-    #   agency.add_skills( skills_arr )
-
-    #   skills_arr = []
-    #   skill_obj = {}
-    #   skill_obj[:id] = Skill.first.id
-    #   skill_obj[:level] = 2
-    #   skills_arr.push( skill_obj )
-    #   agency.add_skills( skills_arr )
-
-    #   expect( agency.agency_skills.count ).to eql 1
-    #   expect( agency.agency_skills.first.level ).to eql 2
-    # end
+  describe "#remove_exclusivity" do
+    it "relates Exclusitivy to an agency" do
+      agency = FactoryGirl.create :agency
+      exclusivity_arr = [ 'Coca-Cola', 'Pepsi' ]
+      agency.add_exclusivity_brands( exclusivity_arr )
+      brand_to_remove_ids = [ AgencyExclusitivy.last.id ]
+      agency.remove_exclusivity_brands( brand_to_remove_ids )
+      expect( agency.exclusivities.count ).to eql 1
+    end
   end
   
 end

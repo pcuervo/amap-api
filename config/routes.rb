@@ -19,9 +19,11 @@ Rails.application.routes.draw do
       end
       resources :agencies, :only => [:index, :show, :create, :update] do
         collection do
-          post 'update',      :action => 'update'
-          post 'add_skills',  :action => 'add_skills'
-          post 'add_criteria',  :action => 'add_criteria'
+          post 'update',                      :action => 'update'
+          post 'add_skills',                  :action => 'add_skills'
+          post 'add_criteria',                :action => 'add_criteria'
+          post 'add_exclusivity_brands',      :action => 'add_exclusivity_brands'
+          post 'remove_exclusivity_brands',   :action => 'remove_exclusivity_brands'
         end
       end
       resources :new_user_requests, :only => [:index, :create, :show] do
