@@ -19,18 +19,18 @@
   end
 
   # POST /pitch_evaluations/update/1
-    def update
-      if ! @pitch_evaluation.present? 
-        render json: { errors: 'No se encontró la evaluación del pitch con id: ' + params[:id] },status: :unprocessable_entity
-        return
-      end
-      
-      if @pitch_evaluation.update(pitch_evaluation_params)
-        render json: @pitch_evaluation, status: :ok
-        return 
-      end
-      render json: { errors: @pitch_evaluation.errors }, status: :unprocessable_entity
+  def update
+    if ! @pitch_evaluation.present? 
+      render json: { errors: 'No se encontró la evaluación del pitch con id: ' + params[:id] },status: :unprocessable_entity
+      return
     end
+    
+    if @pitch_evaluation.update(pitch_evaluation_params)
+      render json: @pitch_evaluation, status: :ok
+      return 
+    end
+    render json: { errors: @pitch_evaluation.errors }, status: :unprocessable_entity
+  end
 
   private
     def set_pitch_evaluation
