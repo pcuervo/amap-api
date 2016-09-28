@@ -1,4 +1,4 @@
-πclass Api::V1::PitchEvaluationsController < ApplicationController
+class Api::V1::PitchEvaluationsController < ApplicationController
   before_action :set_pitch_evaluation, only: [:show, :update]
   before_action only: [:create, :update] do 
     authenticate_with_token! params[:auth_token]
@@ -32,12 +32,12 @@
     render json: { errors: @pitch_evaluation.errors }, status: :unprocessable_entity
   end
 
-  # private
-  #   def set_pitch_evaluation
-  #     @pitch_evaluation = PitchEvaluation.find_by_id(params[:id])
-  #   end
+  private
+    def set_pitch_evaluation
+      @pitch_evaluation = PitchEvaluation.find_by_id(params[:id])
+    end
 
-  #   def pitch_evaluation_params
-  #     params.require(:pitch_evaluation).permit( :pitch_id, :evaluation_status, :pitch_status, :are_objectives_clear, :time_to_present, :is_budget_known, :number_of_agencies, :are_deliverables_clear, :is_marketing_involved, :time_to_know_decision, :deliver_copyright_for_pitching, :know_presentation_rounds, :number_of_rounds, :score, :activity_status, :was_won, :has_selection_criteria )
-  #   end
+    def pitch_evaluation_params
+      params.require(:pitch_evaluation).permit( :pitch_id, :evaluation_status, :pitch_status, :are_objectives_clear, :time_to_present, :is_budget_known, :number_of_agencies, :are_deliverables_clear, :is_marketing_involved, :time_to_know_decision, :deliver_copyright_for_pitching, :know_presentation_rounds, :number_of_rounds, :score, :activity_status, :was_won, :has_selection_criteria )
+    end
 end
