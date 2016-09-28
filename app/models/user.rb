@@ -23,6 +23,7 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :agencies
   has_and_belongs_to_many :brands
+  has_many :pitch_evaluations
 
   AMAP_ADMIN = 1
   AGENCY_ADMIN = 2

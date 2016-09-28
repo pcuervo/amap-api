@@ -6,6 +6,11 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
    # POST /pitch_evaluations
   def create
+    existing_evaluation = PitchEvaluation.where( 'user_id = ? and pitch_id = ?', current_user.id, params[:pitch_evaluation][:pitch_id] )
+    if existing_evaluation.present?
+      render json: { errors: 'Ya existe una evaluación del pitch para este usuario.' },status: :unprocessable_entity
+      return
+    end
     @pitch_evaluation = PitchEvaluation.new(pitch_evaluation_params)
     @pitch_evaluation.user_id = current_user.id
 

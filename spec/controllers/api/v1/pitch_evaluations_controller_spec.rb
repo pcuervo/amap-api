@@ -44,6 +44,35 @@ RSpec.describe Api::V1::PitchEvaluationsController, :type => :controller do
 
       it { should respond_with 422 }
     end
+
+    context "when is not created because a PitchEvaluation already exists" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+        agency = FactoryGirl.create :agency
+        agency.users << @admin
+        agency.save
+    
+        @pitch = Pitch.last
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        pitch_evaluation.pitch = @pitch
+        pitch_evaluation.user = @admin
+        pitch_evaluation.save
+        @pitch.save
+
+        @pitch_evaluation_attributes = FactoryGirl.attributes_for :pitch_evaluation
+        @pitch_evaluation_attributes[:pitch_id] = @pitch.id
+        post :create, params: { auth_token: @admin.auth_token, pitch_evaluation: @pitch_evaluation_attributes }, format: :json
+      end
+
+      it "renders an errors json" do
+        pitch_evaluation_response = json_response
+        expect(pitch_evaluation_response).to have_key(:errors)
+      end
+
+      it { should respond_with 422 }
+    end
   end #POST create
 
   describe "POST #update" do
@@ -70,11 +99,14 @@ RSpec.describe Api::V1::PitchEvaluationsController, :type => :controller do
   end #POST update
 
   describe "GET #by_user" do
-    context "when is successfully updated" do
+    context "when is successfully fetched" do
       before(:each) do
         api_key = ApiKey.create
         api_authorization_header 'Token ' + api_key.access_token
         @admin = FactoryGirl.create :user
+        agency = FactoryGirl.create :agency
+        agency.users << @admin
+        agency.save
 
         pitch_evaluation = FactoryGirl.create :pitch_evaluation
         @pitch = pitch_evaluation.pitch

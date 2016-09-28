@@ -1,5 +1,6 @@
 class PitchEvaluation < ApplicationRecord
   belongs_to :pitch
+  belongs_to :user
 
   def calculate_score
     self.score += 15 if self.are_objectives_clear
@@ -76,7 +77,6 @@ class PitchEvaluation < ApplicationRecord
     if User::AGENCY_ADMIN == user.role
       agency = user.agencies.first
       agency_users = agency.users
-      puts agency_users.pluck(:id).to_yaml
       pitch_evaluations = PitchEvaluation.where('user_id IN (?)', agency_users.pluck(:id))
     else
       pitch_evaluations = PitchEvaluation.where('user_id = ?', user_id)

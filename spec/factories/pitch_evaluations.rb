@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :pitch_evaluation do
     pitch
+    user
     evaluation_status false
     pitch_status 1
     are_objectives_clear false
