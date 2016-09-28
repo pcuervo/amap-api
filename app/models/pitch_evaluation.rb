@@ -74,8 +74,10 @@ class PitchEvaluation < ApplicationRecord
     pitches_info = []
     user = User.find( user_id )
     if User::AGENCY_ADMIN == user.role
-      agency = user.agency
+      agency = user.agencies.first
       agency_users = agency.users
+      puts agency_users.pluck(:id).to_yaml
+      pitch_evaluations = PitchEvaluation.where('user_id IN (?)', agency_users.pluck(:id))
     else
       pitch_evaluations = PitchEvaluation.where('user_id = ?', user_id)
     end
