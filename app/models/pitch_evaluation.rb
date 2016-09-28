@@ -70,4 +70,23 @@ class PitchEvaluation < ApplicationRecord
     self.save
   end
 
+  def self.pitches_by_user( user_id )
+    pitches_info = []
+    pitch_evaluations = PitchEvaluation.where('user_id = ?', user_id)
+    pitch_evaluations.each do |pe|
+      info = {}
+      brand = Brand.find( pe.pitch.brand_id )
+      info[:pitch_evaluation_id]  = pe.id 
+      info[:pitch_id]             = pe.pitch.id
+      info[:pitch_name]           = pe.pitch.name
+      info[:brief_date]           = pe.pitch.brief_date.strftime( "%d/%m/%Y" )
+      info[:score]                = pe.score
+      info[:brand]                = brand.name
+      info[:company]              = brand.company.name
+      info[:other_scores]         = pe.pitch.get_scores_except( pe.id )
+      pitches_info.push( info )
+    end
+    pitches_info
+  end
+
 end

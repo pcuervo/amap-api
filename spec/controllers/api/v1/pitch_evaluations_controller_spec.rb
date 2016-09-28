@@ -69,4 +69,34 @@ RSpec.describe Api::V1::PitchEvaluationsController, :type => :controller do
 
   end #POST update
 
+  describe "GET #by_user" do
+    context "when is successfully updated" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        @pitch = pitch_evaluation.pitch
+        another_pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        another_pitch_evaluation.calculate_score
+        @pitch.pitch_evaluations << another_pitch_evaluation
+        @pitch.save
+        pitch_evaluation.user_id = @admin.id
+        pitch_evaluation.calculate_score
+        pitch_evaluation.save
+
+        post :by_user, params: { auth_token: @admin.auth_token }, format: :json
+      end
+
+      it "returns all the pitches that belong to a user" do
+        pitch_evaluation_response = json_response
+        expect(pitch_evaluation_response[0][:pitch_id]).to eql @pitch.id
+      end
+
+      it { should respond_with 200 }
+    end
+
+  end #POST update
+
 end

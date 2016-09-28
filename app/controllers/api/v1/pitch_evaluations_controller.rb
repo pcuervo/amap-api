@@ -1,6 +1,6 @@
 class Api::V1::PitchEvaluationsController < ApplicationController
   before_action :set_pitch_evaluation, only: [:show, :update]
-  before_action only: [:create, :update] do 
+  before_action only: [:create, :update, :by_user] do 
     authenticate_with_token! params[:auth_token]
   end
 
@@ -30,6 +30,12 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       return 
     end
     render json: { errors: @pitch_evaluation.errors }, status: :unprocessable_entity
+  end
+
+  # POST /by_user
+  def by_user
+    pitch_evaluations = PitchEvaluation.pitches_by_user( current_user.id )
+    render json: pitch_evaluations, status: :ok
   end
 
   private

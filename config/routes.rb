@@ -58,7 +58,11 @@ Rails.application.routes.draw do
           get 'by_brand/:id', :action => 'by_brand'
         end
       end
-      resources :pitch_evaluations, :only => [:create, :update]
+      resources :pitch_evaluations, :only => [:create, :update] do 
+        collection do
+          post 'by_user/', :action => 'by_user'
+        end
+      end
       resources :criteria, :only => [:index]
     end
   end
