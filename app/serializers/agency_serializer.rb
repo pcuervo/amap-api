@@ -45,5 +45,16 @@ class AgencySerializer < ActiveModel::Serializer
     end
     criteria
   end
+
+  def exclusivity_brands
+    brands = []
+    object.exclusivities.each do |criterium|
+      brand_obj = {}
+      brand_obj[:id]    = brand.id
+      brand_obj[:brand]  = brand.brand
+      brands.push( brand_obj )
+    end
+    brands
+  end
 end
 
