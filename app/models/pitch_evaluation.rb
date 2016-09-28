@@ -72,7 +72,13 @@ class PitchEvaluation < ApplicationRecord
 
   def self.pitches_by_user( user_id )
     pitches_info = []
-    pitch_evaluations = PitchEvaluation.where('user_id = ?', user_id)
+    user = User.find( user_id )
+    if User::AGENCY_ADMIN == user.role
+      agency = user.agency
+      agency_users = agency.users
+    else
+      pitch_evaluations = PitchEvaluation.where('user_id = ?', user_id)
+    end
     pitch_evaluations.each do |pe|
       info = {}
       brand = Brand.find( pe.pitch.brand_id )
