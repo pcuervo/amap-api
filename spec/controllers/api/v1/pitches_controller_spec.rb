@@ -65,6 +65,12 @@ RSpec.describe Api::V1::PitchesController, :type => :controller do
         expect(pitch_response[:skill_categories].count).to be > 0
       end
 
+      it "should return an EvaluationPitch" do
+        puts json_response.to_yaml
+        pitch_response = json_response
+        expect(pitch_response).to have_key(:pitch_evaluations)
+      end
+
       it { should respond_with 201 }
     end
 
@@ -92,7 +98,6 @@ RSpec.describe Api::V1::PitchesController, :type => :controller do
 
       it "renders the json errors when no pitch name is present" do
         pitch_response = json_response
-        puts json_response
         expect(pitch_response[:errors][:name]).to include "El nombre no puede estar vacío"
       end
 

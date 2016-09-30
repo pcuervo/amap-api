@@ -13,6 +13,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     end
     @pitch_evaluation = PitchEvaluation.new(pitch_evaluation_params)
     @pitch_evaluation.user_id = current_user.id
+    @pitch_evaluation.evaluation_status = true
 
     if @pitch_evaluation.save
       @pitch_evaluation.calculate_score
@@ -23,14 +24,16 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     render json: { errors: @pitch_evaluation.errors },status: :unprocessable_entity
   end
 
-  # POST /pitch_evaluations/update/1
+  # POST /pitch_evaluations/update/
   def update
     if ! @pitch_evaluation.present? 
       render json: { errors: 'No se encontró la evaluación del pitch con id: ' + params[:id] },status: :unprocessable_entity
       return
     end
     
+    @pitch_evaluation.evaluation_status = true
     if @pitch_evaluation.update(pitch_evaluation_params)
+      @pitch_evaluation.calculate_score
       render json: @pitch_evaluation, status: :ok
       return 
     end

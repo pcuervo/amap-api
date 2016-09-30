@@ -92,6 +92,7 @@ class PitchEvaluation < ApplicationRecord
       info[:brand]                = brand.name
       info[:company]              = brand.company.name
       info[:other_scores]         = pe.pitch.get_scores_except( pe.id )
+      info[:evaluation_status]    = pe.evaluation_status
       pitches_info.push( info )
     end
     pitches_info
