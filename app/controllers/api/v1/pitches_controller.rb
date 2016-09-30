@@ -3,6 +3,7 @@ class Api::V1::PitchesController < ApplicationController
   before_action only: [:create, :update] do 
     authenticate_with_token! params[:auth_token]
   end
+  after_action :create_client_user, only: [:create]
 
   # GET /pitches
   def index
@@ -66,6 +67,33 @@ class Api::V1::PitchesController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def pitch_params
       params.require(:pitch).permit( :name, :brief_date, :brief_email_contact, :brand_id )
+    end
+
+    def create_client_user
+      return if ! @pitch.present?
+      return if @pitch.errors.any?
+
+      user = User.find_by_email( @pitch.brief_email_contact )
+      if user.present?
+        user.pitches << @pitch 
+        user.save
+        notify_client_new_pitch_email( user, @pitch )
+        return
+      end
+
+      password = SecureRandom.hex
+      user = User.create(:email => @pitch.brief_email_contact, :role => User::CLIENT_USER, :password => password)
+      user.pitches << @pitch 
+      user.save
+      send_new_client_email( user, password, @pitch )
+    end
+
+    def send_new_client_email( user, password, pitch )
+      UserMailer.new_client_email( user, password, pitch ).deliver_now
+    end
+
+    def notify_client_new_pitch_email( user, pitch )
+      UserMailer.new_pitch_cilent( user, pitch ).deliver_now
     end
 
 end

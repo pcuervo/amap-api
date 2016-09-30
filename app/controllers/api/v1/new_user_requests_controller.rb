@@ -54,7 +54,7 @@ module Api::V1
       if User::AGENCY_ADMIN == params[:role].to_i
         agency = Agency.find(params[:agency_id])
         @user.agencies << agency
-      elsif User::BRAND == params[:role].to_i
+      elsif User::CLIENT_ADMIN == params[:role].to_i
         brand = Brand.find(params[:brand_id])
         @user.brands << brand
       end

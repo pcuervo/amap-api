@@ -45,7 +45,7 @@ RSpec.describe Api::V1::PitchesController, :type => :controller do
         api_key = ApiKey.create
         api_authorization_header 'Token ' + api_key.access_token
         @admin = FactoryGirl.create :user
-
+        FactoryGirl.create :skill_category
         @pitch_attributes = FactoryGirl.attributes_for :pitch
         @skill_category = SkillCategory.last
         @brand = Brand.last
@@ -66,9 +66,14 @@ RSpec.describe Api::V1::PitchesController, :type => :controller do
       end
 
       it "should return an EvaluationPitch" do
-        puts json_response.to_yaml
         pitch_response = json_response
         expect(pitch_response).to have_key(:pitch_evaluations)
+      end
+
+      it "should create a ClientUser" do
+        client_user = User.where('role = ?', User::CLIENT_USER).last
+        expect(client_user.email).to eq @pitch_attributes[:brief_email_contact]
+        expect( client_user.pitches.count ).to eq 1
       end
 
       it { should respond_with 201 }
@@ -113,6 +118,7 @@ RSpec.describe Api::V1::PitchesController, :type => :controller do
         api_key = ApiKey.create
         api_authorization_header 'Token ' + api_key.access_token
         @admin = FactoryGirl.create :user
+        FactoryGirl.create :skill_category
 
         @pitch_attributes = FactoryGirl.attributes_for :pitch
         @skill_category = SkillCategory.last
