@@ -3,18 +3,19 @@ class PitchEvaluation < ApplicationRecord
   belongs_to :user
 
   def calculate_score
+    self.score = 0
     self.score += 15 if self.are_objectives_clear
     self.score += 8 if self.is_budget_known
     self.score += 15 if self.has_selection_criteria
-    self.score += 6 if self.are_objectives_clear
+    self.score += 6 if self.are_deliverables_clear
 
     case self.deliver_copyright_for_pitching
     when "si"
-      self.score += 5
+      self.score -= 2
     when "no" 
       self.score += 0
     else
-      self.score += 0
+      self.score += 5
     end
 
     case self.is_marketing_involved
@@ -23,22 +24,22 @@ class PitchEvaluation < ApplicationRecord
     when "no" 
       self.score += 0
     else
-      self.score += 0
+      self.score += -2
     end
 
     case self.number_of_agencies
     when "2 - 4"
       self.score += 7
     when ">4" 
-      self.score += 3
+      self.score += -3
     end
 
-    case self.time_to_present
-    when "1s"
+    days_to_present = self.time_to_present.to_i
+    if days_to_present <= 5 
       self.score += 2
-    when "2s"
+    elsif days_to_present > 5 && <= 10
       self.score += 5
-    when "3s"
+    elsif days_to_present > 10 && <= 15
       self.score += 10
     else
       self.score += 15
@@ -64,7 +65,7 @@ class PitchEvaluation < ApplicationRecord
       self.score += 4
     when "5s"
       self.score += 3
-    when ">6"
+    when ">5"
       self.score += 2
     end
 
