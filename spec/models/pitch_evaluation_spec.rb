@@ -13,7 +13,7 @@ RSpec.describe PitchEvaluation, :type => :model do
   end
 
   describe "#pitches_by_user" do
-    it "returns all PitchEvaluations for regular user" do
+    it "returns all PitchEvaluations for agency regular user" do
       pitch = @pitch_evaluation.pitch
       another_pitch_evaluation = FactoryGirl.create :pitch_evaluation
       another_pitch_evaluation.calculate_score
@@ -31,7 +31,7 @@ RSpec.describe PitchEvaluation, :type => :model do
       expect( pitches.first ).to include(:other_scores)
     end
 
-    it "returns all PitchEvaluations for regular user" do
+    it "returns all PitchEvaluations for agency admin user" do
       agency = FactoryGirl.create :agency
       pitch = @pitch_evaluation.pitch
       another_pitch_evaluation = FactoryGirl.create :pitch_evaluation
@@ -52,6 +52,54 @@ RSpec.describe PitchEvaluation, :type => :model do
       pitches = PitchEvaluation.pitches_by_user admin.id
       expect( pitches.count ).to eq 2
       expect( pitches.first ).to include(:other_scores)
+    end
+
+    it "returns all PitchEvaluations for client admin user" do
+      agency = FactoryGirl.create :agency
+      pitch = @pitch_evaluation.pitch
+      another_pitch_evaluation = FactoryGirl.create :pitch_evaluation
+      another_pitch_evaluation.calculate_score
+      pitch.pitch_evaluations << another_pitch_evaluation
+      pitch.pitch_evaluations << @pitch_evaluation
+
+      client_user = FactoryGirl.create :user
+      client_user.role = User::CLIENT_USER
+      client_user.save
+      pitch.brief_email_contact = client_user.email
+      pitch.users << client_user
+      pitch.save
+
+      evaluations = PitchEvaluation.pitches_by_user client_user.id
+      expect( evaluations.count ).to eq 1
+      expect( evaluations.first ).to include(:pitch_types)
+    end
+
+    it "returns all PitchEvaluations for client admin user" do
+      agency = FactoryGirl.create :agency
+      brand = FactoryGirl.create :brand
+      company = brand.company
+      pitch = @pitch_evaluation.pitch
+      pitch.brand = brand
+      puts brand.id.to_yaml
+
+      another_pitch = FactoryGirl.create :pitch
+      another_pitch.brand = brand
+      another_pitch_evaluation = FactoryGirl.create :pitch_evaluation
+      another_pitch_evaluation.calculate_score
+      pitch.pitch_evaluations << another_pitch_evaluation
+      another_pitch.pitch_evaluations << @pitch_evaluation
+      another_pitch.save
+
+      admin_client = FactoryGirl.create :user
+      admin_client.role = User::CLIENT_ADMIN
+      admin_client.companies << company
+      admin_client.save
+      pitch.save
+
+      evaluations = PitchEvaluation.pitches_by_user admin_client.id
+      puts evaluations.first.to_yaml
+      expect( evaluations.count ).to eq 2
+      expect( evaluations.first ).to include(:pitch_types)
     end
   end
 end

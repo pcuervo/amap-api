@@ -82,8 +82,8 @@ ActiveRecord::Schema.define(version: 20160930022208) do
     t.index ["company_id"], name: "index_brands_on_company_id", using: :btree
   end
 
-  create_table "brands_users", id: false, force: :cascade do |t|
-    t.integer "brand_id", null: false
+  create_table "companies_users", id: false, force: :cascade do |t|
+    t.integer "company_id", null: false
     t.integer "user_id",  null: false
   end
 

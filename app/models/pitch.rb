@@ -14,5 +14,25 @@ class Pitch < ApplicationRecord
     end
     scores
   end
+
+  def get_pitch_types
+    pitch_types = {}
+    pitch_types['golden_pitch'] = 0
+    pitch_types['silver_pitch'] = 0
+    pitch_types['medium_risk_pitch'] = 0
+    pitch_types['high_risk_pitch'] = 0
+    self.pitch_evaluations.each do |pe|
+      if pe.score > 70
+        pitch_types['golden_pitch'] += 1
+      elsif pe.score >= 60 && pe.score < 70
+        pitch_types['silver_pitch'] += 1
+      elsif pe.score >= 45 && pe.score < 60
+        pitch_types['medium_risk_pitch'] += 1
+      else
+        pitch_types['high_risk_pitch'] += 1
+      end
+    end
+    pitch_types
+  end
   
 end

@@ -3,7 +3,7 @@ class Api::V1::PitchesController < ApplicationController
   before_action only: [:create, :update] do 
     authenticate_with_token! params[:auth_token]
   end
-  after_action :create_client_user, only: [:create]
+  after_action :add_client_to_pitch, only: [:create]
 
   # GET /pitches
   def index
@@ -69,10 +69,11 @@ class Api::V1::PitchesController < ApplicationController
       params.require(:pitch).permit( :name, :brief_date, :brief_email_contact, :brand_id )
     end
 
-    def create_client_user
+    def add_client_to_pitch
       return if ! @pitch.present?
       return if @pitch.errors.any?
 
+      # If client exists, add pitch
       user = User.find_by_email( @pitch.brief_email_contact )
       if user.present?
         user.pitches << @pitch 
@@ -81,6 +82,7 @@ class Api::V1::PitchesController < ApplicationController
         return
       end
 
+      # If client doesn't exist, create a new user 
       password = SecureRandom.hex
       user = User.create(:email => @pitch.brief_email_contact, :role => User::CLIENT_USER, :password => password)
       user.pitches << @pitch 
@@ -93,7 +95,7 @@ class Api::V1::PitchesController < ApplicationController
     end
 
     def notify_client_new_pitch_email( user, pitch )
-      UserMailer.new_pitch_client( user, pitch ).deliver_now
+      UserMailer.new_pitch_cli ent( user, pitch ).deliver_now
     end
 
 end

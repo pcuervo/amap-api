@@ -73,14 +73,23 @@ class PitchEvaluation < ApplicationRecord
   end
 
   def self.pitches_by_user( user_id )
-    pitches_info = []
+    
     user = User.find( user_id )
+    if User::AGENCY_ADMIN == user.role || User::AGENCY_USER == user.role
+      return pitch_evaluations = self.pitch_evaluations_by_agency_user( user )
+    else
+      return pitch_evaluations = self.pitch_evaluations_by_client_user( user )
+    end
+  end
+
+  def self.pitch_evaluations_by_agency_user( user )
+    pitches_info = []
     if User::AGENCY_ADMIN == user.role
       agency = user.agencies.first
       agency_users = agency.users
       pitch_evaluations = PitchEvaluation.where('user_id IN (?)', agency_users.pluck(:id))
     else
-      pitch_evaluations = PitchEvaluation.where('user_id = ?', user_id)
+      pitch_evaluations = PitchEvaluation.where('user_id = ?', user.id)
     end
     pitch_evaluations.each do |pe|
       info = {}
@@ -97,6 +106,33 @@ class PitchEvaluation < ApplicationRecord
       pitches_info.push( info )
     end
     pitches_info
+  end
+
+  def self.pitch_evaluations_by_client_user( user )
+    pitches_info = []
+    if User::CLIENT_ADMIN == user.role
+      company = user.companies.first
+      pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
+    else
+      pitches = user.pitches
+    end
+    pitches.each do |p|
+      info = {}
+      brand = Brand.find( p.brand_id )
+      info[:pitch_id]             = p.id
+      info[:pitch_name]           = p.name
+      info[:brief_date]           = p.brief_date.strftime( "%d/%m/%Y" )
+      info[:brand]                = brand.name
+      info[:brief_email_contact]  = p.brief_email_contact
+      info[:company]              = brand.company.name
+      info[:pitch_types]          = p.get_pitch_types
+      pitches_info.push( info )
+    end
+    pitches_info
+  end
+
+  def get_pitch_type( score )
+    return 'Golden Pitch'
   end
 
 end

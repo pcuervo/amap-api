@@ -22,7 +22,7 @@ class User < ApplicationRecord
   #             :on => :update
 
   has_and_belongs_to_many :agencies
-  has_and_belongs_to_many :brands
+  has_and_belongs_to_many :companies
   has_and_belongs_to_many :pitches
   has_many :pitch_evaluations
 
