@@ -1,5 +1,5 @@
 class Api::V1::PitchEvaluationsController < ApplicationController
-  before_action :set_pitch_evaluation, only: [:show, :update]
+  before_action :set_pitch_evaluation, only: [:show, :update, :destroy]
   before_action only: [:create, :update, :by_user, :cancel, :decline] do 
     authenticate_with_token! params[:auth_token]
   end
@@ -61,6 +61,20 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     pitch_evaluation.pitch_status = PitchEvaluation::DECLINED
     pitch_evaluation.save
     render json: pitch_evaluation, status: :ok
+  end
+
+  # POST /archive
+  def archive
+    pitch_evaluation = PitchEvaluation.find( params[:id] )
+    pitch_evaluation.pitch_status = PitchEvaluation::ARCHIVED
+    pitch_evaluation.save
+    render json: pitch_evaluation, status: :ok
+  end
+
+  # POST /destroy
+  def destroy
+    @pitch_evaluation.destroy
+    head 204
   end
 
   private

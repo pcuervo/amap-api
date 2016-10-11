@@ -65,6 +65,8 @@ Rails.application.routes.draw do
           post 'update',    :action => 'update'
           post 'cancel',    :action => 'cancel'
           post 'decline',   :action => 'decline'
+          post 'archive',   :action => 'archive'
+          post 'destroy',   :action => 'destroy'
         end
       end
       resources :criteria, :only => [:index]
