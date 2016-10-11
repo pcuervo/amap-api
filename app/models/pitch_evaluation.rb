@@ -2,6 +2,11 @@ class PitchEvaluation < ApplicationRecord
   belongs_to :pitch
   belongs_to :user
 
+  ACTIVE = 1
+  CANCELLED = 2
+  DECLINED = 3
+  ARCHIVED = 4
+
   def calculate_score
     self.score = 0
     self.score += 15 if self.are_objectives_clear
@@ -87,9 +92,9 @@ class PitchEvaluation < ApplicationRecord
     if User::AGENCY_ADMIN == user.role
       agency = user.agencies.first
       agency_users = agency.users
-      pitch_evaluations = PitchEvaluation.where('user_id IN (?)', agency_users.pluck(:id))
+      pitch_evaluations = PitchEvaluation.where( 'user_id IN (?) AND pitch_status = ?', agency_users.pluck(:id), PitchEvaluation::ACTIVE )
     else
-      pitch_evaluations = PitchEvaluation.where('user_id = ?', user.id)
+      pitch_evaluations = PitchEvaluation.where( 'user_id = ? AND pitch_status = ?', user.id, PitchEvaluation::ACTIVE )
     end
     pitch_evaluations.each do |pe|
       info = {}

@@ -102,4 +102,6 @@ RSpec.describe PitchEvaluation, :type => :model do
       expect( evaluations.first ).to include(:pitch_types)
     end
   end
+
+  
 end

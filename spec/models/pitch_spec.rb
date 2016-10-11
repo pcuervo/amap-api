@@ -28,4 +28,20 @@ RSpec.describe Pitch, :type => :model do
       expect( scores.first ).to eq score_2
     end
   end
+
+  describe "#merge" do
+    it "returns an array with all the scores from PitchEvaluation except the given one" do
+      pitch = FactoryGirl.create :pitch
+      bad_pitch = FactoryGirl.create :pitch
+      pitch_evaluation_1 = FactoryGirl.create :pitch_evaluation
+      pitch_evaluation_2 = FactoryGirl.create :pitch_evaluation
+      pitch.pitch_evaluations << pitch_evaluation_1
+      bad_pitch.pitch_evaluations << pitch_evaluation_2
+      pitch.save
+      bad_pitch.save
+
+      expect( pitch.merge( bad_pitch ) ).to eq true
+      expect( pitch.pitch_evaluations.count ).to eq 2
+    end
+  end
 end

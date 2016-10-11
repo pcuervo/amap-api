@@ -8,7 +8,19 @@ class Api::V1::PitchesController < ApplicationController
   # GET /pitches
   def index
     @pitches = Pitch.all
-    render json: { pitches: @pitches },  :include => { :skill_categories => { :only => [:name, :id] } }, except: [:created_at, :updated_at]
+    render json: { pitches: @pitches },  
+           :include => { 
+              :skill_categories => 
+                { :only => [:name, :id] },
+              :brand => 
+                { :only => [:id, :name],
+                  :include => {
+                    :company => {
+                      :only => [:id, :name]
+                    }
+                  }
+                } 
+            }, except: [:created_at, :updated_at]
   end
 
   # GET /pitches/1
@@ -51,11 +63,26 @@ class Api::V1::PitchesController < ApplicationController
   def by_brand
     @pitches = Pitch.where( 'brand_id = ?', params[:id] )
     if ! @pitches.present? 
-      render json: { errors: 'No se encontraron proyecto para la marca con id: ' + params[:id] },status: :unprocessable_entity
+      render json: { errors: 'No se encontraron proyectos para la marca con id: ' + params[:id] },status: :unprocessable_entity
       return
     end
 
-    render json: @pitches, except: [:pitch_evaluations]
+    render json: @pitches
+  end
+
+  # POST /pitches/merge
+  def merge
+    good_pitch = Pitch.find( params[:good_pitch_id] )
+    bad_pitch = Pitch.find( params[:bad_pitch_id] )
+
+    good_pitch.merge( bad_pitch )
+
+    if good_pitch.merge( bad_pitch )
+      render json: good_pitch, except: [:pitch_evaluations]
+      return
+    end
+    render json: { errors: 'Ocurrió un error al unificar los pitches' },status: :unprocessable_entity
+    
   end
 
   private

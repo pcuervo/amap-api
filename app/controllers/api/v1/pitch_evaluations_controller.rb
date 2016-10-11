@@ -1,6 +1,6 @@
 class Api::V1::PitchEvaluationsController < ApplicationController
   before_action :set_pitch_evaluation, only: [:show, :update]
-  before_action only: [:create, :update, :by_user] do 
+  before_action only: [:create, :update, :by_user, :cancel, :decline] do 
     authenticate_with_token! params[:auth_token]
   end
 
@@ -14,6 +14,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     @pitch_evaluation = PitchEvaluation.new(pitch_evaluation_params)
     @pitch_evaluation.user_id = current_user.id
     @pitch_evaluation.evaluation_status = true
+    @pitch_evaluation.pitch_status = PitchEvaluation::ACTIVE
 
     if @pitch_evaluation.save
       @pitch_evaluation.calculate_score
@@ -44,6 +45,22 @@ class Api::V1::PitchEvaluationsController < ApplicationController
   def by_user
     pitch_evaluations = PitchEvaluation.pitches_by_user( current_user.id )
     render json: pitch_evaluations, status: :ok
+  end
+
+  # POST /cancel
+  def cancel
+    pitch_evaluation = PitchEvaluation.find( params[:id] )
+    pitch_evaluation.pitch_status = PitchEvaluation::CANCELLED
+    pitch_evaluation.save
+    render json: pitch_evaluation, status: :ok
+  end
+
+  # POST /decline
+  def decline
+    pitch_evaluation = PitchEvaluation.find( params[:id] )
+    pitch_evaluation.pitch_status = PitchEvaluation::DECLINED
+    pitch_evaluation.save
+    render json: pitch_evaluation, status: :ok
   end
 
   private

@@ -34,5 +34,16 @@ class Pitch < ApplicationRecord
     end
     pitch_types
   end
+
+  def merge bad_pitch
+    bad_pitch.pitch_evaluations.each do |evaluation|
+      self.pitch_evaluations << evaluation
+    end
+    self.save
+
+    return true if bad_pitch.destroy
+
+    return false
+  end
   
 end

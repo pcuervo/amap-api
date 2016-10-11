@@ -98,7 +98,7 @@ RSpec.describe Api::V1::PitchEvaluationsController, :type => :controller do
 
   end #POST update
 
-  describe "GET #by_user" do
+  describe "POST #by_user" do
     context "when is successfully fetched" do
       before(:each) do
         api_key = ApiKey.create
@@ -129,6 +129,60 @@ RSpec.describe Api::V1::PitchEvaluationsController, :type => :controller do
       it { should respond_with 200 }
     end
 
-  end #POST update
+  end #POST by_user
+
+  describe "POST #cancel" do
+    context "when is successfully fetched" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+        agency = FactoryGirl.create :agency
+        agency.users << @admin
+        agency.save
+
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        pitch_evaluation.pitch_status = PitchEvaluation::ACTIVE
+        pitch_evaluation.user_id = @admin.id
+        pitch_evaluation.save
+
+        post :cancel, params: { auth_token: @admin.auth_token, id: pitch_evaluation.id }, format: :json
+      end
+
+      it "returns the cancelled pitch" do
+        pitch_evaluation_response = json_response
+        expect(pitch_evaluation_response[:pitch_status]).to eql PitchEvaluation::CANCELLED
+      end
+
+      it { should respond_with 200 }
+    end
+  end #POST cancel
+
+  describe "POST #decline" do
+    context "when is successfully fetched" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+        agency = FactoryGirl.create :agency
+        agency.users << @admin
+        agency.save
+
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        pitch_evaluation.pitch_status = PitchEvaluation::ACTIVE
+        pitch_evaluation.user_id = @admin.id
+        pitch_evaluation.save
+
+        post :decline, params: { auth_token: @admin.auth_token, id: pitch_evaluation.id }, format: :json
+      end
+
+      it "returns the declined pitch" do
+        pitch_evaluation_response = json_response
+        expect(pitch_evaluation_response[:pitch_status]).to eql PitchEvaluation::DECLINED
+      end
+
+      it { should respond_with 200 }
+    end
+  end
 
 end

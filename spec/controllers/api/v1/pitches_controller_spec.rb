@@ -142,5 +142,35 @@ RSpec.describe Api::V1::PitchesController, :type => :controller do
       it { should respond_with 422 }
     end
   end #POST create
+
+  describe "POST #merge" do
+    context "when two pitches are successfully merged" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+        @good_pitch = FactoryGirl.create :pitch
+        @bad_pitch = FactoryGirl.create :pitch
+
+        some_eval = FactoryGirl.create :pitch_evaluation
+        other_eval = FactoryGirl.create :pitch_evaluation
+
+        @good_pitch.pitch_evaluations << some_eval
+        @good_pitch.save
+        @bad_pitch.pitch_evaluations << other_eval
+        @bad_pitch.save
+
+        post :merge, params: { auth_token: @admin.auth_token, good_pitch_id: @good_pitch.id, bad_pitch_id: @bad_pitch.id }, format: :json
+      end
+
+      it "renders the json representation for the updated pitch" do
+        pitch_response = json_response
+        expect(pitch_response[:pitch_evaluations].count).to eql 2
+      end
+
+      it { should respond_with 200 }
+    end
+
+  end #POST create
   
 end 

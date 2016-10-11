@@ -56,12 +56,15 @@ Rails.application.routes.draw do
       resources :pitches, :only => [:index, :show, :create, :update] do 
         collection do
           get 'by_brand/:id', :action => 'by_brand'
+          post 'merge',       :action => 'merge'
         end
       end
       resources :pitch_evaluations, :only => [:create] do 
         collection do
           post 'by_user/',  :action => 'by_user'
           post 'update',    :action => 'update'
+          post 'cancel',    :action => 'cancel'
+          post 'decline',   :action => 'decline'
         end
       end
       resources :criteria, :only => [:index]
