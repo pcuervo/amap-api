@@ -70,6 +70,7 @@ Rails.application.routes.draw do
         end
       end
       resources :criteria, :only => [:index]
+      resources :pitch_results, :only => [:show, :create, :update]
     end
   end
 

@@ -48,7 +48,7 @@ class Api::V1::PitchesController < ApplicationController
     end
 
     if @pitch.save
-      pitch_evaluation = PitchEvaluation.create(:user_id => current_user.id)
+      pitch_evaluation = PitchEvaluation.create(:user_id => current_user.id, :pitch_status => PitchEvaluation::ACTIVE )
       pitch_evaluation.pitch = @pitch 
       pitch_evaluation.save
 

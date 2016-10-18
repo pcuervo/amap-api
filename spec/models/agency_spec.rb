@@ -75,7 +75,7 @@ RSpec.describe Agency, :type => :model do
       agency = FactoryGirl.create :agency
       exclusivity_arr = [ 'Coca-Cola', 'Pepsi' ]
       agency.add_exclusivity_brands( exclusivity_arr )
-      brand_to_remove_ids = [ AgencyExclusitivy.last.id ]
+      brand_to_remove_ids = [ AgencyExclusivity.last.id ]
       agency.remove_exclusivity_brands( brand_to_remove_ids )
       expect( agency.exclusivities.count ).to eql 1
     end

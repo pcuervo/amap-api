@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160930022208) do
+ActiveRecord::Schema.define(version: 20161017232703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,15 +82,15 @@ ActiveRecord::Schema.define(version: 20160930022208) do
     t.index ["company_id"], name: "index_brands_on_company_id", using: :btree
   end
 
-  create_table "companies_users", id: false, force: :cascade do |t|
-    t.integer "company_id", null: false
-    t.integer "user_id",  null: false
-  end
-
   create_table "companies", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "companies_users", id: false, force: :cascade do |t|
+    t.integer "company_id", null: false
+    t.integer "user_id",    null: false
   end
 
   create_table "criteria", force: :cascade do |t|
@@ -129,6 +129,22 @@ ActiveRecord::Schema.define(version: 20160930022208) do
     t.string   "deliver_copyright_for_pitching"
     t.index ["pitch_id"], name: "index_pitch_evaluations_on_pitch_id", using: :btree
     t.index ["user_id"], name: "index_pitch_evaluations_on_user_id", using: :btree
+  end
+
+  create_table "pitch_results", force: :cascade do |t|
+    t.integer  "agency_id"
+    t.integer  "pitch_id"
+    t.boolean  "was_proposal_presented",     default: false
+    t.boolean  "got_response",               default: true
+    t.boolean  "was_pitch_won",              default: true
+    t.boolean  "got_feedback",               default: true
+    t.boolean  "has_someone_else_won",       default: true
+    t.date     "when_will_you_get_response"
+    t.date     "when_are_you_presenting"
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.index ["agency_id"], name: "index_pitch_results_on_agency_id", using: :btree
+    t.index ["pitch_id"], name: "index_pitch_results_on_pitch_id", using: :btree
   end
 
   create_table "pitches", force: :cascade do |t|
@@ -206,6 +222,8 @@ ActiveRecord::Schema.define(version: 20160930022208) do
   add_foreign_key "brands", "companies"
   add_foreign_key "pitch_evaluations", "pitches"
   add_foreign_key "pitch_evaluations", "users"
+  add_foreign_key "pitch_results", "agencies"
+  add_foreign_key "pitch_results", "pitches"
   add_foreign_key "pitches", "brands"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"
