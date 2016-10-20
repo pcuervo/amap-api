@@ -107,5 +107,11 @@ es:
               required: "La categoría de skill es obligatoria"
             brand:
               required: "La marca es obligatoria"
+        pitch_result:
+          attributes:
+            agency:
+              required: "La agencia es obligatoria"
+            pitch:
+              required: "El pitch es obligatorio"
       messages:
           record_invalid: "es inválido"
