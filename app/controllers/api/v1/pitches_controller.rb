@@ -35,17 +35,7 @@ class Api::V1::PitchesController < ApplicationController
 
   # POST /pitches
   def create
-    if ! params[:skill_categories].present?
-      render json: { errors: { skill_categories: 'El pitch debe tener al menos una categoría de skills' } },status: :unprocessable_entity
-      return
-    end
-
     @pitch = Pitch.new(pitch_params)
-
-    params[:skill_categories].each do |skill_category_id|
-      skill_cat = SkillCategory.find( skill_category_id )
-      @pitch.skill_categories << skill_cat
-    end
 
     if @pitch.save
       pitch_evaluation = PitchEvaluation.create(:user_id => current_user.id, :pitch_status => PitchEvaluation::ACTIVE )
