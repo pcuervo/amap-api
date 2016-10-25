@@ -6,6 +6,7 @@ class PitchEvaluation < ApplicationRecord
   CANCELLED = 2
   DECLINED = 3
   ARCHIVED = 4
+  WON = 5
 
   def calculate_score
     self.score = 0
@@ -109,6 +110,8 @@ class PitchEvaluation < ApplicationRecord
       info[:other_scores]         = pe.pitch.get_scores_except( pe.id )
       info[:evaluation_status]    = pe.evaluation_status
       info[:skill_categories]     = pe.pitch.skill_categories
+      info[:was_won]              = pe.was_won
+      info[:pitch_status]         = pe.pitch_status
       pitches_info.push( info )
     end
     pitches_info
