@@ -80,7 +80,6 @@ RSpec.describe PitchEvaluation, :type => :model do
       company = brand.company
       pitch = @pitch_evaluation.pitch
       pitch.brand = brand
-      puts brand.id.to_yaml
 
       another_pitch = FactoryGirl.create :pitch
       another_pitch.brand = brand
@@ -97,9 +96,69 @@ RSpec.describe PitchEvaluation, :type => :model do
       pitch.save
 
       evaluations = PitchEvaluation.pitches_by_user admin_client.id
-      puts evaluations.first.to_yaml
       expect( evaluations.count ).to eq 2
       expect( evaluations.first ).to include(:pitch_types)
+    end
+  end
+
+  describe "#filter" do
+    it "gets all archived PitchEvaluations" do
+      user = FactoryGirl.create :user
+      agency = FactoryGirl.create :agency
+      agency.users << user 
+      agency.save
+      3.times do |i|
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        if 0 == i
+          pitch_evaluation.pitch_status = PitchEvaluation::ARCHIVED
+        end 
+        pitch_evaluation.calculate_score
+        pitch_evaluation.user = user 
+        pitch_evaluation.save
+      end
+      
+      params = {}
+      params[:archived] = true
+      params[:cancelled] = false
+      params[:declined] = false
+      params[:happitch] = false
+      params[:happy] = false
+      params[:ok] = false
+      params[:unhappy] = false
+
+      evaluations = PitchEvaluation.filter( user.id, params )
+      expect( evaluations.count ).to eql 1
+    end
+
+    it "gets all archived and cancelled PitchEvaluations" do
+      user = FactoryGirl.create :user
+      agency = FactoryGirl.create :agency
+      agency.users << user 
+      agency.save
+      3.times do |i|
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        if 0 == i
+          pitch_evaluation.pitch_status = PitchEvaluation::ARCHIVED
+        end 
+        if 1 == i
+          pitch_evaluation.pitch_status = PitchEvaluation::CANCELLED
+        end 
+        pitch_evaluation.calculate_score
+        pitch_evaluation.user = user 
+        pitch_evaluation.save
+      end
+      
+      params = {}
+      params[:archived] = true
+      params[:cancelled] = true
+      params[:declined] = false
+      params[:happitch] = false
+      params[:happy] = false
+      params[:ok] = false
+      params[:unhappy] = false
+
+      evaluations = PitchEvaluation.filter( user.id, params )
+      expect( evaluations.count ).to eql 2
     end
   end
 

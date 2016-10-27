@@ -234,4 +234,30 @@ RSpec.describe Api::V1::PitchEvaluationsController, :type => :controller do
     end
   end
 
+  describe "POST #filter" do
+    context "when is successfully fetched" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        3.times do 
+          pitch_evaluation = FactoryGirl.create :pitch_evaluation
+          pitch_evaluation.pitch_status = PitchEvaluation::ACTIVE
+          pitch_evaluation.user_id = @admin.id
+          pitch_evaluation.save
+        end
+
+        post :filter, params: { auth_token: @admin.auth_token, happitch: true, happy: true, ok: true, unhappy: true, archived: true, declined: true, cancelled: true }, format: :json
+      end
+
+      it "returns the declined pitch" do
+        pitch_evaluation_response = json_response
+        expect(pitch_evaluation_response[:pitch_status]).to eql PitchEvaluation::ARCHIVED
+      end
+
+      it { should respond_with 200 }
+    end
+  end
+
 end

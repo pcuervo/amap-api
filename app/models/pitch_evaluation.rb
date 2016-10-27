@@ -36,7 +36,9 @@ class PitchEvaluation < ApplicationRecord
     case self.number_of_agencies
     when "2 - 4"
       self.score += 7
-    when ">4" 
+    when "5 - 7"
+      self.score += 3
+    when "+ de 7" 
       self.score += -3
     end
 
@@ -78,24 +80,28 @@ class PitchEvaluation < ApplicationRecord
     self.save
   end
 
-  def self.pitches_by_user( user_id )
+  def self.pitches_by_user( user_id, status='' )
     
     user = User.find( user_id )
     if User::AGENCY_ADMIN == user.role || User::AGENCY_USER == user.role
-      return pitch_evaluations = self.pitch_evaluations_by_agency_user( user )
+      return pitch_evaluations = self.pitch_evaluations_by_agency_user( user, status )
     else
       return pitch_evaluations = self.pitch_evaluations_by_client_user( user )
     end
   end
 
-  def self.pitch_evaluations_by_agency_user( user )
+  def self.pitch_evaluations_by_agency_user( user, status='' )
     pitches_info = []
     if User::AGENCY_ADMIN == user.role
       agency = user.agencies.first
       agency_users = agency.users
-      pitch_evaluations = PitchEvaluation.where( 'user_id IN (?) AND pitch_status = ?', agency_users.pluck(:id), PitchEvaluation::ACTIVE )
+      pitch_evaluations = PitchEvaluation.where( 'user_id IN (?)', agency_users.pluck(:id),  )
     else
-      pitch_evaluations = PitchEvaluation.where( 'user_id = ? AND pitch_status = ?', user.id, PitchEvaluation::ACTIVE )
+      pitch_evaluations = PitchEvaluation.where( 'user_id = ? ', user.id )
+    end
+
+    if '' != status
+      pitch_evaluations = pitch_evaluations.where( 'pitch_status = ?', PitchEvaluation::ACTIVE )
     end
     pitch_evaluations.each do |pe|
       info = {}
@@ -143,5 +149,55 @@ class PitchEvaluation < ApplicationRecord
   def get_pitch_type( score )
     return 'Golden Pitch'
   end
+
+  def self.filter user_id, params
+    pitch_evaluations_arr = PitchEvaluation.pitches_by_user( user_id )
+    pitch_evaluation_ids = []
+    pitch_status_filter = []
+    score_filter = []
+
+    pitch_evaluations_arr.each { |pe| pitch_evaluation_ids.push(pe[:pitch_evaluation_id]) }
+    pitch_evaluations = PitchEvaluation.where( 'id IN (?)', pitch_evaluation_ids )
+
+    if params[:archived]
+      pitch_status_filter.push( ARCHIVED )
+    end
+
+    if params[:declined]
+      pitch_status_filter.push( DECLINED )
+    end
+
+    if params[:cancelled]
+      pitch_status_filter.push( CANCELLED )
+    end
+
+    if params[:happitch]
+      score_filter
+    end
+
+    if ! pitch_status_filter.empty?
+      pitch_evaluations = pitch_evaluations.where( 'pitch_status IN (?)', pitch_status_filter )
+    end
+
+#     70 ---- happitch
+# >= 59 && <= 69 ---- silver
+# >= 45 && <= 58 ---- medium risk
+# <= 44 ---- high risk
+
+    pitch_evaluations
+  end
+
+  def self.search user_id, keyword
+    pitch_evaluations_arr = PitchEvaluation.pitches_by_user( user_id, PitchEvaluation::ACTIVE )
+    pitch_evaluation_ids = []
+    pitch_status_filter = []
+    score_filter = []
+
+    pitch_evaluations_arr.each { |pe| pitch_evaluation_ids.push(pe[:pitch_evaluation_id]) }
+    pitch_evaluations = PitchEvaluation.where( 'id IN (?)', pitch_evaluation_ids )
+
+  end
+
+
 
 end

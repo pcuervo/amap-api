@@ -88,11 +88,6 @@ ActiveRecord::Schema.define(version: 20161017232703) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "companies_users", id: false, force: :cascade do |t|
-    t.integer "company_id", null: false
-    t.integer "user_id",    null: false
-  end
-
   create_table "criteria", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -100,11 +95,11 @@ ActiveRecord::Schema.define(version: 20161017232703) do
   end
 
   create_table "new_user_requests", force: :cascade do |t|
-    t.string   "email",                      null: false
-    t.string   "agency_brand", default: "",  null: false
-    t.string   "user_type",    default: "2", null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.string   "email",                     null: false
+    t.string   "agency_brand", default: "", null: false
+    t.integer  "user_type",    default: 2,  null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "pitch_evaluations", force: :cascade do |t|
@@ -134,15 +129,15 @@ ActiveRecord::Schema.define(version: 20161017232703) do
   create_table "pitch_results", force: :cascade do |t|
     t.integer  "agency_id"
     t.integer  "pitch_id"
-    t.boolean  "was_proposal_presented",     default: false
-    t.boolean  "got_response",               default: true
-    t.boolean  "was_pitch_won",              default: true
-    t.boolean  "got_feedback",               default: true
-    t.boolean  "has_someone_else_won",       default: true
+    t.boolean  "was_proposal_presented"
+    t.boolean  "got_response"
+    t.boolean  "was_pitch_won"
+    t.boolean  "got_feedback"
+    t.boolean  "has_someone_else_won"
     t.date     "when_will_you_get_response"
     t.date     "when_are_you_presenting"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.index ["agency_id"], name: "index_pitch_results_on_agency_id", using: :btree
     t.index ["pitch_id"], name: "index_pitch_results_on_pitch_id", using: :btree
   end

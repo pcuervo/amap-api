@@ -14,7 +14,7 @@ development:
   encoding: unicode
   database: amap_development
   pool: 5
-  username: sil_user
+  username: micho
   password: holama123
 
 # Warning: The database defined as "test" will be erased and
