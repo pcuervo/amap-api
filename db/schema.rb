@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017232703) do
+ActiveRecord::Schema.define(version: 20161027204533) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,19 @@ ActiveRecord::Schema.define(version: 20161017232703) do
     t.index ["pitch_id"], name: "index_pitch_results_on_pitch_id", using: :btree
   end
 
+  create_table "pitch_winner_surveys", force: :cascade do |t|
+    t.integer  "agency_id"
+    t.integer  "pitch_id"
+    t.boolean  "was_contract_signed"
+    t.date     "contract_signature_date"
+    t.boolean  "was_project_activated"
+    t.date     "when_will_it_activate"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.index ["agency_id"], name: "index_pitch_winner_surveys_on_agency_id", using: :btree
+    t.index ["pitch_id"], name: "index_pitch_winner_surveys_on_pitch_id", using: :btree
+  end
+
   create_table "pitches", force: :cascade do |t|
     t.string   "name"
     t.date     "brief_date"
@@ -219,6 +232,8 @@ ActiveRecord::Schema.define(version: 20161017232703) do
   add_foreign_key "pitch_evaluations", "users"
   add_foreign_key "pitch_results", "agencies"
   add_foreign_key "pitch_results", "pitches"
+  add_foreign_key "pitch_winner_surveys", "agencies"
+  add_foreign_key "pitch_winner_surveys", "pitches"
   add_foreign_key "pitches", "brands"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"

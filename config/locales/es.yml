@@ -113,5 +113,17 @@ es:
               required: "La agencia es obligatoria"
             pitch:
               required: "El pitch es obligatorio"
+        pitch_winner_survey:
+          attributes:
+            was_contract_signed:
+              blank: "Es obligatorio saber si el contrato fue firmado"
+            contract_signature_date:
+              blank: "Es obligatorio saber la fecha de la firma del contrato"
+            was_project_activated:
+              blank: "Es obligatorio saber si el proyecto fue activado"
+            when_will_it_activate:
+              blank: "Es obligatorio saber la fecha de activación del proyecto"
+            agency:
+              required: "La agencia es obligatoria"
       messages:
           record_invalid: "es inválido"
