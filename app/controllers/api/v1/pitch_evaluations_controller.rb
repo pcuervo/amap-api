@@ -1,6 +1,6 @@
 class Api::V1::PitchEvaluationsController < ApplicationController
   before_action :set_pitch_evaluation, only: [:show, :update, :destroy, :average_per_month_by_agency]
-  before_action only: [:create, :update, :by_user, :cancel, :decline, :filter, :average_per_month_by_user, :average_per_month_by_agency] do 
+  before_action only: [:create, :update, :by_user, :cancel, :decline, :filter, :average_per_month_by_user, :average_per_month_by_agency, :average_per_month_industry] do 
     authenticate_with_token! params[:auth_token]
   end
 
@@ -103,6 +103,11 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     puts user_ids.join(",").to_yaml
     average_per_month = PitchEvaluation.average_per_month_by_agency( user_ids.join(",") )
     
+    render json: average_per_month, status: :ok
+  end
+
+  def average_per_month_industry
+    average_per_month = PitchEvaluation.average_per_month_industry
     render json: average_per_month, status: :ok
   end
 

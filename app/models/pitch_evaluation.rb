@@ -228,4 +228,12 @@ class PitchEvaluation < ApplicationRecord
        LIMIT 12")
   }
 
+  scope :average_per_month_industry, -> { 
+    find_by_sql("SELECT ROUND(AVG(score)) AS score, to_char(created_at, 'MM-YY') as month_year
+       FROM pitch_evaluations
+       GROUP BY (month_year)
+       ORDER BY to_char(created_at, 'MM-YY') 
+       LIMIT 12")
+  }
+
 end
