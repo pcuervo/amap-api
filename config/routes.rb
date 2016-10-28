@@ -68,6 +68,7 @@ Rails.application.routes.draw do
           post 'archive',   :action => 'archive'
           post 'destroy',   :action => 'destroy'
           post 'average_per_month_by_user', :action => 'average_per_month_by_user'
+          post 'average_per_month_by_agency', :action => 'average_per_month_by_agency'
         end
       end
       resources :criteria, :only => [:index]

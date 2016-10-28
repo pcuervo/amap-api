@@ -1,6 +1,6 @@
 class Api::V1::PitchEvaluationsController < ApplicationController
-  before_action :set_pitch_evaluation, only: [:show, :update, :destroy]
-  before_action only: [:create, :update, :by_user, :cancel, :decline, :filter, :average_per_month_by_user] do 
+  before_action :set_pitch_evaluation, only: [:show, :update, :destroy, :average_per_month_by_agency]
+  before_action only: [:create, :update, :by_user, :cancel, :decline, :filter, :average_per_month_by_user, :average_per_month_by_agency] do 
     authenticate_with_token! params[:auth_token]
   end
 
@@ -87,8 +87,22 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
   # POST /average_per_month_by_user
   def average_per_month_by_user
-    average_per_month_by_user = PitchEvaluation.average_per_month_by_user( current_user.id )
-    render json: average_per_month_by_user, status: :ok
+    average_per_month = PitchEvaluation.average_per_month_by_user( current_user.id )
+    render json: average_per_month, status: :ok
+  end
+
+  # POST /average_per_month_by_agency
+  def average_per_month_by_agency
+    if ! @agency.present? 
+      render json: { errors: 'No se encontró la agencia con id: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+
+    user_ids = @agency.users.pluck(:id)
+    puts user_ids.join(",").to_yaml
+    average_per_month = PitchEvaluation.average_per_month_by_agency( user_ids.join(",") )
+    
+    render json: average_per_month, status: :ok
   end
 
   private
