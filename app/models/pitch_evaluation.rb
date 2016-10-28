@@ -211,7 +211,7 @@ class PitchEvaluation < ApplicationRecord
   }
 
   scope :average_per_month_by_user, -> ( user_id  ) { 
-    find_by_sql("SELECT AVG(score), to_char(created_at, 'MM-YY') as mon
+    find_by_sql("SELECT ROUND(AVG(score)), to_char(created_at, 'MM-YY') as mon
                  FROM pitch_evaluations
                  WHERE user_id = " + user_id.to_s + "
                  GROUP BY (mon)
