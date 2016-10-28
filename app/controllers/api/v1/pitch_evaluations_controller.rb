@@ -93,12 +93,13 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
   # POST /average_per_month_by_agency
   def average_per_month_by_agency
-    if ! @agency.present? 
-      render json: { errors: 'No se encontró la agencia con id: ' + params[:id] },status: :unprocessable_entity
+    agency = Agency.find( params[:id] )
+    if ! agency.present? 
+      render json: { errors: 'No se encontró la agencia con id: ' + params[:id].to_s },status: :unprocessable_entity
       return
     end
 
-    user_ids = @agency.users.pluck(:id)
+    user_ids = agency.users.pluck(:id)
     puts user_ids.join(",").to_yaml
     average_per_month = PitchEvaluation.average_per_month_by_agency( user_ids.join(",") )
     

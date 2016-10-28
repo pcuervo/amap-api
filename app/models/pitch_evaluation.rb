@@ -211,19 +211,19 @@ class PitchEvaluation < ApplicationRecord
   }
 
   scope :average_per_month_by_user, -> ( user_id  ) { 
-    find_by_sql("SELECT ROUND(AVG(score)), to_char(created_at, 'MM-YY') as mon
+    find_by_sql("SELECT ROUND(AVG(score)) AS score, to_char(created_at, 'MM-YY') as month_year
        FROM pitch_evaluations
        WHERE user_id = " + user_id.to_s + "
-       GROUP BY (mon)
+       GROUP BY (month_year)
        ORDER BY to_char(created_at, 'MM-YY') 
        LIMIT 12")
   }
 
   scope :average_per_month_by_agency, -> ( user_ids  ) { 
-    find_by_sql("SELECT ROUND(AVG(score)), to_char(created_at, 'MM-YY') as mon
+    find_by_sql("SELECT ROUND(AVG(score)) AS score, to_char(created_at, 'MM-YY') as month_year
        FROM pitch_evaluations
        WHERE user_id IN ( " + user_ids + ")
-       GROUP BY (mon)
+       GROUP BY (month_year)
        ORDER BY to_char(created_at, 'MM-YY') 
        LIMIT 12")
   }
