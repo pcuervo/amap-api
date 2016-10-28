@@ -67,6 +67,7 @@ Rails.application.routes.draw do
           post 'decline',   :action => 'decline'
           post 'archive',   :action => 'archive'
           post 'destroy',   :action => 'destroy'
+          post 'average_per_month_by_user', :action => 'average_per_month_by_user'
         end
       end
       resources :criteria, :only => [:index]

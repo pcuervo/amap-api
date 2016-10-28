@@ -11,6 +11,7 @@ class Api::V1::SessionsController < ApplicationController
       return
     end
 
+    puts pe.to_yaml
     if user.valid_password? user_password
       sign_in user, store: false
       user.generate_authentication_token!

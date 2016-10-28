@@ -92,8 +92,8 @@ class PitchEvaluation < ApplicationRecord
 
   def self.pitch_evaluations_by_agency_user( user, status='' )
     pitches_info = []
+    agency = user.agencies.first
     if User::AGENCY_ADMIN == user.role
-      agency = user.agencies.first
       agency_users = agency.users
       pitch_evaluations = PitchEvaluation.where( 'user_id IN (?)', agency_users.pluck(:id),  )
     else
@@ -103,7 +103,9 @@ class PitchEvaluation < ApplicationRecord
     if '' != status
       pitch_evaluations = pitch_evaluations.where( 'pitch_status = ?', PitchEvaluation::ACTIVE )
     end
+
     pitch_evaluations.each do |pe|
+      pitch_results = PitchResult.where( 'agency_id = ? AND pitch_id = ?', agency.id, pe.pitch.id )
       info = {}
       brand = Brand.find( pe.pitch.brand_id )
       info[:pitch_evaluation_id]  = pe.id 
@@ -198,6 +200,24 @@ class PitchEvaluation < ApplicationRecord
 
   end
 
+  # Scopes
 
+  scope :inventory_by_type, -> ( project_ids = nil  ){
+    if( project_ids != nil )
+      where( 'project_id IN (?)', project_ids ).group(:item_type).count
+    else
+      group(:item_type).count
+    end
+  }
+
+  scope :average_per_month_by_user, -> ( user_id  ) { 
+    find_by_sql("SELECT AVG(score), to_char(created_at, 'MM-YY') as mon
+                 FROM pitch_evaluations
+                 WHERE user_id = " + user_id.to_s + "
+                 GROUP BY (mon)
+                 ORDER BY to_char(created_at, 'MM-YY') 
+                 LIMIT 12"
+                )
+  }
 
 end

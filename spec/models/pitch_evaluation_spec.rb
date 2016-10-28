@@ -162,5 +162,30 @@ RSpec.describe PitchEvaluation, :type => :model do
     end
   end
 
+  describe "#average_per_month_by_user" do
+    it "gets the average score of PitchEvaluations by user per month" do
+      user = FactoryGirl.create :user
+      agency = FactoryGirl.create :agency
+      agency.users << user 
+      agency.save
+      3.times do |i|
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        if 0 == i
+          pitch_evaluation.pitch_status = PitchEvaluation::ARCHIVED
+        end 
+        pitch_evaluation.calculate_score
+        pitch_evaluation.user = user 
+        pitch_evaluation.save
+      end
+      
+      pe = PitchEvaluation.average_per_month_by_user( user.id )
+      puts pe.to_yaml
+
+      evaluations = PitchEvaluation.filter( user.id, params )
+      expect( evaluations.count ).to eql 1
+    end
+
+  end
+
   
 end

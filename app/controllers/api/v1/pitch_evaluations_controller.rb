@@ -1,6 +1,6 @@
 class Api::V1::PitchEvaluationsController < ApplicationController
   before_action :set_pitch_evaluation, only: [:show, :update, :destroy]
-  before_action only: [:create, :update, :by_user, :cancel, :decline, :filter] do 
+  before_action only: [:create, :update, :by_user, :cancel, :decline, :filter, :average_per_month_by_user] do 
     authenticate_with_token! params[:auth_token]
   end
 
@@ -83,7 +83,12 @@ class Api::V1::PitchEvaluationsController < ApplicationController
   def filter
     user = current_user
     @pitch_evaluation.filter
-    head 204
+  end
+
+  # POST /average_per_month_by_user
+  def average_per_month_by_user
+    average_per_month_by_user = PitchEvaluation.average_per_month_by_user( current_user.id )
+    render json: average_per_month_by_user, status: :ok
   end
 
   private
