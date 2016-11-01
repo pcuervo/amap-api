@@ -354,7 +354,8 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
                         brands: remove_brand_ids }, format: :json
       end
 
-      it "returns the brands added to the agency" do
+      it "returns the exclusivity brands of the agency" do
+        puts json_response.to_json
         agency_response = json_response
         expect(agency_response.count).to eql 1
       end
@@ -364,26 +365,6 @@ RSpec.describe Api::V1::AgenciesController, :type => :controller do
 
   end #POST remove_exclusivity_brands
 
-  describe "GET #pitches_by_user" do
-    context "when user is Agency admin" do
-      before(:each) do
-        api_key = ApiKey.create
-        api_authorization_header 'Token ' + api_key.access_token
-        @admin = FactoryGirl.create :user
-        @agency = FactoryGirl.create :agency
-        @admin.agencies << @agency
-        @pitch_evaluation = FactoryGirl.create :pitch_evaluation
-        @agency.pitch_evaluation.user = @admin
-        get :pitches_by_user, params: { auth_token: @admin.auth_token }, format: :json
-      end
-
-      it "returns all PitchEvalutaions by user" do
-        expect(json_response[:pitches_evaluations]).to eql 1
-      end
-
-      it { should respond_with 200 }
-    end
-  end
 
 
 end
