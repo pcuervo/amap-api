@@ -85,6 +85,16 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     @pitch_evaluation.filter
   end
 
+  # POST /search
+  def search
+    if ! params[:keyword].present? 
+      render json: { errors: 'Por favor ingresa una palabra clave para la búsqueda' },status: :unprocessable_entity
+      return
+    end
+    pitch_evaluations = @pitch_evaluation.search( current_user.id, params[:keyword] )
+    render json: pitch_evaluation, status: :ok
+  end
+
   # POST /average_per_month_by_user
   def average_per_month_by_user
     average_per_month = PitchEvaluation.average_per_month_by_user( current_user.id )

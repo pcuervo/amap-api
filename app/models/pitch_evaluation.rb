@@ -194,24 +194,15 @@ class PitchEvaluation < ApplicationRecord
 
   def self.search user_id, keyword
     pitch_evaluations_arr = PitchEvaluation.pitches_by_user( user_id, PitchEvaluation::ACTIVE )
-    pitch_evaluation_ids = []
-    pitch_status_filter = []
-    score_filter = []
-
-    pitch_evaluations_arr.each { |pe| pitch_evaluation_ids.push(pe[:pitch_evaluation_id]) }
-    pitch_evaluations = PitchEvaluation.where( 'id IN (?)', pitch_evaluation_ids )
-
+    pitch_evaluations = []
+    pitch_evaluations_arr.each do |pe| 
+      next if ! pe[:pitch_name].downcase.include? keyword.downcase
+      pitch_evaluations.push( PitchEvaluation.find( pe[:pitch_evaluation_id] ) )
+    end
+    return pitch_evaluations
   end
 
   # Scopes
-
-  scope :inventory_by_type, -> ( project_ids = nil  ){
-    if( project_ids != nil )
-      where( 'project_id IN (?)', project_ids ).group(:item_type).count
-    else
-      group(:item_type).count
-    end
-  }
 
   scope :average_per_month_by_user, -> ( user_id  ) { 
     find_by_sql("SELECT ROUND(AVG(score)) AS score, to_char(created_at, 'MM-YY') as month_year

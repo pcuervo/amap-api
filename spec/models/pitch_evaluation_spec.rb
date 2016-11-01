@@ -184,7 +184,32 @@ RSpec.describe PitchEvaluation, :type => :model do
       evaluations = PitchEvaluation.filter( user.id, params )
       expect( evaluations.count ).to eql 1
     end
+  end
 
+  describe "#search" do
+    it "search for all pitches that include keyword 'Juan'" do
+      user = FactoryGirl.create :user
+      agency = FactoryGirl.create :agency
+      agency.users << user 
+      agency.save
+      3.times do |i|
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        pitch = pitch_evaluation.pitch
+        if i == 0 
+          pitch.name = 'Sprite'
+        else
+          pitch.name = 'Coke'
+        end
+
+        pitch.save
+        pitch_evaluation.calculate_score
+        pitch_evaluation.user = user 
+        pitch_evaluation.save
+      end
+      
+      pe = PitchEvaluation.search( user.id, 'cok' )
+      expect( pe.count ).to eql 2
+    end
   end
 
   
