@@ -197,7 +197,8 @@ class PitchEvaluation < ApplicationRecord
     pitch_evaluations = []
     pitch_evaluations_arr.each do |pe| 
       next if ! pe[:pitch_name].downcase.include? keyword.downcase
-      pitch_evaluations.push( PitchEvaluation.find( pe[:pitch_evaluation_id] ) )
+      #pitch_evaluations.push( PitchEvaluation.find( pe[:pitch_evaluation_id] ) )
+      pitch_evaluations.push( pe )
     end
     return pitch_evaluations
   end
