@@ -120,6 +120,7 @@ class PitchEvaluation < ApplicationRecord
       info[:skill_categories]     = pe.pitch.skill_categories
       info[:was_won]              = pe.was_won
       info[:pitch_status]         = pe.pitch_status
+      info[:has_results]          = pitch_results.present?
       pitches_info.push( info )
     end
     pitches_info

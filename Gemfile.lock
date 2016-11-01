@@ -109,8 +109,6 @@ GEM
     pkg-config (1.1.7)
     puma (3.6.0)
     rack (2.0.1)
-    rack-attack (4.4.1)
-      rack
     rack-cors (0.4.0)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -197,7 +195,6 @@ DEPENDENCIES
   paperclip (~> 5.0.0)
   pg
   puma (~> 3.0)
-  rack-attack
   rack-cors
   rails (~> 5.0.0)
   rspec-rails (= 3.1.0)
@@ -211,4 +208,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.5
+   1.13.1

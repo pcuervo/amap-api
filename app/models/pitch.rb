@@ -8,7 +8,7 @@ class Pitch < ApplicationRecord
 
   def get_scores_except pitch_evaluation_id
     scores = []
-    self.pitch_evaluations.each do |pe|
+    self.pitch_evaluations.order(created_at: :desc).each do |pe|
       next if pe.id == pitch_evaluation_id
       scores.push( pe.score )
     end
