@@ -91,7 +91,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       render json: { errors: 'Por favor ingresa una palabra clave para la búsqueda' },status: :unprocessable_entity
       return
     end
-    pitch_evaluations = @pitch_evaluation.search( current_user.id, params[:keyword] )
+    pitch_evaluations = PitchEvaluation.search( current_user.id, params[:keyword] )
     render json: pitch_evaluation, status: :ok
   end
 
