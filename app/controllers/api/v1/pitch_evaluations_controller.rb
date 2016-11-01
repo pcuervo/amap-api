@@ -92,7 +92,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       return
     end
     pitch_evaluations = PitchEvaluation.search( current_user.id, params[:keyword] )
-    render json: pitch_evaluation, status: :ok
+    render json: pitch_evaluations, status: :ok
   end
 
   # POST /average_per_month_by_user
