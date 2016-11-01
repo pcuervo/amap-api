@@ -1,6 +1,6 @@
 class Api::V1::PitchEvaluationsController < ApplicationController
   before_action :set_pitch_evaluation, only: [:show, :update, :destroy, :average_per_month_by_agency]
-  before_action only: [:create, :update, :by_user, :cancel, :decline, :filter, :average_per_month_by_user, :average_per_month_by_agency, :average_per_month_industry] do 
+  before_action only: [:create, :update, :by_user, :cancel, :decline, :search, :average_per_month_by_user, :average_per_month_by_agency, :average_per_month_industry] do 
     authenticate_with_token! params[:auth_token]
   end
 
