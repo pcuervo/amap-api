@@ -105,22 +105,24 @@ class PitchEvaluation < ApplicationRecord
     end
 
     pitch_evaluations.each do |pe|
+      pitch_winner_survey = PitchWinnerSurvey.where( 'agency_id = ? AND pitch_id = ?', agency.id, pe.pitch.id )
       pitch_results = PitchResult.where( 'agency_id = ? AND pitch_id = ?', agency.id, pe.pitch.id )
       info = {}
       brand = Brand.find( pe.pitch.brand_id )
-      info[:pitch_evaluation_id]  = pe.id 
-      info[:pitch_id]             = pe.pitch.id
-      info[:pitch_name]           = pe.pitch.name
-      info[:brief_date]           = pe.pitch.brief_date.strftime( "%d/%m/%Y" )
-      info[:score]                = pe.score
-      info[:brand]                = brand.name
-      info[:company]              = brand.company.name
-      info[:other_scores]         = pe.pitch.get_scores_except( pe.id )
-      info[:evaluation_status]    = pe.evaluation_status
-      info[:skill_categories]     = pe.pitch.skill_categories
-      info[:was_won]              = pe.was_won
-      info[:pitch_status]         = pe.pitch_status
-      info[:has_results]          = pitch_results.present?
+      info[:pitch_evaluation_id]      = pe.id 
+      info[:pitch_id]                 = pe.pitch.id
+      info[:pitch_name]               = pe.pitch.name
+      info[:brief_date]               = pe.pitch.brief_date.strftime( "%d/%m/%Y" )
+      info[:score]                    = pe.score
+      info[:brand]                    = brand.name
+      info[:company]                  = brand.company.name
+      info[:other_scores]             = pe.pitch.get_scores_except( pe.id )
+      info[:evaluation_status]        = pe.evaluation_status
+      info[:skill_categories]         = pe.pitch.skill_categories
+      info[:was_won]                  = pe.was_won
+      info[:pitch_status]             = pe.pitch_status
+      info[:has_results]              = pitch_results.present?
+      info[:has_pitch_winner_survey]  = pitch_winner_survey.present?
       pitches_info.push( info )
     end
     pitches_info
