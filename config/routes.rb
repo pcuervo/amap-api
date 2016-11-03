@@ -59,7 +59,7 @@ Rails.application.routes.draw do
           post 'merge',       :action => 'merge'
         end
       end
-      resources :pitch_evaluations, :only => [:create] do 
+      resources :pitch_evaluations, :only => [:create, :show] do 
         collection do
           post 'by_user/',  :action => 'by_user'
           post 'update',    :action => 'update'
