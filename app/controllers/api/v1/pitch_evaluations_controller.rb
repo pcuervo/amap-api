@@ -4,6 +4,15 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     authenticate_with_token! params[:auth_token]
   end
 
+  # GET /pitch_evaluations/1
+  def show
+    if ! @pitch_evaluation.present? 
+      render json: { errors: 'No se encontró la evaluación con id: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+    render json: @pitch_evaluation
+  end
+
    # POST /pitch_evaluations
   def create
     existing_evaluation = PitchEvaluation.where( 'user_id = ? and pitch_id = ?', current_user.id, params[:pitch_evaluation][:pitch_id] )
