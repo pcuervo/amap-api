@@ -22,7 +22,6 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     end
     @pitch_evaluation = PitchEvaluation.new(pitch_evaluation_params)
     @pitch_evaluation.user_id = current_user.id
-    @pitch_evaluation.evaluation_status = true
     @pitch_evaluation.pitch_status = PitchEvaluation::ACTIVE
 
     if @pitch_evaluation.save
