@@ -38,7 +38,7 @@ class PitchEvaluation < ApplicationRecord
       self.score += 7
     when "5 - 7"
       self.score += 3
-    when "+ de 7" 
+    when "+7" 
       self.score += -3
     end
 
