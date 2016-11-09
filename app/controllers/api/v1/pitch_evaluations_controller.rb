@@ -40,7 +40,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       return
     end
     
-    @pitch_evaluation.user_id = current_user.id
+    #@pitch_evaluation.user_id = current_user.id
     @pitch_evaluation.evaluation_status = true
     @pitch_evaluation.pitch_status = PitchEvaluation::ACTIVE
     if @pitch_evaluation.update(pitch_evaluation_params)

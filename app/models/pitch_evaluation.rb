@@ -230,5 +230,4 @@ class PitchEvaluation < ApplicationRecord
        ORDER BY to_char(created_at, 'MM-YY') 
        LIMIT 12")
   }
-
 end
