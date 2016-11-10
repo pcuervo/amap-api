@@ -77,6 +77,16 @@ class PitchEvaluation < ApplicationRecord
       self.score += 2
     end
 
+    if self.score <= 44
+      self.pitch_type = 'unhappy'
+    elsif self.score > 44 && self.score  <= 58
+      self.pitch_type = 'ok'
+    elsif self.score > 58 && self.score  <= 69
+      self.pitch_type = 'happy'
+    else
+      self.pitch_type = 'happitch'
+    end
+        
     self.save
   end
 

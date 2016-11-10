@@ -56,4 +56,11 @@ class Agency < ApplicationRecord
     self.save
   end
 
+  # def get_number_of_pitches_by_type type 
+  #   case type
+  #   when 'happitch'
+      
+  #   end
+  # end
+
 end
