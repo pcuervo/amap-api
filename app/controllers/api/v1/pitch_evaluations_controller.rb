@@ -105,7 +105,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
   # POST /average_per_month_by_user
   def average_per_month_by_user
-    average_per_month = PitchEvaluation.average_per_month_by_user( current_user.id )
+    average_per_month = PitchEvaluation.average_per_month_by_user( params[:id] )
     render json: average_per_month, status: :ok
   end
 
