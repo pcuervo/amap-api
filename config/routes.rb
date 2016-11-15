@@ -76,7 +76,11 @@ Rails.application.routes.draw do
         end
       end
       resources :criteria, :only => [:index]
-      resources :pitch_results, :only => [:show, :create, :update]
+      resources :pitch_results, :only => [:show, :create, :update] do
+        collection do
+          post 'update', :action => 'update'
+        end
+      end
       resources :pitch_winner_surveys, :only => [:create]
     end
   end
