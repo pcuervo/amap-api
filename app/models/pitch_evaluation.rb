@@ -28,9 +28,9 @@ class PitchEvaluation < ApplicationRecord
     when "si"
       self.score += 6
     when "no" 
-      self.score += 0
-    else
       self.score += -2
+    else
+      self.score += 0
     end
 
     case self.number_of_agencies
