@@ -216,12 +216,12 @@ class PitchEvaluation < ApplicationRecord
   end
 
   def self.get_lost_pitches_by_agency( agency )
-    gency_users = agency.users
+    agency_users = agency.users
     return PitchEvaluation.where( 'user_id IN (?) and was_won = false', agency_users.pluck(:id) ).count
   end
 
   def self.get_won_pitches_by_agency( agency )
-    gency_users = agency.users
+    agency_users = agency.users
     return PitchEvaluation.where( 'user_id IN (?) and was_won = true', agency_users.pluck(:id) ).count
   end
 
