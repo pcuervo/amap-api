@@ -1,8 +1,19 @@
 class Api::V1::PitchResultsController < ApplicationController
+  before_action :set_pitch_result, only: [:show, :update]
+
   before_action only: [:create] do 
     authenticate_with_token! params[:auth_token]
   end
   after_action :update_evaluation_won_status, only: [:create], if: -> { @was_won.present? }
+
+  # GET /pitch_results/1
+  def show
+    if ! @pitch_result.present? 
+      render json: { errors: 'No se encontraron los resultados con id: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+    render json: @pitch_result
+  end
 
   # POST /pitch_results
   def create
@@ -18,6 +29,11 @@ class Api::V1::PitchResultsController < ApplicationController
   end
 
   private
+
+    def set_pitch_result
+      @pitch_result = PitchResult.find_by_id(params[:id])
+    end
+
     # Only allow a trusted parameter "white list" through.
     def pitch_result_params
       params.require(:pitch_result).permit( :agency_id, :pitch_id, :was_proposal_presented, :got_response, :was_pitch_won, :got_feedback, :has_someone_else_won, :when_will_you_get_response, :when_are_you_presenting )
