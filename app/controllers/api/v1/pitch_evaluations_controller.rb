@@ -155,10 +155,10 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     end
 
     summary = {}
-    summary[:happitch]  = PitchEvaluation.by_agency_by_user( user, 'happitch' )
-    summary[:happy]     = PitchEvaluation.by_agency_by_user( user, 'happy' )
-    summary[:ok]        = PitchEvaluation.by_agency_by_user( user, 'ok' )
-    summary[:unhappy]   = PitchEvaluation.by_agency_by_user( user, 'unhappy' )
+    summary[:happitch]  = PitchEvaluation.by_user_by_type( user, 'happitch' )
+    summary[:happy]     = PitchEvaluation.by_user_by_type( user, 'happy' )
+    summary[:ok]        = PitchEvaluation.by_user_by_type( user, 'ok' )
+    summary[:unhappy]   = PitchEvaluation.by_user_by_type( user, 'unhappy' )
     summary[:lost]      = PitchEvaluation.get_lost_pitches_by_user( user )
     summary[:won]       = PitchEvaluation.get_won_pitches_by_user( user )
 
