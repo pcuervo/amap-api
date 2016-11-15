@@ -19,8 +19,6 @@ class PitchEvaluation < ApplicationRecord
     when "si"
       self.score -= 2
     when "no" 
-      self.score += 0
-    else
       self.score += 5
     end
 
