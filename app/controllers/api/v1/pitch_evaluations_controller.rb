@@ -1,6 +1,6 @@
 class Api::V1::PitchEvaluationsController < ApplicationController
-  before_action :set_pitch_evaluation, only: [:show, :update, :destroy, :average_per_month_by_agency]
-  before_action only: [:create, :update, :by_user, :cancel, :decline, :search, :average_per_month_by_user, :average_per_month_by_agency, :average_per_month_industry] do 
+  before_action :set_pitch_evaluation, only: [:show, :update, :destroy]
+  before_action only: [:create, :update, :by_user, :cancel, :decline, :search, :average_per_month_by_user, :average_per_month_by_agency, :average_per_month_industry, :dashboard_summary_by_agency, :dashboard_summary_by_user] do 
     authenticate_with_token! params[:auth_token]
   end
 
@@ -127,6 +127,42 @@ class Api::V1::PitchEvaluationsController < ApplicationController
   def average_per_month_industry
     average_per_month = PitchEvaluation.average_per_month_industry
     render json: average_per_month, status: :ok
+  end
+
+  def dashboard_summary_by_agency
+    agency = Agency.find( params[:id] )
+    if ! agency.present? 
+      render json: { errors: 'No se encontró la agencia con id: ' + params[:id].to_s }, status: :unprocessable_entity
+      return
+    end
+
+    summary = {}
+    summary[:happitch]  = PitchEvaluation.by_agency_by_type( agency, 'happitch' )
+    summary[:happy]     = PitchEvaluation.by_agency_by_type( agency, 'happy' )
+    summary[:ok]        = PitchEvaluation.by_agency_by_type( agency, 'ok' )
+    summary[:unhappy]   = PitchEvaluation.by_agency_by_type( agency, 'unhappy' )
+    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_agency( agency )
+    summary[:won]       = PitchEvaluation.get_won_pitches_by_agency( agency )
+
+    render json: summary, status: :ok
+  end
+
+  def dashboard_summary_by_user
+    user = User.find( params[:id] )
+    if ! user.present? 
+      render json: { errors: 'No se encontró el usuario con id: ' + params[:id].to_s }, status: :unprocessable_entity
+      return
+    end
+
+    summary = {}
+    summary[:happitch]  = PitchEvaluation.by_agency_by_user( user, 'happitch' )
+    summary[:happy]     = PitchEvaluation.by_agency_by_user( user, 'happy' )
+    summary[:ok]        = PitchEvaluation.by_agency_by_user( user, 'ok' )
+    summary[:unhappy]   = PitchEvaluation.by_agency_by_user( user, 'unhappy' )
+    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_user( user )
+    summary[:won]       = PitchEvaluation.get_won_pitches_by_user( user )
+
+    render json: summary, status: :ok
   end
 
   private

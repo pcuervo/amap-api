@@ -161,10 +161,6 @@ class PitchEvaluation < ApplicationRecord
     pitches_info
   end
 
-  def get_pitch_type( score )
-    return 'Golden Pitch'
-  end
-
   def self.filter user_id, params
     pitch_evaluations_arr = PitchEvaluation.pitches_by_user( user_id )
     pitch_evaluation_ids = []
@@ -194,11 +190,6 @@ class PitchEvaluation < ApplicationRecord
       pitch_evaluations = pitch_evaluations.where( 'pitch_status IN (?)', pitch_status_filter )
     end
 
-#     70 ---- happitch
-# >= 59 && <= 69 ---- silver
-# >= 45 && <= 58 ---- medium risk
-# <= 44 ---- high risk
-
     pitch_evaluations
   end
 
@@ -211,6 +202,35 @@ class PitchEvaluation < ApplicationRecord
       pitch_evaluations.push( pe )
     end
     return pitch_evaluations
+  end
+
+  def self.by_agency_by_type( agency, type )
+    agency_users = agency.users
+    pitch_evaluations = PitchEvaluation.where( 'user_id IN (?) AND pitch_type = ?', agency_users.pluck(:id), type )
+    return pitch_evaluations
+  end
+
+  def self.by_user_by_type( user, type )
+    pitch_evaluations = PitchEvaluation.where( 'user_id = ? AND pitch_type = ?', user.id, type )
+    return pitch_evaluations
+  end
+
+  def self.get_lost_pitches_by_agency( agency )
+    gency_users = agency.users
+    return PitchEvaluation.where( 'user_id IN (?) and was_won = false', agency_users.pluck(:id) ).count
+  end
+
+  def self.get_won_pitches_by_agency( agency )
+    gency_users = agency.users
+    return PitchEvaluation.where( 'user_id IN (?) and was_won = true', agency_users.pluck(:id) ).count
+  end
+
+  def self.get_lost_pitches_by_user( user )
+    return PitchEvaluation.where( 'user_id = ? and was_won = false', user.id ).count
+  end
+
+  def self.get_won_pitches_by_user( user )
+    return PitchEvaluation.where( 'user_id = ? and was_won = true', user.id ).count
   end
 
   # Scopes
