@@ -163,6 +163,7 @@ class PitchEvaluation < ApplicationRecord
     pitch_evaluations_arr = PitchEvaluation.pitches_by_user( user_id )
     pitch_evaluation_ids = []
     pitch_status_filter = []
+    pitch_type_filter = []
     score_filter = []
 
     pitch_evaluations_arr.each { |pe| pitch_evaluation_ids.push(pe[:pitch_evaluation_id]) }
@@ -181,14 +182,34 @@ class PitchEvaluation < ApplicationRecord
     end
 
     if params[:happitch]
-      score_filter
+      pitch_type_filter.push('happitch')
     end
 
-    if ! pitch_status_filter.empty?
-      pitch_evaluations = pitch_evaluations.where( 'pitch_status IN (?)', pitch_status_filter )
+    if params[:happy]
+      pitch_type_filter.push('happy')
     end
 
-    pitch_evaluations
+    if params[:ok]
+      pitch_type_filter.push('ok')
+    end
+
+    if params[:unhappy]
+      pitch_type_filter.push('unhappy')
+    end
+
+    if ! pitch_status_filter.empty? && ! pitch_type_filter.empty?
+      return pitch_evaluations.where( 'pitch_status IN (?) AND pitch_type IN (?)', pitch_status_filter, pitch_type_filter )
+    end
+
+    if ! pitch_status_filter.empty? && pitch_type_filter.empty?
+      return pitch_evaluations.where( 'pitch_status IN (?)', pitch_status_filter )
+    end
+
+    if pitch_status_filter.empty? && ! pitch_type_filter.empty?
+      return pitch_evaluations.where( 'pitch_type IN (?)', pitch_type_filter )
+    end
+
+    return pitch_evaluations
   end
 
   def self.search user_id, keyword

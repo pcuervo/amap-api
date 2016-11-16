@@ -160,10 +160,8 @@ RSpec.describe PitchEvaluation, :type => :model do
       evaluations = PitchEvaluation.filter( user.id, params )
       expect( evaluations.count ).to eql 2
     end
-  end
 
-  describe "#average_per_month_by_user" do
-    it "gets the average score of PitchEvaluations by user per month" do
+    it "gets all unhappy PitchEvaluations" do
       user = FactoryGirl.create :user
       agency = FactoryGirl.create :agency
       agency.users << user 
@@ -171,15 +169,85 @@ RSpec.describe PitchEvaluation, :type => :model do
       3.times do |i|
         pitch_evaluation = FactoryGirl.create :pitch_evaluation
         if 0 == i
-          pitch_evaluation.pitch_status = PitchEvaluation::ARCHIVED
+          #pitch_evaluation.pitch_status = PitchEvaluation::ARCHIVED
+        end 
+        if 1 == i
+          #pitch_evaluation.pitch_status = PitchEvaluation::CANCELLED
         end 
         pitch_evaluation.calculate_score
         pitch_evaluation.user = user 
         pitch_evaluation.save
       end
       
-      pe = PitchEvaluation.average_per_month_by_user( user.id )
-      puts pe.to_yaml
+      params = {}
+      params[:archived] = false
+      params[:cancelled] = false
+      params[:declined] = false
+      params[:happitch] = false
+      params[:happy] = false
+      params[:ok] = false
+      params[:unhappy] = true
+
+      evaluations = PitchEvaluation.filter( user.id, params )
+      expect( evaluations.count ).to eql 3
+    end
+
+    it "gets all happitch PitchEvaluations" do
+      user = FactoryGirl.create :user
+      agency = FactoryGirl.create :agency
+      agency.users << user 
+      agency.save
+      3.times do |i|
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        if 0 == i
+          pitch_evaluation.pitch_type = 'happitch'
+        end 
+        if 1 == i
+          #pitch_evaluation.pitch_status = PitchEvaluation::CANCELLED
+        end 
+        pitch_evaluation.user = user 
+        pitch_evaluation.save
+      end
+      
+      params = {}
+      params[:archived] = false
+      params[:cancelled] = false
+      params[:declined] = false
+      params[:happitch] = true
+      params[:happy] = false
+      params[:ok] = false
+      params[:unhappy] = false
+
+      evaluations = PitchEvaluation.filter( user.id, params )
+      expect( evaluations.count ).to eql 1
+    end
+
+    it "gets all happitch and archived PitchEvaluations" do
+      user = FactoryGirl.create :user
+      agency = FactoryGirl.create :agency
+      agency.users << user 
+      agency.save
+      3.times do |i|
+        pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        if 0 == i
+          pitch_evaluation.pitch_type = 'happitch'
+          pitch_evaluation.pitch_status = PitchEvaluation::ARCHIVED
+        end 
+        if 1 == i
+          pitch_evaluation.pitch_status = PitchEvaluation::ARCHIVED
+        end 
+        pitch_evaluation.user = user 
+        pitch_evaluation.save
+      end
+      
+      params = {}
+      params[:archived] = true
+      params[:cancelled] = false
+      params[:declined] = false
+      params[:happitch] = true
+      params[:happy] = false
+      params[:ok] = false
+      params[:unhappy] = false
 
       evaluations = PitchEvaluation.filter( user.id, params )
       expect( evaluations.count ).to eql 1
