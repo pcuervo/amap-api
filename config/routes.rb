@@ -68,6 +68,7 @@ Rails.application.routes.draw do
           post 'archive',   :action => 'archive'
           post 'destroy',   :action => 'destroy'
           post 'search',    :action => 'search'
+          post 'filter',    :action => 'filter'
           post 'average_per_month_by_user',   :action => 'average_per_month_by_user'
           post 'average_per_month_by_agency', :action => 'average_per_month_by_agency'
           post 'average_per_month_industry',  :action => 'average_per_month_industry'
