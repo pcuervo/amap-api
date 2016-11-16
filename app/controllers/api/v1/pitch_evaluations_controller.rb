@@ -90,7 +90,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
   # POST /filter
   def filter
     user = current_user
-    render json: @pitch_evaluation.filter( user_id, params ), status: :ok
+    render json: @pitch_evaluation.filter( user.id, params ), status: :ok
   end
 
   # POST /search
