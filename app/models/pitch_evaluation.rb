@@ -131,6 +131,11 @@ class PitchEvaluation < ApplicationRecord
       info[:pitch_status]             = pe.pitch_status
       info[:has_results]              = pitch_results.present?
       info[:has_pitch_winner_survey]  = pitch_winner_survey.present?
+
+      if pitch_results.present?
+        info[:pitch_results_id] = pith
+      end
+
       pitches_info.push( info )
     end
     pitches_info
