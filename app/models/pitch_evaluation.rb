@@ -133,7 +133,7 @@ class PitchEvaluation < ApplicationRecord
       info[:has_pitch_winner_survey]  = pitch_winner_survey.present?
 
       if pitch_results.present?
-        info[:pitch_results_id] = pith
+        info[:pitch_results_id] = pitch_results.id
       end
 
       pitches_info.push( info )
