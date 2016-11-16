@@ -30,7 +30,7 @@ class Api::V1::PitchResultsController < ApplicationController
 
   # POST /pitch_results/update
   def update
-    if ! @pitch_evaluation.present? 
+    if ! @pitch_result.present? 
       render json: { errors: 'No se encontraron los resultados con id: ' + params[:id] },status: :unprocessable_entity
       return
     end
