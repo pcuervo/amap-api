@@ -26,7 +26,7 @@ class PitchEvaluation < ApplicationRecord
     when "si"
       self.score += 6
     when "no" 
-      self.score += -2
+      self.score -= 2
     else
       self.score += 0
     end
@@ -37,7 +37,7 @@ class PitchEvaluation < ApplicationRecord
     when "5 - 7"
       self.score += 3
     when "+7" 
-      self.score += -3
+      self.score -= 3
     end
 
     days_to_present = self.time_to_present.to_i
