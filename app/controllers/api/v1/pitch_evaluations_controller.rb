@@ -111,7 +111,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
   # POST /average_per_month_by_user
   def average_per_month_by_user
-    average_per_month = PitchEvaluation.average_per_month_by_user( params[:id] )
+    average_per_month = PitchEvaluation.average_per_month_by_user( params[:id], params[:start_date], params[:end_date] )
     render json: average_per_month, status: :ok
   end
 
@@ -130,7 +130,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     render json: { 'average_per_month': average_per_month, 'users': agency.users.select( 'id', 'email', 'first_name', 'last_name' ) } , status: :ok
   end
 
-  def average_per_month_industry
+  def average_per_month_industry( params[:start_date], params[:end_date] )
     average_per_month = PitchEvaluation.average_per_month_industry
     render json: average_per_month, status: :ok
   end
