@@ -58,7 +58,7 @@ class PitchEvaluation < ApplicationRecord
       self.score += 3
     when "3r"
       self.score += 2
-    else
+    when "4r"
       self.score += 1
     end
 
