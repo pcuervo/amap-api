@@ -37,6 +37,9 @@ class Api::V1::PitchResultsController < ApplicationController
     
     if @pitch_result.update(pitch_result_params)
       @was_won = @pitch_result.was_pitch_won
+      puts 'was this bitch won?'
+      puts @was_won.to_yaml
+      puts @pitch_result.was_pitch_won.to_yaml
       render json: @pitch_result, status: :ok
       return 
     end
