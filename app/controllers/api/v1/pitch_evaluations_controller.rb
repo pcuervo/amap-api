@@ -39,6 +39,12 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       render json: { errors: 'No se encontró la evaluación del pitch con id: ' + params[:id] },status: :unprocessable_entity
       return
     end
+
+    existing_evaluation = PitchEvaluation.where( 'user_id = ? and pitch_id = ?', current_user.id, @pitch_evaluation.pitch_id )
+    if existing_evaluation.present?
+      render json: { errors: 'Ya existe una evaluación del pitch para este usuario.' },status: :unprocessable_entity
+      return
+    end
     
     #@pitch_evaluation.user_id = current_user.id
     @pitch_evaluation.evaluation_status = true
@@ -143,6 +149,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     summary[:unhappy]   = PitchEvaluation.by_agency_by_type( agency, 'unhappy' )
     summary[:lost]      = PitchEvaluation.get_lost_pitches_by_agency( agency )
     summary[:won]       = PitchEvaluation.get_won_pitches_by_agency( agency )
+    summary[:users]     = agency.users.select( 'id', 'first_name', 'last_name' )
 
     render json: summary, status: :ok
   end
