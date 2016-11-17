@@ -127,7 +127,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     puts user_ids.join(",").to_yaml
     average_per_month = PitchEvaluation.average_per_month_by_agency( user_ids.join(",") )
     
-    render json: { 'average_per_month': average_per_month, 'users': agency.users.select( 'id', 'first_name', 'last_name' ) } , status: :ok
+    render json: { 'average_per_month': average_per_month, 'users': agency.users.select( 'id', 'email', 'first_name', 'last_name' ) } , status: :ok
   end
 
   def average_per_month_industry
@@ -149,7 +149,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     summary[:unhappy]   = PitchEvaluation.by_agency_by_type( agency, 'unhappy' )
     summary[:lost]      = PitchEvaluation.get_lost_pitches_by_agency( agency )
     summary[:won]       = PitchEvaluation.get_won_pitches_by_agency( agency )
-    summary[:users]     = agency.users.select( 'id', 'first_name', 'last_name' )
+    summary[:users]     = agency.users.select( 'id', 'email', 'first_name', 'last_name' )
 
     render json: summary, status: :ok
   end
