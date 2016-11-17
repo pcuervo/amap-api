@@ -125,7 +125,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
     user_ids = agency.users.pluck(:id)
     puts user_ids.join(",").to_yaml
-    average_per_month = PitchEvaluation.average_per_month_by_agency( user_ids.join(",") )
+    average_per_month = PitchEvaluation.average_per_month_by_agency( user_ids.join(","), params[:start_date], params[:end_date] )
     
     render json: { 'average_per_month': average_per_month, 'users': agency.users.select( 'id', 'email', 'first_name', 'last_name' ) } , status: :ok
   end
