@@ -4,7 +4,7 @@ class Api::V1::PitchResultsController < ApplicationController
   before_action only: [:create] do 
     authenticate_with_token! params[:auth_token]
   end
-  after_action :update_evaluation_won_status, only: [:create, :update], if: -> { @was_won.present? }
+  after_action :update_evaluation_won_status, only: [:create, :update], if: -> { ! @was_won.nil? }
 
   # GET /pitch_results/1
   def show
