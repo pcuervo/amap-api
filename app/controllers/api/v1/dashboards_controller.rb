@@ -5,6 +5,8 @@ class Api::V1::DashboardsController < ApplicationController
     dashboard_data = {}
     closed_pitches = PitchResult.where( 'was_pitch_won = ?', true ).pluck(:pitch_id)
     pitch_types = PitchEvaluation.where('pitch_type is not null').group(:pitch_type).count
+    worst_pitches = PitchEvaluation.joins(:pitch).limit(3).group("name").order('avg(score) asc').average(:score)
+    top_pitches = PitchEvaluation.joins(:pitch).limit(3).group("name").order('avg(score) desc').average(:score)
 
     # Closed vs Pending pitches
     dashboard_data[:total_closed] = closed_pitches.count
@@ -18,6 +20,9 @@ class Api::V1::DashboardsController < ApplicationController
     dashboard_data[:total_pitches] = Pitch.all.count
     dashboard_data[:total_agencies] = Agency.all.count
     dashboard_data[:total_brands] = Brand.all.count
+    # Ranking
+    dashboard_data[:worst_pitches] = worst_pitches
+    dashboard_data[:top_pitches] = top_pitches
 
     render json: dashboard_data, status: :ok
   end
