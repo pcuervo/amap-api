@@ -83,6 +83,11 @@ Rails.application.routes.draw do
         end
       end
       resources :pitch_winner_surveys, :only => [:create]
+      resources :dashboards do
+        collection do
+          get 'amap', :action => 'amap'
+        end
+      end
     end
   end
 

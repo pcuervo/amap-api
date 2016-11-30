@@ -4,6 +4,7 @@ module Api::V1
     before_action only: [:create, :update, :confirm_user_request] do 
       authenticate_with_token! params[:auth_token]
     end
+    after_action :send_password_to_user, only: [:create], if: -> { User::AMAP_ADMIN == current_user.role }
 
     # GET /users/1
     def show
@@ -25,10 +26,20 @@ module Api::V1
         @user.agencies << agency
       end
 
+      if params[:company_id].present?
+        company = Agency.find(params[:company_id])
+        user.companies << company
+      end
+
+      @password = SecureRandom.hex
+      @user.password = @password
+      @user.password_confirmation = @password
+
       if @user.save!
         render json: @user, status: :created, location: [:api, @user]
         return
       end
+      puts @user.errors.to_yaml
       render json: { errors: @user.errors }, status: :unprocessable_entity
     end
 
@@ -38,6 +49,11 @@ module Api::V1
       if params[:agency_id].present?
         agency = Agency.find(params[:agency_id])
         user.agencies << agency
+      end
+
+      if params[:company_id].present?
+        company = Agency.find(params[:company_id])
+        user.companies << company
       end
 
       if user.update( user_params )
@@ -90,6 +106,9 @@ module Api::V1
         params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :role, :is_member_amap)
       end
 
+      def send_password_to_user
+        UserMailer.new_user( @user, @password ).deliver_now
+      end
   end 
 end 
 

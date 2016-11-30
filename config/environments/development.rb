@@ -31,20 +31,15 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  config.action_mailer.default_url_options = { host: "startupmexico.com"}
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { :host => 'amap-dev.herokuapp.com/api/' }
   config.action_mailer.smtp_settings = {
-    address: "gator4150.hostgator.com",
-    port: 465,
-    domain: "startupmexi.co",
-    authentication: "plain",
-    enable_starttls_auto: true,
-    user_name: "info@startupmexi.co",
-    password: "NuevoLeon112",
-    ssl:true
-    #user_name: ENV["GMAIL_USERNAME"],
-    #password: ENV["GMAIL_PASSWORD"]
+    address:              'smtp.sendgrid.net',
+    port:                 587,
+    domain:               'gmail.com',
+    user_name:            'micho_dabba',
+    password:             'holama123',
+    authentication:       :plain,
+    enable_starttls_auto: true
   }
 
   # Print deprecation notices to the Rails logger.

@@ -50,6 +50,10 @@ module Api::V1
         logo.original_filename = params[:filename]
         @agency.logo = logo
       end
+
+      if params[:delete_image]
+        @agency.logo.destroy
+      end
       
       if @agency.update(agency_params)
         render json: @agency, status: :ok

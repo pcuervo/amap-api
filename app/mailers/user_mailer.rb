@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  default from: 'maichomper@pcuervo.com'
+  default from: 'amap@gmail.com'
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
@@ -24,5 +24,12 @@ class UserMailer < ApplicationMailer
     @pitch = pitch
     #mail( to: @user.email, subject: 'Una agencia ha dado de alta un pitch con tu correo en Happitch' )
     mail( to: 'miguel@pcuervo.com', subject: 'Una agencia ha dado de alta un pitch con tu correo en Happitch' )
+  end
+
+  def new_user( user, password )
+    @user = user
+    @password = password
+    #mail( to: @user.email, subject: 'Una agencia ha dado de alta un pitch con tu correo en Happitch' )
+    mail( to: @user.email, subject: '¡Bienvenido a Happitch!', bcc: ['miguel@pcuervo.com'] )
   end
 end

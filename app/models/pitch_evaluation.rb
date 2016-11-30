@@ -233,11 +233,11 @@ class PitchEvaluation < ApplicationRecord
 
   def self.by_agency_by_type( agency, type )
     agency_users = agency.users
-    return PitchEvaluation.where( 'user_id IN (?) AND pitch_type = ?', agency_users.pluck(:id), type ).count
+    return PitchEvaluation.where( 'user_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', agency_users.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
   def self.by_user_by_type( user, type )
-    return PitchEvaluation.where( 'user_id = ? AND pitch_type = ?', user.id, type ).count
+    return PitchEvaluation.where( 'user_id = ? AND pitch_type = ? AND pitch_status IN (?)', user.id, type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
   def self.get_lost_pitches_by_agency( agency )
