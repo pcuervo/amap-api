@@ -174,6 +174,10 @@ class PitchEvaluation < ApplicationRecord
     pitch_evaluations_arr.each { |pe| pitch_evaluation_ids.push(pe[:pitch_evaluation_id]) }
     pitch_evaluations = PitchEvaluation.where( 'id IN (?)', pitch_evaluation_ids )
 
+    if params[:active]
+      pitch_status_filter.push( ACTIVE )
+    end
+
     if params[:archived]
       pitch_status_filter.push( ARCHIVED )
     end

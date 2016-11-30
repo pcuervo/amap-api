@@ -49,6 +49,10 @@ class Api::V1::SuccessCasesController < ApplicationController
       case_image.original_filename = params[:filename]
       @success_case.case_image = case_image
     end
+
+    if params[:delete_image]
+      @success_case.case_image.destroy
+    end
     
     if @success_case.update(success_case_params)
       render json: @success_case, status: :ok
