@@ -112,7 +112,7 @@ class Api::V1::PitchesController < ApplicationController
     end
 
     def notify_client_new_pitch_email( user, pitch )
-      UserMailer.new_pitch_cli ent( user, pitch ).deliver_now
+      UserMailer.new_pitch_client( user, pitch ).deliver_now
     end
 
 end
