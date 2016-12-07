@@ -61,7 +61,25 @@ RSpec.describe Pitch, :type => :model do
     end
 
     it "returns 0 if no one has one the Pitch" do
+      pitch = FactoryGirl.create :pitch
+      pitch_evaluation_1 = FactoryGirl.create :pitch_evaluation
+      pitch.pitch_evaluations << pitch_evaluation_1
+      pitch.save
 
+      expect( pitch.get_winner ).to eq 0
+    end
+  end
+
+  describe "#get_evaluation_breakdown" do
+    it "returns the name of Agency who won the pitch" do
+      pitch = FactoryGirl.create :pitch
+      pitch_evaluation_1 = FactoryGirl.create :pitch_evaluation
+      pitch_evaluation.calculate_score
+      pitch_evaluation.save
+      pitch.pitch_evaluations << pitch_evaluation_1
+      pitch.save
+
+      expect( pitch.get_evaluation_breakdown ).to eq agency.name
     end
   end
 end

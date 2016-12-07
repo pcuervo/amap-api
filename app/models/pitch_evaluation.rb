@@ -159,7 +159,9 @@ class PitchEvaluation < ApplicationRecord
       info[:brief_email_contact]    = p.brief_email_contact
       info[:company]                = brand.company.name
       info[:pitch_types_percentage] = p.get_pitch_types
+      info[:evaluation_breakdown]   = p.get_evaluation_percentage
       info[:winner]                 = p.get_winner
+      info[:breakdown]              = p.get_breakdown
       pitches_info.push( info )
     end
     pitches_info

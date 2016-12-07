@@ -1,6 +1,7 @@
 class Pitch < ApplicationRecord
   belongs_to :brand
   has_many :pitch_evaluations
+  has_one :pitch_winner_survey
   has_and_belongs_to_many :skill_categories, :through => :pitches_skill_categories
   has_and_belongs_to_many :users
 
@@ -53,9 +54,33 @@ class Pitch < ApplicationRecord
   end
 
   def get_winner
-    #return 0 if ! self.pitch_winner_survey.present?
+    return 0 if ! self.pitch_winner_survey.present?
 
     return self.pitch_winner_survey.agency.name
+  end
+
+  def get_evaluation_breakdown
+    breakdown = {}
+    breakdown[:objective_clear] = 0
+    breakdown[:budget_known] = 0
+    breakdown[:selection_criteria] = 0
+    breakdown[:deliverables_clear] = 0
+    breakdown[:marketing_involved] = 0
+    self.pitch_evaluations do |pe|
+      breakdown[:objective_clear] += pe.are_objectives_clear ? 1 : 0
+      breakdown[:budget_known] += pe.is_budget_known ? 1 : 0
+      breakdown[:selection_criteria] += pe.has_selection_criteria ? 1 : 0
+      breakdown[:deliverables_clear] += pe.are_deliverables_clear ? 1 : 0
+      breakdown[:marketing_involved] += pe.is_marketing_involved == 'si' ? 1 : 0
+    end
+
+    breakdown[:objective_clear] = breakdown[:objective_clear] / self.pitch_evaluations.count * 100
+    breakdown[:budget_known] = breakdown[:budget_known] / self.pitch_evaluations.count * 100
+    breakdown[:selection_criteria] = breakdown[:selection_criteria] / self.pitch_evaluations.count * 100
+    breakdown[:deliverables_clear] = breakdown[:deliverables_clear] / self.pitch_evaluations.count * 100
+    breakdown[:marketing_involved] = breakdown[:marketing_involved] / self.pitch_evaluations.count * 100
+
+    return breakdown
   end
   
 end
