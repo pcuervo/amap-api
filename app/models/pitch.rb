@@ -51,5 +51,11 @@ class Pitch < ApplicationRecord
 
     return false
   end
+
+  def get_winner
+    #return 0 if ! self.pitch_winner_survey.present?
+
+    return self.pitch_winner_survey.agency.name
+  end
   
 end

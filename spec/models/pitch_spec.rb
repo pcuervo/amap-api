@@ -44,4 +44,24 @@ RSpec.describe Pitch, :type => :model do
       expect( pitch.pitch_evaluations.count ).to eq 2
     end
   end
+
+  describe "#get_winner" do
+    it "returns the name of Agency who won the pitch" do
+      agency = FactoryGirl.create :agency
+      pitch = FactoryGirl.create :pitch
+      pitch_evaluation_1 = FactoryGirl.create :pitch_evaluation
+      pitch.pitch_evaluations << pitch_evaluation_1
+      winner_survey = FactoryGirl.create :pitch_winner_survey
+      winner_survey.agency = agency
+      winner_survey.pitch = pitch 
+      winner_survey.save
+      pitch.save
+
+      expect( pitch.get_winner ).to eq agency.name
+    end
+
+    it "returns 0 if no one has one the Pitch" do
+
+    end
+  end
 end
