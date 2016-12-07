@@ -87,6 +87,14 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     render json: pitch_evaluation, status: :ok
   end
 
+  # POST /activate
+  def activate
+    pitch_evaluation = PitchEvaluation.find( params[:id] )
+    pitch_evaluation.pitch_status = PitchEvaluation::ACTIVE
+    pitch_evaluation.save
+    render json: pitch_evaluation, status: :ok
+  end
+
   # POST /destroy
   def destroy
     @pitch_evaluation.destroy

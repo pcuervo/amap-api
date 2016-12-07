@@ -38,6 +38,12 @@ class Api::V1::CompaniesController < ApplicationController
       render json: { errors: 'No se encontró ninguna companía con id: ' + params[:id] },status: :unprocessable_entity
       return
     end
+
+    if params[:logo].present?
+        logo = Paperclip.io_adapters.for(params[:logo])
+        logo.original_filename = params[:filename]
+        @company.logo = logo
+      end
     
     if @company.update(company_params)
       render json: @company, status: :ok
@@ -54,7 +60,7 @@ class Api::V1::CompaniesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def company_params
-      params.require(:company).permit( :name )
+      params.require(:company).permit( :name, :contact_name, :contact_email, :contact_position )
     end
 
 end
