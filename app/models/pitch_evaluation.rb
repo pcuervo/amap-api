@@ -152,13 +152,13 @@ class PitchEvaluation < ApplicationRecord
     pitches.each do |p|
       info = {}
       brand = Brand.find( p.brand_id )
-      info[:pitch_id]             = p.id
-      info[:pitch_name]           = p.name
-      info[:brief_date]           = p.brief_date.strftime( "%d/%m/%Y" )
-      info[:brand]                = brand.name
-      info[:brief_email_contact]  = p.brief_email_contact
-      info[:company]              = brand.company.name
-      info[:pitch_types]          = p.get_pitch_types
+      info[:pitch_id]               = p.id
+      info[:pitch_name]             = p.name
+      info[:brief_date]             = p.brief_date.strftime( "%d/%m/%Y" )
+      info[:brand]                  = brand.name
+      info[:brief_email_contact]    = p.brief_email_contact
+      info[:company]                = brand.company.name
+      info[:pitch_types_percentage] = p.get_pitch_types
       pitches_info.push( info )
     end
     pitches_info

@@ -17,21 +17,27 @@ class Pitch < ApplicationRecord
 
   def get_pitch_types
     pitch_types = {}
-    pitch_types['golden_pitch'] = 0
-    pitch_types['silver_pitch'] = 0
-    pitch_types['medium_risk_pitch'] = 0
-    pitch_types['high_risk_pitch'] = 0
+    pitch_types['happitch'] = 0
+    pitch_types['happy'] = 0
+    pitch_types['ok'] = 0
+    pitch_types['sad'] = 0
     self.pitch_evaluations.each do |pe|
-      if pe.score > 70
-        pitch_types['golden_pitch'] += 1
-      elsif pe.score >= 60 && pe.score < 70
-        pitch_types['silver_pitch'] += 1
-      elsif pe.score >= 45 && pe.score < 60
-        pitch_types['medium_risk_pitch'] += 1
+      if pe.pitch_type == 'happitch'
+        pitch_types['happitch'] += 1
+      elsif pe.pitch_type == 'happy'
+        pitch_types['happy'] += 1
+      elsif pe.pitch_type == 'ok'
+        pitch_types['ok'] += 1
       else
-        pitch_types['high_risk_pitch'] += 1
+        pitch_types['sad'] += 1
       end
     end
+
+    pitch_types['happitch'] = pitch_types['happitch'] / self.pitch_evaluations.count * 100
+    pitch_types['happy'] = pitch_types['happy'] / self.pitch_evaluations.count * 100
+    pitch_types['ok'] = pitch_types['ok'] / self.pitch_evaluations.count * 100
+    pitch_types['sad'] = pitch_types['sad'] / self.pitch_evaluations.count * 100
+
     pitch_types
   end
 
