@@ -74,14 +74,18 @@ RSpec.describe Pitch, :type => :model do
     it "returns the name of Agency who won the pitch" do
       pitch = FactoryGirl.create :pitch
       pitch_evaluation = FactoryGirl.create :pitch_evaluation
+      pitch_evaluation2 = FactoryGirl.create :pitch_evaluation
       pitch_evaluation.are_objectives_clear = true
       pitch_evaluation.calculate_score
+      pitch_evaluation2.calculate_score
       pitch_evaluation.save
+      pitch_evaluation2.save
       pitch.pitch_evaluations << pitch_evaluation
+      pitch.pitch_evaluations << pitch_evaluation2
       pitch.save
 
       breakdown = pitch.get_evaluation_breakdown
-      expect( breakdown[:objectives_clear] ).to eq 100
+      expect( breakdown['objectives_clear'] ).to eq 50
     end
   end
 end

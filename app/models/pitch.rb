@@ -62,28 +62,30 @@ class Pitch < ApplicationRecord
   def get_evaluation_breakdown
 
     breakdown = {}
-    breakdown[:objectives_clear] = 0
-    breakdown[:budget_known] = 0
-    breakdown[:selection_criteria] = 0
-    breakdown[:deliverables_clear] = 0
-    breakdown[:marketing_involved] = 0
+    breakdown['objectives_clear'] = 0
+    breakdown['budget_known'] = 0
+    breakdown['selection_criteria'] = 0
+    breakdown['deliverables_clear'] = 0
+    breakdown['marketing_involved'] = 0
 
     return breakdown if self.pitch_evaluations.count == 0
 
+    total_evaluations = 0
     self.pitch_evaluations.each do |pe|
-      breakdown[:objectives_clear] += pe.are_objectives_clear ? 1 : 0
-      puts breakdown[:objectives_clear].to_yaml
-      breakdown[:budget_known] += pe.is_budget_known ? 1 : 0
-      breakdown[:selection_criteria] += pe.has_selection_criteria ? 1 : 0
-      breakdown[:deliverables_clear] += pe.are_deliverables_clear ? 1 : 0
-      breakdown[:marketing_involved] += pe.is_marketing_involved == 'si' ? 1 : 0
+      breakdown['objectives_clear'] += pe.are_objectives_clear ? 1 : 0
+
+      breakdown['budget_known'] += pe.is_budget_known ? 1 : 0
+      breakdown['selection_criteria'] += pe.has_selection_criteria ? 1 : 0
+      breakdown['deliverables_clear'] += pe.are_deliverables_clear ? 1 : 0
+      breakdown['marketing_involved'] += pe.is_marketing_involved == 'si' ? 1 : 0
+      total_evaluations += 1
     end
 
-    breakdown[:objectives_clear] = breakdown[:objectives_clear] / self.pitch_evaluations.count * 100
-    breakdown[:budget_known] = breakdown[:budget_known] / self.pitch_evaluations.count * 100
-    breakdown[:selection_criteria] = breakdown[:selection_criteria] / self.pitch_evaluations.count * 100
-    breakdown[:deliverables_clear] = breakdown[:deliverables_clear] / self.pitch_evaluations.count * 100
-    breakdown[:marketing_involved] = breakdown[:marketing_involved] / self.pitch_evaluations.count * 100
+    breakdown['objectives_clear'] = breakdown['objectives_clear'].to_f / total_evaluations * 100
+    breakdown['budget_known'] = breakdown['budget_known'].to_f / total_evaluations * 100
+    breakdown['selection_criteria'] = breakdown['selection_criteria'].to_f / total_evaluations * 100
+    breakdown['deliverables_clear'] = breakdown['deliverables_clear'].to_f / total_evaluations * 100
+    breakdown['marketing_involved'] = breakdown['marketing_involved'].to_f / total_evaluations * 100
 
     return breakdown
   end
