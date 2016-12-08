@@ -60,21 +60,26 @@ class Pitch < ApplicationRecord
   end
 
   def get_evaluation_breakdown
+
     breakdown = {}
-    breakdown[:objective_clear] = 0
+    breakdown[:objectives_clear] = 0
     breakdown[:budget_known] = 0
     breakdown[:selection_criteria] = 0
     breakdown[:deliverables_clear] = 0
     breakdown[:marketing_involved] = 0
-    self.pitch_evaluations do |pe|
-      breakdown[:objective_clear] += pe.are_objectives_clear ? 1 : 0
+
+    return breakdown if self.pitch_evaluations.count == 0
+
+    self.pitch_evaluations.each do |pe|
+      puts pe.to_yaml
+      breakdown[:objectives_clear] += pe.are_objectives_clear ? 1 : 0
       breakdown[:budget_known] += pe.is_budget_known ? 1 : 0
       breakdown[:selection_criteria] += pe.has_selection_criteria ? 1 : 0
       breakdown[:deliverables_clear] += pe.are_deliverables_clear ? 1 : 0
       breakdown[:marketing_involved] += pe.is_marketing_involved == 'si' ? 1 : 0
     end
 
-    breakdown[:objective_clear] = breakdown[:objective_clear] / self.pitch_evaluations.count * 100
+    breakdown[:objectives_clear] = breakdown[:objectives_clear] / self.pitch_evaluations.count * 100
     breakdown[:budget_known] = breakdown[:budget_known] / self.pitch_evaluations.count * 100
     breakdown[:selection_criteria] = breakdown[:selection_criteria] / self.pitch_evaluations.count * 100
     breakdown[:deliverables_clear] = breakdown[:deliverables_clear] / self.pitch_evaluations.count * 100
