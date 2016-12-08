@@ -71,8 +71,8 @@ class Pitch < ApplicationRecord
     return breakdown if self.pitch_evaluations.count == 0
 
     self.pitch_evaluations.each do |pe|
-      puts pe.to_yaml
       breakdown[:objectives_clear] += pe.are_objectives_clear ? 1 : 0
+      puts breakdown[:objectives_clear].to_yaml
       breakdown[:budget_known] += pe.is_budget_known ? 1 : 0
       breakdown[:selection_criteria] += pe.has_selection_criteria ? 1 : 0
       breakdown[:deliverables_clear] += pe.are_deliverables_clear ? 1 : 0
