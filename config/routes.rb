@@ -70,6 +70,7 @@ Rails.application.routes.draw do
           post 'cancel',    :action => 'cancel'
           post 'decline',   :action => 'decline'
           post 'archive',   :action => 'archive'
+          post 'activate',  :action => 'activate'
           post 'destroy',   :action => 'destroy'
           post 'search',    :action => 'search'
           post 'filter',    :action => 'filter'
