@@ -51,6 +51,7 @@ Rails.application.routes.draw do
       resources :brands, :only => [:create, :show, :index] do
         collection do
           get 'by_company/:id', :action => 'by_company'
+          post 'update', :action => 'update'
         end
       end
       resources :pitches, :only => [:index, :show, :create, :update] do 
