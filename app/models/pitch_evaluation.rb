@@ -294,7 +294,6 @@ class PitchEvaluation < ApplicationRecord
   end
 
   # Scopes
-
   scope :average_per_month_by_user, -> ( user_id, start_date, end_date  ) { 
     if start_date.present? && end_date.present?
       find_by_sql("SELECT ROUND(AVG(score)) AS score, to_char(created_at, 'MM-YY') as month_year

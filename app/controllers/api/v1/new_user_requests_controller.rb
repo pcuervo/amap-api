@@ -55,8 +55,8 @@ module Api::V1
         agency = Agency.find(params[:agency_id])
         @user.agencies << agency
       elsif User::CLIENT_ADMIN == params[:role].to_i
-        brand = Brand.find(params[:brand_id])
-        @user.brands << brand
+        company = Company.find(params[:company_id])
+        @user.companys << company
       end
 
       @password = SecureRandom.hex
