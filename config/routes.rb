@@ -24,6 +24,7 @@ Rails.application.routes.draw do
           post 'add_criteria',                :action => 'add_criteria'
           post 'add_exclusivity_brands',      :action => 'add_exclusivity_brands'
           post 'remove_exclusivity_brands',   :action => 'remove_exclusivity_brands'
+          post 'search',                      :action => 'search'
         end
       end
       resources :new_user_requests, :only => [:index, :create, :show] do
