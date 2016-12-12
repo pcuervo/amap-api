@@ -127,6 +127,12 @@ module Api::V1
       render json: @agency.exclusivities, status: :created
     end
 
+    # GET /agencies/search
+    def search
+      @agencies = Agency.search( params[:keyword] )
+      render json: { agencies: @agencies }
+    end
+
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_agency

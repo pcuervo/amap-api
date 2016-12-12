@@ -56,6 +56,10 @@ class Agency < ApplicationRecord
     self.save
   end
 
+  def search keyword
+    return Agency.where('LOWER(name) LIKE ?', '%' + keyword.downcase + '%' )
+  end
+
   # def get_number_of_pitches_by_type type 
   #   case type
   #   when 'happitch'
