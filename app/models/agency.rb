@@ -56,7 +56,7 @@ class Agency < ApplicationRecord
     self.save
   end
 
-  def search keyword
+  def self.search keyword
     return Agency.where('LOWER(name) LIKE ?', '%' + keyword.downcase + '%' )
   end
 
