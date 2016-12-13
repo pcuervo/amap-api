@@ -57,8 +57,17 @@ class Agency < ApplicationRecord
     self.save
   end
 
-  def self.search keyword
-    return Agency.where('LOWER(name) LIKE ?', '%' + keyword.downcase + '%' )
+  def self.search keyword, company_id
+    agencies = []
+    Agency.where('LOWER(name) LIKE ?', '%' + keyword.downcase + '%' ).each do |a|
+      c = Company.find(company_id)
+      agency = {}
+      agency[:id] = a.id 
+      agency[:name] = a.name 
+      agency[:is_favorite] = c.agencies.exists?(a.id) 
+      agencies.push( agency )
+    end
+    return agencies
   end
 
 end

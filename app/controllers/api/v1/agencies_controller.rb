@@ -129,7 +129,7 @@ module Api::V1
 
     # POST /agencies/search
     def search
-      @agencies = Agency.search( params[:keyword] )
+      @agencies = Agency.search( params[:keyword], params[:company_id] )
       render json: { agencies: @agencies }
     end
 

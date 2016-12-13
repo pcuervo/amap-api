@@ -80,5 +80,22 @@ RSpec.describe Agency, :type => :model do
       expect( agency.exclusivities.count ).to eql 1
     end
   end
+
+  describe "#search" do
+    it "relates Criteria to an agency" do
+      Agency.destroy_all
+      agency = FactoryGirl.create :agency
+      agency.name = 'Corben'
+      agency.save
+      company = FactoryGirl.create :company
+      company.agencies << agency
+      company.save
+      
+      agencies = Agency.search( 'cor', company.id )
+      puts agencies.to_yaml
+      expect( agencies.count ).to eql 1
+
+    end
+  end
   
 end
