@@ -1,11 +1,111 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-  </head>
-  <body>
-    <h1>Nuevo pitch</h1>
-
-    <p>Se ha dado de alta el pitch <%= @pitch.name %> a través de Happitch con tu email como contacto del proyecto.</p>
-  </body>
+<html dir="ltr">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Happitch - AMAP</title>
+	</head>
+	<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+		<div id="wrapper" dir="ltr" style="background-color: #ffffff; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+			<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
+				<tbody>
+					<tr>
+						<td align="center" valign="top">
+							<div></div>
+							<table border="0" cellpadding="0" cellspacing="0" width="600" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #ffffff; border: 1px solid #e5e5e5; border-radius: 3px !important;">
+								<tbody>
+									<tr>
+										<td align="center" valign="top">
+											<!-- Header -->
+											<table border="0" cellpadding="0" cellspacing="0" width="600" style="padding: 10px; background-color: #00a9af; border-bottom: 10px solid #dde11e;">
+												<tbody>
+													<tr>
+														<td>
+															<a href="https://tienda.newera.mx/" style="color: #000000; font-weight: normal; text-decoration: underline;">
+															<img style="width: 100px; display: block; margin: auto; border: none; font-size: 14px; font-weight: bold; height: auto; line-height: 100%; outline: none; text-decoration: none; text-transform: capitalize;" src="http://pcuervo.com/happtich/logo.png" alt="Logo Happitch"></a>
+														</td>
+													</tr>
+												</tbody>
+											</table><!-- End Header -->
+										</td>
+									</tr>
+									<tr>
+										<td align="center" valign="top">
+											<!-- Header -->
+											<table border="0" cellpadding="0" cellspacing="0" width="600" style="padding: 15px; background-color: #fff; color: #000000;">
+												<tbody>
+													<tr>
+														<td>
+															<h1 style="color: #000000; font-weight: 500; text-align: center; letter-spacing: 1px; text-transform: uppercase; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; line-height: 150%; margin: 0; text-shadow: 0 1px 0 #333333; -webkit-font-smoothing: antialiased;">Alta de pitch</h1>
+														</td>
+													</tr>
+												</tbody>
+											</table><!-- End Header -->
+										</td>
+									</tr>
+									<tr>
+										<td align="center" valign="top">
+											<!-- Body -->
+											<table border="0" cellpadding="0" cellspacing="0" width="600">
+												<tbody>
+													<tr>
+														<td valign="top" id="body_content" style="background-color: #ffffff;">
+															<!-- Content -->
+															<table border="0" cellpadding="20" cellspacing="0" width="100%">
+																<tbody>
+																	<tr>
+																		<td valign="top" style="padding: 20px 48px 20px 48px;">
+																			<div style="color: #5b5b5b; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+																				<p style="margin: 0 0 16px;">Se dio de alta un pitch para tu proyecto  <%= @pitch.name %>  en Happitch. Entra y conoce como están evaluando las agencias tu brief para que juntos podamos mejorar los procesos.</p>
+																				<br />
+																				<br />
+																				<p style="margin: 0 0 16px;">Si aún no has descagado nuestra app hazlo desde aquí:</p>
+																			</div>
+																		</td>
+																	</tr>
+																</tbody>
+															</table><!-- End Content -->
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<!-- End Body -->
+										</td>
+									</tr>
+									<tr>
+										<td align="center" valign="top">
+											<!-- Footer -->
+											<table border="0" cellpadding="10" cellspacing="0" width="600">
+												<tbody>
+													<tr>
+														<td valign="top" style="padding: 0; -webkit-border-radius: 6px;">
+															<table border="0" cellpadding="10" cellspacing="0" width="100%">
+																<tbody>
+																	<tr>
+																		<td colspan="2" valign="middle" id="credit" style="padding: 0 48px 10px 48px; -webkit-border-radius: 6px; border: 0; color: #666666; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center;">
+																			<a href="#" style="color: #000000; font-weight: normal; text-decoration: underline;">
+																				<img style="width: 180px; display: block; margin: 20px auto; border: none; font-size: 14px; font-weight: bold; height: auto; line-height: 100%; outline: none; text-decoration: none; text-transform: capitalize;" src="http://www.pcuervo.com/happtich/app-store-badge.svg" alt="Consíguelo en la App Store">
+																			</a>
+																		</td>
+																		<td colspan="2" valign="middle" id="credit" style="padding: 0 48px 10px 48px; -webkit-border-radius: 6px; border: 0; color: #666666; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center;">
+																			<a href="#" style="color: #000000; font-weight: normal; text-decoration: underline;">
+																				<img style="width: 204px; display: block; margin: 20px auto; border: none; font-size: 14px; font-weight: bold; height: auto; line-height: 100%; outline: none; text-decoration: none; text-transform: capitalize;" src="http://www.pcuervo.com/happtich/google-play-badge.png" alt="Consíguelo en Google play">
+																			</a>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</td>
+													</tr>
+												</tbody>
+											</table><!-- End Footer -->
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
 </html>
