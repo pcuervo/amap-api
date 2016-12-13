@@ -1,6 +1,6 @@
 class UserRequestMailer < ApplicationMailer
   # Default Mail Values
-  default from: 'miguel@pcuervo.com'
+  default from: 'amap@gmail.com'
 
   # Send a message to AMAP Admin Users when there a new user request
   # * *Params:* 

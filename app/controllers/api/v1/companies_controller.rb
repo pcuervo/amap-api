@@ -1,8 +1,9 @@
 class Api::V1::CompaniesController < ApplicationController
   before_action :set_company, only: [:show, :update, :destroy]
-  before_action only: [:create, :update] do 
+  before_action only: [:create, :update, :add_favorite_agency] do 
     authenticate_with_token! params[:auth_token]
   end
+
 
   # GET /companies
   def index
@@ -50,6 +51,24 @@ class Api::V1::CompaniesController < ApplicationController
       return 
     end
     render json: { errors: @company.errors }, status: :unprocessable_entity
+  end
+
+  # POST /add_favorite_agency
+  def add_favorite_agency
+    company = current_user.companies.first
+    agency = Agency.find( params[:agency_id] )
+    if ! agency.present? 
+      render json: { errors: 'No se encontró la agencya con id: ' + params[:agency_id] },status: :unprocessable_entity
+      return
+    end
+
+    favorite_agency = FavoriteAgency.create(:agency_id => agency.id, :company_id => company.id)
+    if favorite_agency.save
+      render json: company, status: :created
+      return
+    end
+
+    render json: { errors: company.errors },status: :unprocessable_entity
   end
 
   private

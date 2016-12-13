@@ -51,6 +51,7 @@ Rails.application.routes.draw do
       resources :companies, :only => [:create, :show, :index] do 
         collection do 
           post 'update', :action => 'update'
+          post 'add_favorite_agency', :action => 'add_favorite_agency'
         end
       end
       resources :brands, :only => [:create, :show, :index] do

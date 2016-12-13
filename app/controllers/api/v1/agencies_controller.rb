@@ -127,7 +127,7 @@ module Api::V1
       render json: @agency.exclusivities, status: :created
     end
 
-    # GET /agencies/search
+    # POST /agencies/search
     def search
       @agencies = Agency.search( params[:keyword] )
       render json: { agencies: @agencies }
