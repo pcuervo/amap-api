@@ -1,0 +1,2 @@
+class CompanyConflictBrand < ApplicationRecord
+end

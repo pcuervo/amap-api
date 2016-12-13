@@ -1,6 +1,6 @@
 module Api::V1
   class AgenciesController < ApiController
-    before_action :set_agency, only: [:show, :update, :destroy, :add_skills, :add_criteria, :add_exclusivity_brands, :remove_exclusivity_brands]
+    before_action :set_agency, only: [:show, :update, :destroy, :add_skills, :add_criteria, :add_exclusivity_brands, :remove_exclusivity_brands, :get_users]
     before_action only: [:create, :update] do 
       authenticate_with_token! params[:auth_token]
     end
@@ -131,6 +131,15 @@ module Api::V1
     def search
       @agencies = Agency.search( params[:keyword], params[:company_id] )
       render json: { agencies: @agencies }
+    end
+
+    # POST /agencies/get_users
+    def get_users
+      if ! @agency.present? 
+        render json: { errors: 'No se encontró la agencia con id: ' + params[:id] },status: :unprocessable_entity
+        return
+      end
+      render json: @agency.users
     end
 
     private

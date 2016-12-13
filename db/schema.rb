@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161213013255) do
+ActiveRecord::Schema.define(version: 20161213162440) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,15 +105,18 @@ ActiveRecord::Schema.define(version: 20161213013255) do
     t.integer "user_id",    null: false
   end
 
+  create_table "company_conflict_brands", force: :cascade do |t|
+    t.integer  "company_id"
+    t.string   "brand"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_company_conflict_brands_on_company_id", using: :btree
+  end
+
   create_table "criteria", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "favorite_agencies", id: false, force: :cascade do |t|
-    t.integer "agency_id",  null: false
-    t.integer "company_id", null: false
   end
 
   create_table "new_user_requests", force: :cascade do |t|
@@ -251,6 +254,7 @@ ActiveRecord::Schema.define(version: 20161213013255) do
   add_foreign_key "agency_skills", "agencies"
   add_foreign_key "agency_skills", "skills"
   add_foreign_key "brands", "companies"
+  add_foreign_key "company_conflict_brands", "companies"
   add_foreign_key "pitch_evaluations", "pitches"
   add_foreign_key "pitch_evaluations", "users"
   add_foreign_key "pitch_results", "agencies"
