@@ -93,7 +93,7 @@ RSpec.describe Api::V1::CompaniesController, :type => :controller do
         @admin.companies << @company
         @admin.save
         @agency = FactoryGirl.create :agency
-        post :add_favorite_agency, params: { auth_token: @admin.auth_token, id: @company.id, agency_id: @agency.id }, format: :json
+        post :add_favorite_agency, params: { auth_token: @admin.auth_token, agency_id: @agency.id }, format: :json
       end
 
       it "returns a Company object with the agency as favorite" do
@@ -102,6 +102,31 @@ RSpec.describe Api::V1::CompaniesController, :type => :controller do
       end
 
       it { should respond_with 201 }
+    end
+  end #POST add_favorite
+
+  describe "POST #remove_favorite_agency" do
+    context "when is successfully created" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @company = FactoryGirl.create :company
+        @admin.companies << @company
+        @admin.save
+        @agency = FactoryGirl.create :agency
+        @company.agencies << @agency
+        @company.save
+        post :remove_favorite_agency, params: { auth_token: @admin.auth_token, agency_id: @agency.id }, format: :json
+      end
+
+      it "returns a Company object with the agency as favorite" do
+        company_response = json_response
+        expect(company_response[:favorite_agencies].count).to eql 0
+      end
+
+      it { should respond_with 200 }
     end
   end #POST add_favorite
 end

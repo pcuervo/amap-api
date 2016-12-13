@@ -7,6 +7,7 @@ class Agency < ApplicationRecord
   has_many :skills, :through => :agency_skills
   has_many :exclusivities, foreign_key: "agency_id", class_name: "AgencyExclusivity"
   has_and_belongs_to_many :criteria, :through => :agencies_criteria
+  has_and_belongs_to_many :companies
 
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "200x200#" }, default_url: "", :path => ":rails_root/storage/agency/:id/:style/:basename.:extension", :url => ":rails_root/storage/#{Rails.env}#{ENV['RAILS_TEST_NUMBER']}/attachments/:id/:style/:basename.:extension"
   

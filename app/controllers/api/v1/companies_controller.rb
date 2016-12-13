@@ -1,6 +1,6 @@
 class Api::V1::CompaniesController < ApplicationController
   before_action :set_company, only: [:show, :update, :destroy]
-  before_action only: [:create, :update, :add_favorite_agency] do 
+  before_action only: [:create, :update, :add_favorite_agency, :remove_favorite_agency] do 
     authenticate_with_token! params[:auth_token]
   end
 
@@ -58,13 +58,30 @@ class Api::V1::CompaniesController < ApplicationController
     company = current_user.companies.first
     agency = Agency.find( params[:agency_id] )
     if ! agency.present? 
-      render json: { errors: 'No se encontró la agencya con id: ' + params[:agency_id] },status: :unprocessable_entity
+      render json: { errors: 'No se encontró la agencia con id: ' + params[:agency_id] },status: :unprocessable_entity
       return
     end
 
-    favorite_agency = FavoriteAgency.create(:agency_id => agency.id, :company_id => company.id)
-    if favorite_agency.save
+    company.agencies << agency
+    if company.save 
       render json: company, status: :created
+      return
+    end
+
+    render json: { errors: company.errors },status: :unprocessable_entity
+  end
+
+  # POST /remove_favorite_agency
+  def remove_favorite_agency
+    company = current_user.companies.first
+    favorite_agency = company.agencies.where('agency_id = ?', params[:agency_id])
+    if ! favorite_agency.present?
+      render json: { errors: 'No se encontró la agencia favorita con id: ' + params[:agency_id] },status: :unprocessable_entity
+      return
+    end
+
+    if company.agencies.delete(favorite_agency)
+      render json: company, status: :ok
       return
     end
 

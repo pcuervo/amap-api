@@ -3,9 +3,8 @@ class CompanySerializer < ActiveModel::Serializer
 
   def favorite_agencies
     favs = []
-    object.favorite_agencies.each do |fav|
-      agency = Agency.find(fav.agency_id)
-      favs.push({:id => agency.id, :name => agency.name})
+    object.agencies.each do |fav|
+      favs.push({:id => fav.id, :name => fav.name})
     end
     favs
   end
