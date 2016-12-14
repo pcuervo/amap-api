@@ -303,6 +303,17 @@ class PitchEvaluation < ApplicationRecord
     return PitchEvaluation.where( 'pitch_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', pitches.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
+  def self.get_lost_pitches_by_company( company )
+    pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
+    won = PitchWinnerSurvey.select(:pitch_id).where( 'pitch_id IN (?)', pitches.pluck(:id) ).group(:pitch_id)
+    return pitches.count - won.length
+  end
+
+  def self.get_won_pitches_by_company( company )
+    pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
+    return PitchWinnerSurvey.where( 'pitch_id IN (?)', pitches.pluck(:id) ).count
+  end
+
   # Scopes
   scope :average_per_month_by_user, -> ( user_id, start_date, end_date  ) { 
     if start_date.present? && end_date.present?
