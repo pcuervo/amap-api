@@ -180,6 +180,25 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     render json: summary, status: :ok
   end
 
+  def dashboard_summary_by_client
+    company = Company.find( params[:id] )
+    if ! company.present? 
+      render json: { errors: 'No se encontró la compañía con id: ' + params[:id].to_s }, status: :unprocessable_entity
+      return
+    end
+
+    summary = {}
+    summary[:happitch]  = PitchEvaluation.by_company_by_type( company, 'happitch' )
+    summary[:happy]     = PitchEvaluation.by_company_by_type( company, 'happy' )
+    summary[:ok]        = PitchEvaluation.by_company_by_type( company, 'ok' )
+    summary[:unhappy]   = PitchEvaluation.by_company_by_type( company, 'unhappy' )
+    # summary[:lost]      = PitchEvaluation.get_lost_pitches_by_company( company )
+    # summary[:won]       = PitchEvaluation.get_won_pitches_by_company( company )
+    summary[:brands]     = company.brands.select( 'id', 'name' )
+
+    render json: summary, status: :ok
+  end
+
   private
     def set_pitch_evaluation
       @pitch_evaluation = PitchEvaluation.find_by_id(params[:id])

@@ -56,18 +56,16 @@
                                     <td valign="top" style="padding: 20px 48px 20px 48px;">
                                       <div style="color: #5b5b5b; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
                                         <% if '2' == @user_request.user_type %>
-                                          Alguien de la agencia "<%= @user_request.agency_brand %>" con el correo <%= @user_request.email %> desea crear su cuenta para la app de Happitch. 
-
-                                          <p style="margin: 0 0 16px;">El usuario <%= @user_request.email %> de <%= @user_request.agency_brand %> ha solicitado acceso a Happitch como agencia, revisa sus datos y confirma o rechaza su soclitud</p>
+                                          <p style="margin: 0 0 16px;">El usuario <%= @user_request.email %> de <%= @user_request.agency_brand %> ha solicitado acceso a Happitch como agencia, revisa sus datos y confirma o rechaza su solicitud.</p>
                                           <h2 style="color:#000000;display:block;font-family:&quot;Helvetica Neue&quot;,Helvetica,Roboto,Arial,sans-serif;font-size:18px;font-weight:bold;line-height:130%;margin:16px 0 8px;text-align:left">Correo</h2>
                                           <p style="margin: 0 0 16px;"><%= @user_request.email %> </p>
-                                          <h2 style="color:#000000;display:block;font-family:&quot;Helvetica Neue&quot;,Helvetica,Roboto,Arial,sans-serif;font-size:18px;font-weight:bold;line-height:130%;margin:16px 0 8px;text-align:left"><%= @user_request.agency_brand %></h2>
+                                          <h2 style="color:#000000;display:block;font-family:&quot;Helvetica Neue&quot;,Helvetica,Roboto,Arial,sans-serif;font-size:18px;font-weight:bold;line-height:130%;margin:16px 0 8px;text-align:left">Agencia</h2>
                                           <p style="margin: 0 0 16px;"><%= @user_request.agency_brand %></p>
                                         <% else %>
-                                          <p style="margin: 0 0 16px;">El usuario <%= @user_request.email %> de <%= @user_request.agency_brand %> ha solicitado acceso a Happitch como cliente, revisa sus datos y confirma o rechaza su soclitud</p>
+                                          <p style="margin: 0 0 16px;">El usuario <%= @user_request.email %> de <%= @user_request.agency_brand %> ha solicitado acceso a Happitch como cliente, revisa sus datos y confirma o rechaza su solicitud.</p>
                                           <h2 style="color:#000000;display:block;font-family:&quot;Helvetica Neue&quot;,Helvetica,Roboto,Arial,sans-serif;font-size:18px;font-weight:bold;line-height:130%;margin:16px 0 8px;text-align:left">Correo</h2>
                                           <p style="margin: 0 0 16px;"><%= @user_request.email %> </p>
-                                          <h2 style="color:#000000;display:block;font-family:&quot;Helvetica Neue&quot;,Helvetica,Roboto,Arial,sans-serif;font-size:18px;font-weight:bold;line-height:130%;margin:16px 0 8px;text-align:left"><%= @user_request.agency_brand %></h2>
+                                          <h2 style="color:#000000;display:block;font-family:&quot;Helvetica Neue&quot;,Helvetica,Roboto,Arial,sans-serif;font-size:18px;font-weight:bold;line-height:130%;margin:16px 0 8px;text-align:left">Cliente</h2>
                                           <p style="margin: 0 0 16px;"><%= @user_request.agency_brand %></p>
                                         <% end %>
                                       </div>
@@ -94,12 +92,7 @@
                                   <tr>
                                     <td colspan="2" valign="middle" id="credit" style="padding: 0 48px 10px 48px; -webkit-border-radius: 6px; border: 0; color: #666666; font-family: Arial; font-size: 22px; line-height: 125%; text-align: center;">
                                       <a href="#" style="color: #000000; font-weight: normal; text-decoration: underline;">
-                                        Aceptar
-                                      </a>
-                                    </td>
-                                    <td colspan="2" valign="middle" id="credit" style="padding: 0 48px 10px 48px; -webkit-border-radius: 6px; border: 0; color: #666666; font-family: Arial; font-size: 22px; line-height: 125%; text-align: center;">
-                                      <a href="#" style="color: #000000; font-weight: normal; text-decoration: underline;">
-                                        Rechazar
+                                        Ir al administrador
                                       </a>
                                     </td>
                                   </tr>

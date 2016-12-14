@@ -145,6 +145,8 @@ class PitchEvaluation < ApplicationRecord
     pitches_info = []
     if User::CLIENT_ADMIN == user.role
       company = user.companies.first
+      return pitches_info if company.brand.count == 0
+
       pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
     else
       pitches = user.pitches
@@ -230,8 +232,9 @@ class PitchEvaluation < ApplicationRecord
     pitch_evaluations_arr = PitchEvaluation.pitches_by_user( user_id, PitchEvaluation::ACTIVE )
     pitch_evaluations = []
     pitch_evaluations_arr.each do |pe| 
-      next if ! pe[:pitch_name].downcase.include? keyword.downcase
-      #pitch_evaluations.push( PitchEvaluation.find( pe[:pitch_evaluation_id] ) )
+      if ! pe[:pitch_name].downcase.include?(keyword.downcase) && ! pe[:brand].downcase.include?( keyword.downcase ) && ! pe[:company].downcase.include?( keyword.downcase )
+        next
+      end
       pitch_evaluations.push( pe )
     end
     return pitch_evaluations
@@ -291,6 +294,13 @@ class PitchEvaluation < ApplicationRecord
       pitches_info.push( info )
     end
     pitches_info
+  end
+
+  def self.by_company_by_type( company, type )
+    pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
+    return 0 if ! pitches.present?
+
+    return PitchEvaluation.where( 'pitch_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', pitches.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
   # Scopes
