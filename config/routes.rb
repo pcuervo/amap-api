@@ -83,6 +83,7 @@ Rails.application.routes.draw do
           post 'average_per_month_industry',  :action => 'average_per_month_industry'
           post 'dashboard_summary_by_agency', :action => 'dashboard_summary_by_agency'
           post 'dashboard_summary_by_user',   :action => 'dashboard_summary_by_user'
+          post 'dashboard_summary_by_client', :action => 'dashboard_summary_by_client'
         end
       end
       resources :criteria, :only => [:index]
