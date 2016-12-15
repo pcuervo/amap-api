@@ -145,7 +145,7 @@ class PitchEvaluation < ApplicationRecord
     pitches_info = []
     if User::CLIENT_ADMIN == user.role
       company = user.companies.first
-      return pitches_info if company.brand.count == 0
+      return pitches_info if company.brands.count == 0
 
       pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
     else
@@ -303,6 +303,13 @@ class PitchEvaluation < ApplicationRecord
     return PitchEvaluation.where( 'pitch_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', pitches.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
+  def self.by_brand_by_type( brand, type )
+    pitches = Pitch.where('brand_id = ?', brand.id)
+    return 0 if ! pitches.present?
+
+    return PitchEvaluation.where( 'pitch_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', pitches.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
+  end
+
   def self.get_lost_pitches_by_company( company )
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
     won = PitchWinnerSurvey.select(:pitch_id).where( 'pitch_id IN (?)', pitches.pluck(:id) ).group(:pitch_id)
@@ -312,6 +319,68 @@ class PitchEvaluation < ApplicationRecord
   def self.get_won_pitches_by_company( company )
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
     return PitchWinnerSurvey.where( 'pitch_id IN (?)', pitches.pluck(:id) ).count
+  end
+
+  def self.get_lost_pitches_by_brand( brand )
+    pitches = Pitch.where('brand_id = ?', brand.id)
+    won = PitchWinnerSurvey.select(:pitch_id).where( 'pitch_id IN (?)', pitches.pluck(:id) ).group(:pitch_id)
+    return pitches.count - won.length
+  end
+
+  def self.get_won_pitches_by_brand( brand )
+    pitches = Pitch.where('brand_id = ?', brand.id)
+    return PitchWinnerSurvey.where( 'pitch_id IN (?)', pitches.pluck(:id) ).count
+  end
+
+  def self.are_objectives_clear_percentage pitch_id
+    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
+    return 0 if ! pe.present?
+
+    with_clear_objectives = pe.where('are_objectives_clear = ?', true).count
+    return with_clear_objectives / pe.count * 100
+  end
+
+  def self.is_budget_known_percentage pitch_id
+    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
+    return 0 if ! pe.present?
+
+    known_budget = pe.where('is_budget_known = ?', true).count
+    return known_budget / pe.count * 100
+  end
+
+  def self.are_deliverables_clear_percentage pitch_id
+    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
+    return 0 if ! pe.present?
+
+    clear_deliverables = pe.where('are_deliverables_clear = ?', true).count
+    return clear_deliverables / pe.count * 100
+  end
+
+  def self.deliver_copyright_for_pitching_percentage pitch_id
+    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
+    return 0 if ! pe.present?
+
+    deliver_copyright = pe.where('deliver_copyright_for_pitching = ?', true).count
+    return deliver_copyright / pe.count * 100
+  end
+
+  def self.time_to_present_avg pitch_id
+    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
+    return 0 if ! pe.present?
+
+    return pe.average('time_to_present::integer').ceil
+  end
+
+  def self.has_selection_criteria? pitch_id
+    return PitchEvaluation.where('pitch_id = ? AND has_selection_criteria = ?', pitch_id, true).present?
+  end
+
+  def self.five_to_seven_agencies? pitch_id
+    return PitchEvaluation.where('pitch_id = ? AND number_of_agencies = ?', pitch_id, '5 - 7').present?
+  end
+
+  def self.more_than_seven_agencies? pitch_id
+    return PitchEvaluation.where('pitch_id = ? AND number_of_agencies = ?', pitch_id, '7+').present?
   end
 
   # Scopes

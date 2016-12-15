@@ -199,6 +199,24 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     render json: summary, status: :ok
   end
 
+  def dashboard_summary_by_brand
+    brand = Brand.find( params[:id] )
+    if ! brand.present? 
+      render json: { errors: 'No se encontró la marca con id: ' + params[:id].to_s }, status: :unprocessable_entity
+      return
+    end
+
+    summary = {}
+    summary[:happitch]  = PitchEvaluation.by_brand_by_type( brand, 'happitch' )
+    summary[:happy]     = PitchEvaluation.by_brand_by_type( brand, 'happy' )
+    summary[:ok]        = PitchEvaluation.by_brand_by_type( brand, 'ok' )
+    summary[:unhappy]   = PitchEvaluation.by_brand_by_type( brand, 'unhappy' )
+    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_brand( brand )
+    summary[:won]       = PitchEvaluation.get_won_pitches_by_brand( brand )
+
+    render json: summary, status: :ok
+  end
+
   private
     def set_pitch_evaluation
       @pitch_evaluation = PitchEvaluation.find_by_id(params[:id])
