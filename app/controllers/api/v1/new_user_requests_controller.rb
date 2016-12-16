@@ -3,6 +3,7 @@ module Api::V1
     before_action :set_new_user_request, only: [:show, :update, :destroy]
     before_action :check_if_user_exists, only: [:create]
     before_action :check_if_agency_user_exists, only: [:create]
+    before_action :check_if_company_user_exists, only: [:create]
     after_action :send_confirmation_email, only: [:confirm_request]
     after_action :send_rejection_email, only: [:reject_request]
 
@@ -25,6 +26,11 @@ module Api::V1
       end
 
       if @agency_user_exists
+        render json: { errors: @user.errors }, status: :unprocessable_entity
+        return
+      end
+
+      if @company_user_exists
         render json: { errors: @user.errors }, status: :unprocessable_entity
         return
       end
@@ -126,6 +132,7 @@ module Api::V1
 
       def check_if_agency_user_exists
         return if ! params[:new_user_request][:email].present?
+        return if ! params[:user_type] == 2
 
         agency_domain = params[:new_user_request][:email].split('@')[1]
         agency_admin = User.where('email LIKE ? AND role = ?', '%'+agency_domain, User::AGENCY_ADMIN )
@@ -134,6 +141,20 @@ module Api::V1
           @user = agency_admin.first
           @user.errors.add(:email, "Ya existe un usuario de tu agencia registrado")
           @agency_user_exists = true
+        end
+      end
+
+      def check_if_company_user_exists
+        return if ! params[:new_user_request][:email].present?
+        return if ! params[:user_type] == 4
+
+        company_domain = params[:new_user_request][:email].split('@')[1]
+        company_admin = User.where('email LIKE ? AND role = ?', '%'+company_domain, User::CLIENT_ADMIN )
+
+        if company_admin.present?
+          @user = company_admin.first
+          @user.errors.add(:email, "Ya existe un usuario de tu compañía registrado")
+          @company_user_exists = true
         end
       end
 
