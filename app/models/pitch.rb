@@ -24,7 +24,6 @@ class Pitch < ApplicationRecord
     pitch_types['sad'] = 0
 
     self.pitch_evaluations.each do |pe|
-      puts pe.pitch_type 
       if pe.pitch_type == 'happitch'
         pitch_types['happitch'] += 1
       elsif pe.pitch_type == 'happy'
@@ -32,14 +31,14 @@ class Pitch < ApplicationRecord
       elsif pe.pitch_type == 'ok'
         pitch_types['ok'] += 1
       else
-        pitch_types['sad'] += 1
+        pitch_types['unhappy'] += 1
       end
     end
 
     pitch_types['happitch'] = pitch_types['happitch'] / self.pitch_evaluations.count * 100
     pitch_types['happy'] = pitch_types['happy'] / self.pitch_evaluations.count * 100
     pitch_types['ok'] = pitch_types['ok'] / self.pitch_evaluations.count * 100
-    pitch_types['sad'] = pitch_types['sad'] / self.pitch_evaluations.count * 100
+    pitch_types['unhappy'] = pitch_types['unhappy'] / self.pitch_evaluations.count * 100
 
     pitch_types
   end
