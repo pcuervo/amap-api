@@ -21,7 +21,7 @@ class Pitch < ApplicationRecord
     pitch_types['happitch'] = 0
     pitch_types['happy'] = 0
     pitch_types['ok'] = 0
-    pitch_types['sad'] = 0
+    pitch_types['unhappy'] = 0
 
     self.pitch_evaluations.each do |pe|
       if pe.pitch_type == 'happitch'
