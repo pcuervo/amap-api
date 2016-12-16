@@ -33,6 +33,7 @@ class Pitch < ApplicationRecord
       else
         pitch_types['unhappy'] += 1
       end
+      puts pitch_types.to_yaml
     end
 
     pitch_types['happitch'] = pitch_types['happitch'] / self.pitch_evaluations.count * 100
