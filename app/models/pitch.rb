@@ -22,6 +22,7 @@ class Pitch < ApplicationRecord
     pitch_types['happy'] = 0
     pitch_types['ok'] = 0
     pitch_types['sad'] = 0
+    puts self.pitch_evaluations.to_yaml
     self.pitch_evaluations.each do |pe|
       if pe.pitch_type == 'happitch'
         pitch_types['happitch'] += 1
