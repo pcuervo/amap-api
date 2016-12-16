@@ -33,13 +33,14 @@ class Pitch < ApplicationRecord
       else
         pitch_types['unhappy'] += 1
       end
-      puts pitch_types.to_yaml
     end
 
-    pitch_types['happitch'] = pitch_types['happitch'] / self.pitch_evaluations.count * 100
-    pitch_types['happy'] = pitch_types['happy'] / self.pitch_evaluations.count * 100
-    pitch_types['ok'] = pitch_types['ok'] / self.pitch_evaluations.count * 100
-    pitch_types['unhappy'] = pitch_types['unhappy'] / self.pitch_evaluations.count * 100
+    puts pitch_types.to_yaml
+
+    pitch_types['happitch'] = pitch_types['happitch'].to_f / self.pitch_evaluations.count * 100
+    pitch_types['happy'] = pitch_types['happy'].to_f / self.pitch_evaluations.count * 100
+    pitch_types['ok'] = pitch_types['ok'].to_f / self.pitch_evaluations.count * 100
+    pitch_types['unhappy'] = pitch_types['unhappy'].to_f / self.pitch_evaluations.count * 100
 
     pitch_types
   end
