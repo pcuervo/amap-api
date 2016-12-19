@@ -95,7 +95,6 @@ class Api::V1::PitchesController < ApplicationController
       puts '-----'
       puts 'Brand: ' + brand.name
       puts 'Company: ' + company.name
-      puts pitch.to_yaml
 
       # If client exists, add pitch
       user = User.find_by_email( @pitch.brief_email_contact )
