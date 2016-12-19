@@ -344,43 +344,43 @@ class PitchEvaluation < ApplicationRecord
     end
 
     if pitch.is_budget_known_percentage <= 25 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_budget_25' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_budget_25' ).first )
     elsif pitch.is_budget_known_percentage > 25 && pitch.is_budget_known_percentage <= 50
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_budget_50' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_budget_50' ).first )
     elsif pitch.is_budget_known_percentage > 50 && pitch.is_budget_known_percentage <= 75
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_budget_75' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_budget_75' ).first )
     elsif pitch.is_budget_known_percentage > 75 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_budget_100' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_budget_100' ).first )
     end
 
     if has_selection_criteria? 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_criteria' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_criteria' ).first )
     end
 
     if five_to_seven_agencies? 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_number_5' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_number_5' ).first )
     elsif more_than_seven_agencies?
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_number_7' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_number_7' ).first )
     end
 
     if time_to_present_avg > 0 && time_to_present_avg <= 5 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_time' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_time' ).first )
     elsif time_to_present_avg > 5 && time_to_present_avg <= 10 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_more_time' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_more_time' ).first )
     end
 
     if will_deliver_copyright_for_pitching? 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_property' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_property' ).first )
     end
 
     if pitch.are_deliverables_clear_percentage <= 25 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_25' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_25' ).first )
     elsif pitch.are_deliverables_clear_percentage > 25 && pitch.are_deliverables_clear_percentage <= 50
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_50' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_50' ).first )
     elsif pitch.are_deliverables_clear_percentage > 50 && pitch.are_deliverables_clear_percentage <= 75
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_75' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_75' ).first )
     elsif pitch.are_deliverables_clear_percentage > 75 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_100' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_100' ).first )
     end
 
     return recommendations
@@ -397,11 +397,11 @@ class PitchEvaluation < ApplicationRecord
     are_objectives_clear_percentage = ( are_objectives_clear_percentage.to_f / pitches.count ).ceil
 
     if are_objectives_clear_percentage <= 25 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_25' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_25' ).first )
     elsif are_objectives_clear_percentage > 25 && are_objectives_clear_percentage <= 50
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_50' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_50' ).first )
     elsif are_objectives_clear_percentage > 50 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_75' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_75' ).first )
     end
 
     return recommendations
