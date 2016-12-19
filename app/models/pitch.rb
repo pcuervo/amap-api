@@ -117,12 +117,8 @@ class Pitch < ApplicationRecord
     return clear_deliverables.to_f / pe.count * 100
   end
 
-  def deliver_copyright_for_pitching_percentage 
-    pe = PitchEvaluation.where('pitch_id = ?', self.id)
-    return 0 if ! pe.present?
-
-    deliver_copyright = pe.where('deliver_copyright_for_pitching = ?', true).count
-    return deliver_copyright.to_f / pe.count * 100
+  def will_deliver_copyright_for_pitching? 
+    return PitchEvaluation.where('pitch_id = ? AND deliver_copyright = ?', self.id, true).present?
   end
 
   def time_to_present_avg 
