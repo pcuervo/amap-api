@@ -386,7 +386,7 @@ class PitchEvaluation < ApplicationRecord
     return recommendations
   end
 
-  def get_recommendations_by_client( company )
+  def self.get_recommendations_by_client( company )
     recommendations = []
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
     are_objectives_clear_percentage = 0.0
