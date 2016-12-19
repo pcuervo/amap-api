@@ -92,5 +92,56 @@ class Pitch < ApplicationRecord
 
     return breakdown
   end
+
+  def are_objectives_clear_percentage 
+    pe = PitchEvaluation.where('pitch_id = ?', self.id)
+    return 0 if ! pe.present?
+
+    with_clear_objectives = pe.where('are_objectives_clear = ?', true).count
+    return with_clear_objectives.to_f / pe.count * 100
+  end
+
+  def is_budget_known_percentage 
+    pe = PitchEvaluation.where('pitch_id = ?', self.pitch_id)
+    return 0 if ! pe.present?
+
+    known_budget = pe.where('is_budget_known = ?', true).count
+    return known_budget.to_f / pe.count * 100
+  end
+
+  def are_deliverables_clear_percentage 
+    pe = PitchEvaluation.where('pitch_id = ?', self.pitch_id)
+    return 0 if ! pe.present?
+
+    clear_deliverables = pe.where('are_deliverables_clear = ?', true).count
+    return clear_deliverables.to_f / pe.count * 100
+  end
+
+  def deliver_copyright_for_pitching_percentage 
+    pe = PitchEvaluation.where('pitch_id = ?', self.pitch_id)
+    return 0 if ! pe.present?
+
+    deliver_copyright = pe.where('deliver_copyright_for_pitching = ?', true).count
+    return deliver_copyright.to_f / pe.count * 100
+  end
+
+  def time_to_present_avg 
+    pe = PitchEvaluation.where('pitch_id = ?', self.pitch_id)
+    return 0 if ! pe.present?
+
+    return pe.average('time_to_present::integer').ceil
+  end
+
+  def has_selection_criteria? 
+    return PitchEvaluation.where('pitch_id = ? AND has_selection_criteria = ?', self.id, true).present?
+  end
+
+  def five_to_seven_agencies? 
+    return PitchEvaluation.where('pitch_id = ? AND number_of_agencies = ?', self.id, '5 - 7').present?
+  end
+
+  def more_than_seven_agencies? 
+    return PitchEvaluation.where('pitch_id = ? AND number_of_agencies = ?', self.id, '7+').present?
+  end
   
 end

@@ -163,6 +163,7 @@ class PitchEvaluation < ApplicationRecord
       info[:pitch_types_percentage] = p.get_pitch_types
       info[:winner]                 = p.get_winner
       info[:breakdown]              = p.get_evaluation_breakdown
+      info[:recommendations]        = get_recommendations( p )
       pitches_info.push( info )
     end
     pitches_info
@@ -332,56 +333,29 @@ class PitchEvaluation < ApplicationRecord
     return PitchWinnerSurvey.where( 'pitch_id IN (?)', pitches.pluck(:id) ).count
   end
 
-  def self.are_objectives_clear_percentage pitch_id
-    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
-    return 0 if ! pe.present?
+  def get_recommendations pitch
+    recommendations = []
+    if pitch.are_objectives_clear_percentage <= 25 
+      recommendations.push( Recommendation.find_by_reco_id( 'client_objective_25' ) )
+    elsif pitch.are_objectives_clear_percentage > 25 && pitch.are_objectives_clear_percentage <= 50
+      recommendations.push( Recommendation.find_by_reco_id( 'client_objective_50' ) )
+    elsif pitch.are_objectives_clear_percentage > 50 
+      recommendations.push( Recommendation.find_by_reco_id( 'client_objective_75' ) )
+    end
 
-    with_clear_objectives = pe.where('are_objectives_clear = ?', true).count
-    return with_clear_objectives / pe.count * 100
+    if pitch.is_budget_known_percentage <= 25 
+      recommendations.push( Recommendation.find_by_reco_id( 'client_budget_25' ) )
+    elsif pitch.is_budget_known_percentage > 25 && pitch.is_budget_known_percentage <= 50
+      recommendations.push( Recommendation.find_by_reco_id( 'client_budget_50' ) )
+    elsif pitch.is_budget_known_percentage > 50 && pitch.is_budget_known_percentage <= 75
+      recommendations.push( Recommendation.find_by_reco_id( 'client_budget_75' ) )
+    elsif pitch.is_budget_known_percentage > 75 
+      recommendations.push( Recommendation.find_by_reco_id( 'client_budget_100' ) )
+    end
+
+    return recommendations
   end
 
-  def self.is_budget_known_percentage pitch_id
-    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
-    return 0 if ! pe.present?
-
-    known_budget = pe.where('is_budget_known = ?', true).count
-    return known_budget / pe.count * 100
-  end
-
-  def self.are_deliverables_clear_percentage pitch_id
-    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
-    return 0 if ! pe.present?
-
-    clear_deliverables = pe.where('are_deliverables_clear = ?', true).count
-    return clear_deliverables / pe.count * 100
-  end
-
-  def self.deliver_copyright_for_pitching_percentage pitch_id
-    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
-    return 0 if ! pe.present?
-
-    deliver_copyright = pe.where('deliver_copyright_for_pitching = ?', true).count
-    return deliver_copyright / pe.count * 100
-  end
-
-  def self.time_to_present_avg pitch_id
-    pe = PitchEvaluation.where('pitch_id = ?', pitch_id)
-    return 0 if ! pe.present?
-
-    return pe.average('time_to_present::integer').ceil
-  end
-
-  def self.has_selection_criteria? pitch_id
-    return PitchEvaluation.where('pitch_id = ? AND has_selection_criteria = ?', pitch_id, true).present?
-  end
-
-  def self.five_to_seven_agencies? pitch_id
-    return PitchEvaluation.where('pitch_id = ? AND number_of_agencies = ?', pitch_id, '5 - 7').present?
-  end
-
-  def self.more_than_seven_agencies? pitch_id
-    return PitchEvaluation.where('pitch_id = ? AND number_of_agencies = ?', pitch_id, '7+').present?
-  end
 
   # Scopes
   scope :average_per_month_by_user, -> ( user_id, start_date, end_date  ) { 

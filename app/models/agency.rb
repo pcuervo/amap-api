@@ -42,6 +42,7 @@ class Agency < ApplicationRecord
   end
 
   def add_exclusivity_brands brands_array
+    self.exclusivities.delete_all
     brands_array.each do |brand|
       exclusivity = AgencyExclusivity.create( :brand => brand )
       self.exclusivities << exclusivity
