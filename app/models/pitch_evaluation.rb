@@ -363,9 +363,9 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_number_7' ).first )
     end
 
-    if pitch.time_to_present_avg > 0 && time_to_present_avg <= 5 
+    if pitch.time_to_present_avg > 0 && pitch.time_to_present_avg <= 5 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_time' ).first )
-    elsif time_to_present_avg > 5 && time_to_present_avg <= 10 
+    elsif pitch.time_to_present_avg > 5 && pitch.time_to_present_avg <= 10 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_more_time' ).first )
     end
 
