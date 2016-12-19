@@ -188,13 +188,14 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     end
 
     summary = {}
-    summary[:happitch]  = PitchEvaluation.by_company_by_type( company, 'happitch' )
-    summary[:happy]     = PitchEvaluation.by_company_by_type( company, 'happy' )
-    summary[:ok]        = PitchEvaluation.by_company_by_type( company, 'ok' )
-    summary[:unhappy]   = PitchEvaluation.by_company_by_type( company, 'unhappy' )
-    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_company( company )
-    summary[:won]       = PitchEvaluation.get_won_pitches_by_company( company )
-    summary[:brands]     = company.brands.select( 'id', 'name' )
+    summary[:happitch]        = PitchEvaluation.by_company_by_type( company, 'happitch' )
+    summary[:happy]           = PitchEvaluation.by_company_by_type( company, 'happy' )
+    summary[:ok]              = PitchEvaluation.by_company_by_type( company, 'ok' )
+    summary[:unhappy]         = PitchEvaluation.by_company_by_type( company, 'unhappy' )
+    summary[:lost]            = PitchEvaluation.get_lost_pitches_by_company( company )
+    summary[:won]             = PitchEvaluation.get_won_pitches_by_company( company )
+    summary[:brands]          = company.brands.select( 'id', 'name' )
+    summary[:recommendations] = PitchEvaluation.get_recommendations_by_company( company )
 
     render json: summary, status: :ok
   end

@@ -163,7 +163,7 @@ class PitchEvaluation < ApplicationRecord
       info[:pitch_types_percentage] = p.get_pitch_types
       info[:winner]                 = p.get_winner
       info[:breakdown]              = p.get_evaluation_breakdown
-      info[:recommendations]        = PitchEvaluation.get_recommendations( p )
+      info[:recommendations]        = PitchEvaluation.get_recommendations_by_pitch( p )
       pitches_info.push( info )
     end
     pitches_info
@@ -333,7 +333,7 @@ class PitchEvaluation < ApplicationRecord
     return PitchWinnerSurvey.where( 'pitch_id IN (?)', pitches.pluck(:id) ).count
   end
 
-  def self.get_recommendations pitch
+  def self.get_recommendations_by_pitch pitch
     recommendations = []
     if pitch.are_objectives_clear_percentage <= 25 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_25' ) ).first
@@ -381,6 +381,27 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_75' ) ).first
     elsif pitch.are_deliverables_clear_percentage > 75 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_deliverable_100' ) ).first
+    end
+
+    return recommendations
+  end
+
+  def get_recommendations_by_client( company )
+    recommendations = []
+    pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
+    are_objectives_clear_percentage = 0.0
+    pitches.each do |p|
+      are_objectives_clear_percentage = are_objectives_clear_percentage + p.are_deliverables_clear_percentage
+    end
+
+    are_objectives_clear_percentage = ( are_objectives_clear_percentage.to_f / pitches.count ).ceil
+
+    if are_objectives_clear_percentage <= 25 
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_25' ) ).first
+    elsif are_objectives_clear_percentage > 25 && are_objectives_clear_percentage <= 50
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_50' ) ).first
+    elsif are_objectives_clear_percentage > 50 
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_75' ) ).first
     end
 
     return recommendations
