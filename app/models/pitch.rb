@@ -35,8 +35,6 @@ class Pitch < ApplicationRecord
       end
     end
 
-    puts pitch_types.to_yaml
-
     pitch_types['happitch'] = pitch_types['happitch'].to_f / self.pitch_evaluations.count * 100
     pitch_types['happy'] = pitch_types['happy'].to_f / self.pitch_evaluations.count * 100
     pitch_types['ok'] = pitch_types['ok'].to_f / self.pitch_evaluations.count * 100

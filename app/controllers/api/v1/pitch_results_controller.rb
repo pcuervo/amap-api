@@ -55,11 +55,14 @@ class Api::V1::PitchResultsController < ApplicationController
     end
 
     def update_evaluation_won_status
-      puts 'are we ever here?'
       agency = Agency.find( @pitch_result.agency_id )
       user_ids = []
       agency.users.each do |user|
         user_ids.push( user.id )
+      end
+
+      if @was_won
+        lost_evaluations = PitchEvaluation.where('pitch_id = ?', @pitch_result.pitch_id).update_all(was_won: false)
       end
       pitch_evaluation = PitchEvaluation.where( 'user_id in (?) AND pitch_id = ?', user_ids, @pitch_result.pitch_id ).first
       pitch_evaluation.was_won = @was_won 
