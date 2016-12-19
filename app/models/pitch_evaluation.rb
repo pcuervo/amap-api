@@ -386,14 +386,14 @@ class PitchEvaluation < ApplicationRecord
     return recommendations
   end
 
-  def self.get_recommendations_by_client( company )
+  def self.get_recommendations_by_company( company )
     recommendations = []
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
     are_objectives_clear_percentage = 0.0
     is_budget_known_percentage = 0.0
     time_to_present_avg = 0
     are_deliverables_clear_percentage = 0.0
-    
+
     pitches.each do |p|
       are_objectives_clear_percentage = are_objectives_clear_percentage + p.are_objectives_clear_percentage
       is_budget_known_percentage = is_budget_known_percentage + p.is_budget_known_percentage
