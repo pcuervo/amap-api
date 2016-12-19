@@ -102,7 +102,7 @@ class Pitch < ApplicationRecord
   end
 
   def is_budget_known_percentage 
-    pe = PitchEvaluation.where('pitch_id = ?', self.pitch_id)
+    pe = PitchEvaluation.where('pitch_id = ?', self.id)
     return 0 if ! pe.present?
 
     known_budget = pe.where('is_budget_known = ?', true).count
@@ -110,7 +110,7 @@ class Pitch < ApplicationRecord
   end
 
   def are_deliverables_clear_percentage 
-    pe = PitchEvaluation.where('pitch_id = ?', self.pitch_id)
+    pe = PitchEvaluation.where('pitch_id = ?', self.id)
     return 0 if ! pe.present?
 
     clear_deliverables = pe.where('are_deliverables_clear = ?', true).count
@@ -118,7 +118,7 @@ class Pitch < ApplicationRecord
   end
 
   def deliver_copyright_for_pitching_percentage 
-    pe = PitchEvaluation.where('pitch_id = ?', self.pitch_id)
+    pe = PitchEvaluation.where('pitch_id = ?', self.id)
     return 0 if ! pe.present?
 
     deliver_copyright = pe.where('deliver_copyright_for_pitching = ?', true).count
@@ -126,7 +126,7 @@ class Pitch < ApplicationRecord
   end
 
   def time_to_present_avg 
-    pe = PitchEvaluation.where('pitch_id = ?', self.pitch_id)
+    pe = PitchEvaluation.where('pitch_id = ?', self.id)
     return 0 if ! pe.present?
 
     return pe.average('time_to_present::integer').ceil
