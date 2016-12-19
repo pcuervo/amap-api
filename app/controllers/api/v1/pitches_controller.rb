@@ -93,8 +93,8 @@ class Api::V1::PitchesController < ApplicationController
       brand = @pitch.brand
       company = brand.company
       puts '-----'
-      puts 'Brand: ' + brand
-      puts 'Company: ' + company
+      puts 'Brand: ' + brand.name
+      puts 'Company: ' + company.name
       puts pitch.to_yaml
 
       # If client exists, add pitch
