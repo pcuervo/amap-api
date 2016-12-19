@@ -7,7 +7,7 @@ module Api::V1
 
     # GET /agencies
     def index
-      @agencies = Agency.all
+      @agencies = Agency.all.order(:name)
       render json: { agencies: @agencies }
     end
 
