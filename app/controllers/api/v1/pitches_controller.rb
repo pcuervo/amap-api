@@ -107,24 +107,14 @@ class Api::V1::PitchesController < ApplicationController
         return
       end
 
-      if user.present?
-        company.users << user
-        company.save
-        user.companies << company
-        puts user.companies.to_yaml
-        puts company.to_yaml
-        user.pitches << @pitch 
-        user.save
-        notify_client_new_pitch_email( user, @pitch )
-        return
-      end
-
       # If client doesn't exist, create a new user 
       password = SecureRandom.hex
       user = User.create(:email => @pitch.brief_email_contact, :role => User::CLIENT_USER, :password => password)
       user.pitches << @pitch 
+      user.companies << company
       user.save
       send_new_client_email( user, password, @pitch )
+
     end
 
     def send_new_client_email( user, password, pitch )
