@@ -359,7 +359,7 @@ class PitchEvaluation < ApplicationRecord
 
     if pitch.five_to_seven_agencies? 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_number_5' ).first )
-    elsif more_than_seven_agencies?
+    elsif pitch.more_than_seven_agencies?
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_number_7' ).first )
     end
 
