@@ -90,10 +90,22 @@ class Api::V1::PitchesController < ApplicationController
       return if ! @pitch.present?
       return if @pitch.errors.any?
 
+      brand = @pitch.brand
+      company = brand.company
+
       # If client exists, add pitch
       user = User.find_by_email( @pitch.brief_email_contact )
       if user.present?
         user.pitches << @pitch 
+        user.companies << company
+        user.save
+        notify_client_new_pitch_email( user, @pitch )
+        return
+      end
+
+      if user.present?
+        user.pitches << @pitch 
+        user.companies << company
         user.save
         notify_client_new_pitch_email( user, @pitch )
         return

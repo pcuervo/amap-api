@@ -145,6 +145,7 @@ class PitchEvaluation < ApplicationRecord
     pitches_info = []
     if User::CLIENT_ADMIN == user.role
       company = user.companies.first
+
       return pitches_info if company.brands.count == 0
 
       pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
