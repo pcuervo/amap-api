@@ -118,7 +118,7 @@ class Pitch < ApplicationRecord
   end
 
   def will_deliver_copyright_for_pitching? 
-    return PitchEvaluation.where('pitch_id = ? AND deliver_copyright = ?', self.id, true).present?
+    return PitchEvaluation.where('pitch_id = ? AND deliver_copyright_for_pitching = ?', self.id, true).present?
   end
 
   def time_to_present_avg 
