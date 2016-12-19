@@ -163,7 +163,7 @@ class PitchEvaluation < ApplicationRecord
       info[:pitch_types_percentage] = p.get_pitch_types
       info[:winner]                 = p.get_winner
       info[:breakdown]              = p.get_evaluation_breakdown
-      info[:recommendations]        = get_recommendations( p )
+      info[:recommendations]        = PitchEvaluation.get_recommendations( p )
       pitches_info.push( info )
     end
     pitches_info
@@ -333,7 +333,7 @@ class PitchEvaluation < ApplicationRecord
     return PitchWinnerSurvey.where( 'pitch_id IN (?)', pitches.pluck(:id) ).count
   end
 
-  def get_recommendations pitch
+  def self.get_recommendations pitch
     recommendations = []
     if pitch.are_objectives_clear_percentage <= 25 
       recommendations.push( Recommendation.find_by_reco_id( 'client_objective_25' ) )
