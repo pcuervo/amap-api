@@ -96,11 +96,7 @@ class Api::V1::PitchesController < ApplicationController
       # If client exists, add pitch
       user = User.find_by_email( @pitch.brief_email_contact )
       if user.present?
-        company.users << user
-        company.save
         user.companies << company
-        puts user.companies.to_yaml
-        puts company.to_yaml
         user.pitches << @pitch 
         user.save
         notify_client_new_pitch_email( user, @pitch )
