@@ -30,7 +30,7 @@ class Pitch < ApplicationRecord
         pitch_types['happy'] += 1
       elsif pe.pitch_type == 'ok'
         pitch_types['ok'] += 1
-      elsif
+      elsif pe.pitch_type == 'unhappy'
         pitch_types['unhappy'] += 1
       end
     end
