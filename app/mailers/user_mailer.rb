@@ -16,7 +16,7 @@ class UserMailer < ApplicationMailer
     @pitch = pitch
     @password = password
     #mail( to: @user.email, subject: 'Una agencia ha dado de alta un pitch con tu correo en Happitch' )
-    mail( to: 'miguel@pcuervo.com', subject: 'Una agencia ha dado de alta un pitch con tu correo en Happitch' )
+    mail( to: @user.email, subject: 'Una agencia ha dado de alta un pitch con tu correo en Happitch' )
   end
 
   def new_pitch_client( user, pitch )
