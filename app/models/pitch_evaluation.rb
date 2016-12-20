@@ -456,6 +456,16 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_list' ).first )
     end
 
+    if PitchEvaluation.num_pitches_without_budget( user_ids ) == 1 
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_budget_1' ).first )
+    elsif PitchEvaluation.num_pitches_without_budget( user_ids ) >= 3
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_budget_3' ).first )
+    end
+
+    if PitchEvaluation.num_pitches_without_selection_criteria( user_ids ) >= 2
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_sharing' ).first )
+    end 
+
     return recommendations
   end
 
@@ -463,7 +473,21 @@ class PitchEvaluation < ApplicationRecord
     pe = PitchEvaluation.where('user_id IN (?)', user_ids)
     return 0 if ! pe.present?
 
-    return pe.where('are_objectives_clear = ?', true).count
+    return pe.where('are_objectives_clear = ?', false).count
+  end
+
+  def self.num_pitches_without_budget user_ids
+    pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    return pe.where('is_budget_known = ?', false).count
+  end
+
+  def self.num_pitches_without_selection_criteria user_ids
+    pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    return pe.where('has_selection_criteria = ?', false).count
   end
 
   # Scopes
