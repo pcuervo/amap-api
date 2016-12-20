@@ -490,13 +490,13 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_speak' ).first )
     end
 
-    total_unhappy = PitchEvaluation.where('user_id IN (?) AND pitch_type = ?' user_ids, 'unhappy' ).count
-    total_pitches = PitchEvaluation.where('user_id IN (?) AND pitch_type is not null' user_ids ).count
+    total_unhappy = PitchEvaluation.where('user_id IN (?) AND pitch_type = ?', user_ids, 'unhappy' ).count
+    total_pitches = PitchEvaluation.where('user_id IN (?) AND pitch_type is not null', user_ids ).count
     total_unhappy_percent = total_unhappy.to_f / total_pitches * 100
     if total_unhappy_percent > 50
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_alert' ).first )
     end
-    
+
     return recommendations
   end
 
