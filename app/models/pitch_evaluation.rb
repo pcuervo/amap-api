@@ -337,11 +337,11 @@ class PitchEvaluation < ApplicationRecord
   def self.get_recommendations_by_pitch pitch
     recommendations = []
     if pitch.are_objectives_clear_percentage <= 25 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_25' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_25' ).first )
     elsif pitch.are_objectives_clear_percentage > 25 && pitch.are_objectives_clear_percentage <= 50
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_50' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_50' ).first )
     elsif pitch.are_objectives_clear_percentage > 50 
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_75' ) ).first
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_75' ).first )
     end
 
     if pitch.is_budget_known_percentage <= 25 
