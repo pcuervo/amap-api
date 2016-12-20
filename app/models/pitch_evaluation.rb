@@ -450,9 +450,9 @@ class PitchEvaluation < ApplicationRecord
     recommendations = []
     user_ids = agency.users.pluck(:id)
 
-    if PitchEvaluation.num_clear_objectives_by_agency( user_ids ) == 1 
+    if PitchEvaluation.num_not_clear_objectives_by_agency( user_ids ) == 1 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_communication' ).first )
-    elsif PitchEvaluation.num_clear_objectives_by_agency( user_ids ) > 1 
+    elsif PitchEvaluation.num_not_clear_objectives_by_agency( user_ids ) > 1 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_list' ).first )
     end
 
@@ -482,12 +482,25 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_property' ).first )
     end 
 
-    
+    if PitchEvaluation.num_pitches_without_clear_deliverables( user_ids ) >= 1
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_deliverable' ).first )
+    end 
 
+    if PitchEvaluation.num_pitches_without_clear_deliverables( user_ids ) >= 1 && PitchEvaluation.num_not_clear_objectives_by_agency( user_ids ) >= 1 
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_speak' ).first )
+    end
+
+    total_unhappy = PitchEvaluation.where('user_id IN (?) AND pitch_type = ?' user_ids, 'unhappy' ).count
+    total_pitches = PitchEvaluation.where('user_id IN (?) AND pitch_type is not null' user_ids ).count
+    total_unhappy_percent = total_unhappy.to_f / total_pitches * 100
+    if total_unhappy_percent > 50
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_alert' ).first )
+    end
+    
     return recommendations
   end
 
-  def self.num_clear_objectives_by_agency user_ids
+  def self.num_not_clear_objectives_by_agency user_ids
     pe = PitchEvaluation.where('user_id IN (?)', user_ids)
     return 0 if ! pe.present?
 
@@ -534,6 +547,13 @@ class PitchEvaluation < ApplicationRecord
     return 0 if ! pe.present?
 
     return pe.where('deliver_copyright_for_pitching =  ?', true).count
+  end
+
+  def self.num_pitches_without_clear_deliverables user_ids
+    pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    return pe.where('are_deliverables_clear =  ?', false).count
   end
 
   # Scopes
