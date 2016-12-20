@@ -158,6 +158,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     summary[:lost]      = PitchEvaluation.get_lost_pitches_by_agency( agency )
     summary[:won]       = PitchEvaluation.get_won_pitches_by_agency( agency )
     summary[:users]     = agency.users.select( 'id', 'email', 'first_name', 'last_name' )
+    summary[:recommendations] = PitchEvaluation.get_recommendations_by_agency( agency )
 
     render json: summary, status: :ok
   end
