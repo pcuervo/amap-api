@@ -466,6 +466,20 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_sharing' ).first )
     end 
 
+    if PitchEvaluation.num_pitches_five_seven_agencies( user_ids ) >= 2
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_number_5' ).first )
+    end 
+
+    if PitchEvaluation.num_pitches_more_than_seven_agencies( user_ids ) >= 1
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_number_7' ).first )
+    end 
+
+    if PitchEvaluation.num_pitches_short_time( user_ids ) >= 1
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_time' ).first )
+    end 
+
+    
+
     return recommendations
   end
 
@@ -488,6 +502,27 @@ class PitchEvaluation < ApplicationRecord
     return 0 if ! pe.present?
 
     return pe.where('has_selection_criteria = ?', false).count
+  end
+
+  def self.num_pitches_five_seven_agencies user_ids
+    pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    return pe.where('number_of_agencies = ?', '5 - 7').count
+  end
+
+  def self.num_pitches_more_than_seven_agencies user_ids
+    pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    return pe.where('number_of_agencies = ?', '+7').count
+  end
+
+  def self.num_pitches_short_time user_ids
+    pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    return pe.where('time_to_present BETWEEN ? AND ?', 1, 5).count
   end
 
   # Scopes
