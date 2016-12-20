@@ -478,6 +478,10 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_time' ).first )
     end 
 
+    if PitchEvaluation.num_pitches_deliver_copyright( user_ids ) >= 1
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_property' ).first )
+    end 
+
     
 
     return recommendations
@@ -522,7 +526,14 @@ class PitchEvaluation < ApplicationRecord
     pe = PitchEvaluation.where('user_id IN (?)', user_ids)
     return 0 if ! pe.present?
 
-    return pe.where('time_to_present BETWEEN ? AND ?', 1, 5).count
+    return pe.where('time_to_present::integer BETWEEN ? AND ?', 1, 5).count
+  end
+
+  def self.num_pitches_deliver_copyright user_ids
+    pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    return pe.where('deliver_copyright_for_pitching =  ?', true).count
   end
 
   # Scopes
