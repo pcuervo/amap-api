@@ -336,11 +336,11 @@ class PitchEvaluation < ApplicationRecord
 
   def self.get_recommendations_by_pitch pitch
     recommendations = []
-    if pitch.are_objectives_clear_percentage <= 25 
+    if pitch.objectives_not_clear_percentage <= 25 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_25' ).first )
-    elsif pitch.are_objectives_clear_percentage > 25 && pitch.are_objectives_clear_percentage <= 50
+    elsif pitch.objectives_not_clear_percentage > 25 && pitch.objectives_not_clear_percentage <= 50
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_50' ).first )
-    elsif pitch.are_objectives_clear_percentage > 50 
+    elsif pitch.objectives_not_clear_percentage > 50 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_75' ).first )
     end
 
@@ -390,13 +390,13 @@ class PitchEvaluation < ApplicationRecord
   def self.get_recommendations_by_company( company )
     recommendations = []
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
-    are_objectives_clear_percentage = 0.0
+    objectives_not_clear_percentage = 0.0
     is_budget_known_percentage = 0.0
     time_to_present_avg = 0
     are_deliverables_clear_percentage = 0.0
 
     pitches.each do |p|
-      are_objectives_clear_percentage = are_objectives_clear_percentage + p.are_objectives_clear_percentage
+      objectives_not_clear_percentage = objectives_not_clear_percentage + p.objectives_not_clear_percentage
       is_budget_known_percentage = is_budget_known_percentage + p.is_budget_known_percentage
       time_to_present_avg = time_to_present_avg + p.time_to_present_avg
       are_deliverables_clear_percentage = are_deliverables_clear_percentage + p.are_deliverables_clear_percentage
@@ -404,16 +404,16 @@ class PitchEvaluation < ApplicationRecord
 
     return recommendations if pitches.count == 0
 
-    are_objectives_clear_percentage = ( are_objectives_clear_percentage.to_f / pitches.count ).ceil
+    objectives_not_clear_percentage = ( objectives_not_clear_percentage.to_f / pitches.count ).ceil
     is_budget_known_percentage = ( is_budget_known_percentage.to_f / pitches.count ).ceil
     time_to_present_avg = ( time_to_present_avg.to_f / pitches.count ).ceil
     are_deliverables_clear_percentage = ( are_deliverables_clear_percentage.to_f / pitches.count ).ceil
 
-    if are_objectives_clear_percentage <= 25 
+    if objectives_not_clear_percentage <= 25 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_25' ).first )
-    elsif are_objectives_clear_percentage > 25 && are_objectives_clear_percentage <= 50
+    elsif objectives_not_clear_percentage > 25 && objectives_not_clear_percentage <= 50
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_50' ).first )
-    elsif are_objectives_clear_percentage > 50 
+    elsif objectives_not_clear_percentage > 50 
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'client_objective_75' ).first )
     end
 

@@ -91,11 +91,11 @@ class Pitch < ApplicationRecord
     return breakdown
   end
 
-  def are_objectives_clear_percentage 
+  def objectives_not_clear_percentage 
     pe = PitchEvaluation.where('pitch_id = ?', self.id)
     return 0 if ! pe.present?
 
-    with_clear_objectives = pe.where('are_objectives_clear = ?', true).count
+    with_clear_objectives = pe.where('are_objectives_clear = ?', false).count
     return with_clear_objectives.to_f / pe.count * 100
   end
 
