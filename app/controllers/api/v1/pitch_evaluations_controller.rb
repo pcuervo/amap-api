@@ -3,6 +3,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
   before_action only: [:create, :update, :by_user, :cancel, :decline, :search, :average_per_month_by_user, :average_per_month_by_agency, :average_per_month_industry, :dashboard_summary_by_agency, :dashboard_summary_by_user, :filter] do 
     authenticate_with_token! params[:auth_token]
   end
+  after_action :send_pitch_evaluation_email only: [:update]
 
   # GET /pitch_evaluations/1
   def show
@@ -39,14 +40,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       render json: { errors: 'No se encontró la evaluación del pitch con id: ' + params[:id] },status: :unprocessable_entity
       return
     end
-
-    # existing_evaluation = PitchEvaluation.where( 'user_id = ? and pitch_id = ?', current_user.id, @pitch_evaluation.pitch_id )
-    # if existing_evaluation.present?
-    #   render json: { errors: 'Ya existe una evaluación del pitch para este usuario.' },status: :unprocessable_entity
-    #   return
-    # end
     
-    #@pitch_evaluation.user_id = current_user.id
     @pitch_evaluation.evaluation_status = true
     @pitch_evaluation.pitch_status = PitchEvaluation::ACTIVE
     if @pitch_evaluation.update(pitch_evaluation_params)
@@ -226,5 +220,19 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
     def pitch_evaluation_params
       params.require(:pitch_evaluation).permit( :pitch_id, :evaluation_status, :pitch_status, :are_objectives_clear, :time_to_present, :is_budget_known, :number_of_agencies, :are_deliverables_clear, :is_marketing_involved, :time_to_know_decision, :deliver_copyright_for_pitching, :know_presentation_rounds, :number_of_rounds, :score, :activity_status, :was_won, :has_selection_criteria )
+    end
+
+    def send_pitch_evaluation_email
+      pitch = @pitch_evaluation.pitch
+      pitch_users = pitch.users
+
+      if pitch_users.present?
+        pitch_users.each do |pu|
+          user = User.find(pu.user_id)
+          UserMailer.evaluated_pitch( user, pitch ).deliver_now
+        end
+        return
+      end
+
     end
 end

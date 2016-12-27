@@ -32,4 +32,10 @@ class UserMailer < ApplicationMailer
     #mail( to: @user.email, subject: 'Una agencia ha dado de alta un pitch con tu correo en Happitch' )
     mail( to: @user.email, subject: '¡Bienvenido a Happitch!', bcc: ['miguel@pcuervo.com'] )
   end
+
+  def evaluated_pitch( user, pitch )
+    @user = user
+    @pitch = pitch
+    mail( to: @user.email, subject: 'Se ha evaluado tu pitch dentro de Happitch', bcc: ['miguel@pcuervo.com'] )
+  end
 end

@@ -176,6 +176,7 @@ class PitchEvaluation < ApplicationRecord
     pitch_status_filter = []
     pitch_type_filter = []
     score_filter = []
+    show_won_pitches = false
 
     pitch_evaluations_arr.each { |pe| pitch_evaluation_ids.push(pe[:pitch_evaluation_id]) }
     pitch_evaluations = PitchEvaluation.where( 'id IN (?)', pitch_evaluation_ids )
@@ -210,6 +211,14 @@ class PitchEvaluation < ApplicationRecord
 
     if params[:unhappy]
       pitch_type_filter.push('unhappy')
+    end
+
+    if params[:won]
+      show_won_pitches = true
+    end
+
+    if show_won_pitches 
+      pitch_evaluations = pitch_evaluations.where( 'was_won = ?', true )
     end
 
     if ! pitch_status_filter.empty? && ! pitch_type_filter.empty?
