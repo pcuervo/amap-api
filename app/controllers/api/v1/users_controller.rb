@@ -4,7 +4,7 @@ module Api::V1
     before_action only: [:create, :update, :confirm_user_request] do 
       authenticate_with_token! params[:auth_token]
     end
-    after_action :send_password_to_user, only: [:create], if: -> { User::AMAP_ADMIN == current_user.role }
+    after_action :send_password_to_user, only: [:create]
 
     # GET /users/1
     def show
@@ -107,6 +107,8 @@ module Api::V1
       end
 
       def send_password_to_user
+        puts 'role: ' + current_user.role.to_s
+        return if ! User::AMAP_ADMIN == current_user.role
         UserMailer.new_user( @user, @password ).deliver_now
       end
   end 
