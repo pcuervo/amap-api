@@ -3,7 +3,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
   before_action only: [:create, :update, :by_user, :cancel, :decline, :search, :average_per_month_by_user, :average_per_month_by_agency, :average_per_month_industry, :dashboard_summary_by_agency, :dashboard_summary_by_user, :filter] do 
     authenticate_with_token! params[:auth_token]
   end
-  after_action :send_pitch_evaluation_email only: [:update]
+  after_action :send_pitch_evaluation_email, only: [:update]
 
   # GET /pitch_evaluations/1
   def show
