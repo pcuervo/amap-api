@@ -228,7 +228,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
       if pitch_users.present?
         pitch_users.each do |pu|
-          user = User.find(pu.user_id)
+          user = User.find(pu.id)
           UserMailer.evaluated_pitch( user, pitch ).deliver_now
         end
         return
