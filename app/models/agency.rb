@@ -61,7 +61,6 @@ class Agency < ApplicationRecord
   def self.search keyword, company_id
     agencies = []
     Agency.where('LOWER(name) LIKE ?', '%' + keyword.downcase + '%' ).each do |a|
-      puts a.users.to_yaml
       next if ! a.users.present?
       next if ! a.users.first.is_member_amap
 
