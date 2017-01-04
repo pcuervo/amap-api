@@ -133,6 +133,12 @@ module Api::V1
       render json: { agencies: @agencies }
     end
 
+    # POST /agencies/directory
+    def directory
+      @agencies = Agency.directory( params[:company_id] )
+      render json: { agencies: @agencies }
+    end
+
     # POST /agencies/get_users
     def get_users
       if ! @agency.present? 
