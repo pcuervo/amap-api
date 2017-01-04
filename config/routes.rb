@@ -25,6 +25,7 @@ Rails.application.routes.draw do
           post 'add_exclusivity_brands',      :action => 'add_exclusivity_brands'
           post 'remove_exclusivity_brands',   :action => 'remove_exclusivity_brands'
           post 'search',                      :action => 'search'
+          post 'directory',                   :action => 'directory'
           post 'get_users',                   :action => 'get_users'
         end
       end
