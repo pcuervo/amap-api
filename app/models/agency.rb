@@ -61,6 +61,8 @@ class Agency < ApplicationRecord
   def self.search keyword, company_id
     agencies = []
     Agency.where('LOWER(name) LIKE ?', '%' + keyword.downcase + '%' ).each do |a|
+      next if ! a.users.first.is_member_amap
+      
       c = Company.find(company_id)
       agency = {}
       agency[:id] = a.id 
@@ -72,16 +74,17 @@ class Agency < ApplicationRecord
   end
 
   def self.directory company_id
-    agencies = []
-    Agency.all.each do |a|
-      c = Company.find( company_id )
-      agency = {}
-      agency[:id] = a.id 
-      agency[:name] = a.name 
-      agency[:is_favorite] = c.agencies.exists?(a.id) 
-      agencies.push( agency )
-    end
-    return agencies.sort_by{|c| c[:is_favorite].to_s}.reverse
+    return self.search( '', company_id )
+    # agencies = []
+    # Agency.all.each do |a|
+    #   c = Company.find( company_id )
+    #   agency = {}
+    #   agency[:id] = a.id 
+    #   agency[:name] = a.name 
+    #   agency[:is_favorite] = c.agencies.exists?(a.id) 
+    #   agencies.push( agency )
+    # end
+    # return agencies.sort_by{|c| c[:is_favorite].to_s}.reverse
   end
 
 end
