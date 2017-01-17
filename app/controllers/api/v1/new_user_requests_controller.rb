@@ -2,8 +2,8 @@ module Api::V1
   class NewUserRequestsController < ApiController
     before_action :set_new_user_request, only: [:show, :update, :destroy]
     before_action :check_if_user_exists, only: [:create]
-    before_action :check_if_agency_user_exists, only: [:create]
-    before_action :check_if_company_user_exists, only: [:create]
+    #before_action :check_if_agency_user_exists, only: [:create]
+    #before_action :check_if_company_user_exists, only: [:create]
     after_action :send_confirmation_email, only: [:confirm_request]
     after_action :send_rejection_email, only: [:reject_request]
 

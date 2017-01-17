@@ -105,12 +105,11 @@ class Api::V1::PitchesController < ApplicationController
 
       # If client doesn't exist, create a new user 
       password = SecureRandom.hex
-      user = User.create(:email => @pitch.brief_email_contact, :role => User::CLIENT_USER, :password => password)
+      user = User.create(:email => @pitch.brief_email_contact, :role => User::CLIENT_ADMIN, :password => password)
       user.pitches << @pitch 
       user.companies << company
       user.save
       send_new_client_email( user, password, @pitch )
-
     end
 
     def send_new_client_email( user, password, pitch )
