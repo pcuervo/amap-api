@@ -626,4 +626,24 @@ class PitchEvaluation < ApplicationRecord
          LIMIT 12")
     end
   }
+
+   scope :average_per_month_by_company, -> ( pitch_ids, start_date, end_date  ) { 
+    if start_date.present? && end_date.present?
+      find_by_sql("SELECT ROUND(AVG(score)) AS score, to_char(created_at, 'MM-YY') as month_year
+                   FROM pitch_evaluations
+                   WHERE user_id IN ( " + user_ids + ")
+                   AND created_at BETWEEN '" + start_date + "' AND '" + end_date + "'
+                   GROUP BY (month_year)
+                   ORDER BY to_char(created_at, 'MM-YY') 
+                   LIMIT 12")
+    else
+      find_by_sql("SELECT ROUND(AVG(score)) AS score, to_char(created_at, 'MM-YY') as month_year
+                   FROM pitch_evaluations
+                   WHERE pitch_id IN ( " + pitch_ids + ")
+                   GROUP BY (month_year)
+                   ORDER BY to_char(created_at, 'MM-YY') 
+                   LIMIT 12")
+    end
+  }
+
 end

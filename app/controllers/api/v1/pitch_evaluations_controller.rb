@@ -213,6 +213,19 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     render json: summary, status: :ok
   end
 
+  def average_per_month_by_company
+    company = Agency.find( params[:id] )
+    if ! company.present? 
+      render json: { errors: 'No se encontró el anunciante con id: ' + params[:id].to_s },status: :unprocessable_entity
+      return
+    end
+
+    pitch_ids = Pitch.where( 'brand_id IN (?)', company.brands.pluck(:id) )
+    average_per_month = PitchEvaluation.average_per_month_by_company( pitch_ids.join(","), params[:start_date], params[:end_date] )
+    
+    render json: { 'average_per_month': average_per_month, 'users': company.users.select( 'id', 'email' ) } , status: :ok
+  end
+
   private
     def set_pitch_evaluation
       @pitch_evaluation = PitchEvaluation.find_by_id(params[:id])
