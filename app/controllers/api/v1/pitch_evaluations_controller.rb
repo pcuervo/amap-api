@@ -220,7 +220,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       return
     end
 
-    pitch_ids = Pitch.where( 'brand_id IN (?)', company.brands.pluck(:id) )
+    pitch_ids = Pitch.where( 'brand_id IN (?)', company.brands.pluck(:id) ).pluck(:id)
     average_per_month = PitchEvaluation.average_per_month_by_company( pitch_ids.join(","), params[:start_date], params[:end_date] )
     
     render json: { 'average_per_month': average_per_month, 'users': company.users.select( 'id', 'email' ) } , status: :ok
