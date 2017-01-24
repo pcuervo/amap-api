@@ -658,7 +658,7 @@ class PitchEvaluation < ApplicationRecord
     else
       find_by_sql("SELECT ROUND(AVG(score)) AS score, to_char(created_at, 'MM-YY') as month_year
          FROM pitch_evaluations
-         WHERE brand_id = " + brand_id.to_s + "
+         WHERE pitch_id IN ( " + pitch_ids + ")
          GROUP BY (month_year)
          ORDER BY to_char(created_at, 'MM-YY') 
          LIMIT 12")
