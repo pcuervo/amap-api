@@ -13,7 +13,7 @@ module Api::V1
 
     # GET /users
     def index
-      @users = User.all
+      @users = User.where('role = <>', 1)
       render json: @users
     end
 
