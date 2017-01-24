@@ -214,7 +214,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
   end
 
   def average_per_month_by_company
-    company = Agency.find( params[:id] )
+    company = Company.find( params[:id] )
     if ! company.present? 
       render json: { errors: 'No se encontró el anunciante con id: ' + params[:id].to_s },status: :unprocessable_entity
       return
