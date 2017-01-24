@@ -80,6 +80,7 @@ Rails.application.routes.draw do
           post 'search',    :action => 'search'
           post 'filter',    :action => 'filter'
           post 'average_per_month_by_user',   :action => 'average_per_month_by_user'
+          post 'average_per_month_by_brand',  :action => 'average_per_month_by_brand'
           post 'average_per_month_by_agency', :action => 'average_per_month_by_agency'
           post 'average_per_month_by_company', :action => 'average_per_month_by_company'
           post 'average_per_month_industry',  :action => 'average_per_month_industry'

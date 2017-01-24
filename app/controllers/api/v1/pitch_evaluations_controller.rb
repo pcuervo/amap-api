@@ -223,7 +223,19 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     pitch_ids = Pitch.where( 'brand_id IN (?)', company.brands.pluck(:id) ).pluck(:id)
     average_per_month = PitchEvaluation.average_per_month_by_company( pitch_ids.join(","), params[:start_date], params[:end_date] )
     
-    render json: { 'average_per_month': average_per_month, 'users': company.users.select( 'id', 'email' ) } , status: :ok
+    render json: { 'average_per_month': average_per_month, 'brands': company.brands.select( 'id', 'name' ) } , status: :ok
+  end
+
+  def average_per_month_by_brand
+    brand = Brand.find( params[:id] )
+    if ! brand.present? 
+      render json: { errors: 'No se encontró la marca con id: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+    
+    pitch_ids = Pitch.where( 'brand_id = ?', brand.id ).pluck(:id)
+    average_per_month = PitchEvaluation.average_per_month_by_brand( pitch_ids.join(","), params[:start_date], params[:end_date] )
+    render json: average_per_month, status: :ok
   end
 
   private
