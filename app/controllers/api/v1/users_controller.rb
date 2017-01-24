@@ -17,6 +17,12 @@ module Api::V1
       render json: @users
     end
 
+    # GET /users/admin
+    def admin
+      @users = User.where('role = ?', 1)
+      render json: @users
+    end
+
     # POST /create
     def create
       @user = User.new(user_params)

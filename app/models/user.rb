@@ -26,11 +26,11 @@ class User < ApplicationRecord
   has_and_belongs_to_many :pitches
   has_many :pitch_evaluations
 
-  AMAP_ADMIN = 1
-  AGENCY_ADMIN = 2
-  AGENCY_USER = 3
-  CLIENT_ADMIN = 4
-  CLIENT_USER = 5
+  AMAP_ADMIN    = 1
+  AGENCY_ADMIN  = 2
+  AGENCY_USER   = 3
+  CLIENT_ADMIN  = 4
+  CLIENT_USER   = 5
   
   def generate_authentication_token!
     begin
