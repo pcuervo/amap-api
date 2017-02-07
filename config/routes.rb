@@ -56,6 +56,7 @@ Rails.application.routes.draw do
           post 'update',                  :action => 'update'
           post 'add_favorite_agency',     :action => 'add_favorite_agency'
           post 'remove_favorite_agency',  :action => 'remove_favorite_agency'
+          post 'get_users',               :action => 'get_users'
         end
       end
       resources :brands, :only => [:create, :show, :index] do
