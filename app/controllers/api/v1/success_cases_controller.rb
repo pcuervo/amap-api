@@ -80,6 +80,6 @@ class Api::V1::SuccessCasesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def success_case_params
-      params.require(:success_case).permit( :name, :description, :url, :case_image, :agency_id )
+      params.require(:success_case).permit( :name, :description, :url, video_url, :case_image, :agency_id )
     end
 end
