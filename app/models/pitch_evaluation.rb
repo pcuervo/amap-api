@@ -252,8 +252,11 @@ class PitchEvaluation < ApplicationRecord
     return pitch_evaluations
   end
 
-  def self.by_agency_by_type( agency, type )
+  def self.by_agency_by_type( agency, type, start_date, end_date )
     agency_users = agency.users
+    if start_date.present?  && end_date.present?
+      return PitchEvaluation.where( 'user_id IN (?) AND pitch_type = ? AND pitch_status IN (?) AND created_at BETWEEN ? AND ?', agency_users.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ], start_date, end_date ).count
+    end
     return PitchEvaluation.where( 'user_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', agency_users.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
