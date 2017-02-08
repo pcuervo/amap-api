@@ -34,7 +34,7 @@ module Api::V1
 
       if params[:company_id].present?
         company = Agency.find(params[:company_id])
-        user.companies << company
+        @user.companies << company
       end
 
       @password = SecureRandom.hex
