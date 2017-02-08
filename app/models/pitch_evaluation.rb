@@ -323,7 +323,7 @@ class PitchEvaluation < ApplicationRecord
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
     return 0 if ! pitches.present?
 
-     if start_date.present?  && end_date.present?
+    if start_date.present?  && end_date.present?
       return PitchEvaluation.where( 'pitch_id IN (?) AND pitch_type = ? AND pitch_status IN (?) AND created_at BETWEEN ? AND ?', pitches.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ], start_date, end_date ).count
     end
 
@@ -337,14 +337,21 @@ class PitchEvaluation < ApplicationRecord
     return PitchEvaluation.where( 'pitch_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', pitches.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
-  def self.get_lost_pitches_by_company( company )
+  def self.get_lost_pitches_by_company( company, start_date, end_date )
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
+    if start_date.present?  && end_date.present?
+      pitches = Pitch.where('brand_id IN (?) AND created_at BETWEEN ? AND ?', company.brands.pluck(:id), start_date, end_date)
+    end
+
     won = PitchWinnerSurvey.select(:pitch_id).where( 'pitch_id IN (?)', pitches.pluck(:id) ).group(:pitch_id)
     return pitches.count - won.length
   end
 
-  def self.get_won_pitches_by_company( company )
+  def self.get_won_pitches_by_company( company, start_date, end_date )
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
+    if start_date.present?  && end_date.present?
+      pitches = Pitch.where('brand_id IN (?) AND created_at BETWEEN ? AND ?', company.brands.pluck(:id), start_date, end_date)
+    end
     return PitchWinnerSurvey.where( 'pitch_id IN (?)', pitches.pluck(:id) ).count
   end
 

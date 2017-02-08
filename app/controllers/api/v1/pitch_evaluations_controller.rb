@@ -187,8 +187,8 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     summary[:happy]           = PitchEvaluation.by_company_by_type( company, 'happy', params[:start_date], params[:end_date] )
     summary[:ok]              = PitchEvaluation.by_company_by_type( company, 'ok', params[:start_date], params[:end_date] )
     summary[:unhappy]         = PitchEvaluation.by_company_by_type( company, 'unhappy', params[:start_date], params[:end_date] )
-    summary[:lost]            = PitchEvaluation.get_lost_pitches_by_company( company )
-    summary[:won]             = PitchEvaluation.get_won_pitches_by_company( company )
+    summary[:lost]            = PitchEvaluation.get_lost_pitches_by_company( company, params[:start_date], params[:end_date] )
+    summary[:won]             = PitchEvaluation.get_won_pitches_by_company( company, params[:start_date], params[:end_date] )
     summary[:brands]          = company.brands.select( 'id', 'name' )
     summary[:recommendations] = PitchEvaluation.get_recommendations_by_company( company )
 
