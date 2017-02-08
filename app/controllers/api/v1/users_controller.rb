@@ -33,7 +33,7 @@ module Api::V1
       end
 
       if params[:company_id].present?
-        company = Agency.find(params[:company_id])
+        company = Company.find(params[:company_id])
         @user.companies << company
       end
 
