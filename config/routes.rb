@@ -28,6 +28,7 @@ Rails.application.routes.draw do
           post 'search',                      :action => 'search'
           post 'directory',                   :action => 'directory'
           post 'get_users',                   :action => 'get_users'
+          get 'get_recommendations/:id',      :action => 'get_recommendations'
         end
       end
       resources :new_user_requests, :only => [:index, :create, :show] do

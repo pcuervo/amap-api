@@ -71,7 +71,7 @@ class Agency < ApplicationRecord
       agency[:is_favorite] = c.agencies.exists?(a.id) 
       agencies.push( agency )
     end
-    return agencies.sort_by{|c| c[:is_favorite].to_s}.reverse
+    return agencies.sort_by{|a| a[:is_favorite].to_s}.reverse
   end
 
   def self.directory company_id
