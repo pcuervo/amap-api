@@ -169,8 +169,8 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     summary[:happy]     = PitchEvaluation.by_user_by_type( user, 'happy', params[:start_date], params[:end_date] )
     summary[:ok]        = PitchEvaluation.by_user_by_type( user, 'ok', params[:start_date], params[:end_date] )
     summary[:unhappy]   = PitchEvaluation.by_user_by_type( user, 'unhappy', params[:start_date], params[:end_date] )
-    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_user( user )
-    summary[:won]       = PitchEvaluation.get_won_pitches_by_user( user )
+    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_user( user, params[:start_date], params[:end_date]  )
+    summary[:won]       = PitchEvaluation.get_won_pitches_by_user( user, params[:start_date], params[:end_date]  )
 
     render json: summary, status: :ok
   end

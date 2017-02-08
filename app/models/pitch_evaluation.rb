@@ -267,21 +267,33 @@ class PitchEvaluation < ApplicationRecord
     return PitchEvaluation.where( 'user_id = ? AND pitch_type = ? AND pitch_status IN (?)', user.id, type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
-  def self.get_lost_pitches_by_agency( agency )
+  def self.get_lost_pitches_by_agency( agency, start_date, end_date )
     agency_users = agency.users
+    if start_date.present?  && end_date.present?
+      return PitchEvaluation.where( 'user_id IN (?) and was_won = false AND created_at BETWEEN ? AND ?', agency_users.pluck(:id), start_date, end_date ).count
+    end
     return PitchEvaluation.where( 'user_id IN (?) and was_won = false', agency_users.pluck(:id) ).count
   end
 
-  def self.get_won_pitches_by_agency( agency )
+  def self.get_won_pitches_by_agency( agency, start_date, end_date )
     agency_users = agency.users
+    if start_date.present?  && end_date.present?
+      return PitchEvaluation.where( 'user_id IN (?) and was_won = true AND created_at BETWEEN ? AND ?', agency_users.pluck(:id), start_date, end_date ).count
+    end
     return PitchEvaluation.where( 'user_id IN (?) and was_won = true', agency_users.pluck(:id) ).count
   end
 
-  def self.get_lost_pitches_by_user( user )
+  def self.get_lost_pitches_by_user( user, start_date, end_date )
+    if start_date.present?  && end_date.present?
+      return PitchEvaluation.where( 'user_id = ? and was_won = false AND created_at BETWEEN ? AND ?', user.id, start_date, end_date ).count
+    end
     return PitchEvaluation.where( 'user_id = ? and was_won = false', user.id ).count
   end
 
-  def self.get_won_pitches_by_user( user )
+  def self.get_won_pitches_by_user( user, start_date, end_date )
+    if start_date.present?  && end_date.present?
+      return PitchEvaluation.where( 'user_id = ? and was_won = true AND created_at BETWEEN ? AND ?', user.id, start_date, end_date ).count
+    end
     return PitchEvaluation.where( 'user_id = ? and was_won = true', user.id ).count
   end
 
