@@ -13,6 +13,7 @@ class AgencySerializer < ActiveModel::Serializer
       success_case[:name]               = sc.name
       success_case[:description]        = sc.description
       success_case[:url]                = sc.url
+      success_case[:video_url]          = sc.video_url
       success_case[:case_image]         = sc.case_image
       success_case[:case_image_thumb]   = sc.case_image(:thumb)
       success_cases.push( success_case )
