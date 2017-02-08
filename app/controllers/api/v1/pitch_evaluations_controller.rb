@@ -149,8 +149,8 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     summary[:happy]     = PitchEvaluation.by_agency_by_type( agency, 'happy', params[:start_date], params[:end_date])
     summary[:ok]        = PitchEvaluation.by_agency_by_type( agency, 'ok', params[:start_date], params[:end_date])
     summary[:unhappy]   = PitchEvaluation.by_agency_by_type( agency, 'unhappy', params[:start_date], params[:end_date])
-    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_agency( agency )
-    summary[:won]       = PitchEvaluation.get_won_pitches_by_agency( agency )
+    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_agency( agency, params[:start_date], params[:end_date] )
+    summary[:won]       = PitchEvaluation.get_won_pitches_by_agency( agency, params[:start_date], params[:end_date] )
     summary[:users]     = agency.users.select( 'id', 'email' )
     summary[:recommendations] = PitchEvaluation.get_recommendations_by_agency( agency )
 
@@ -203,12 +203,12 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     end
 
     summary = {}
-    summary[:happitch]  = PitchEvaluation.by_brand_by_type( brand, 'happitch' )
-    summary[:happy]     = PitchEvaluation.by_brand_by_type( brand, 'happy' )
-    summary[:ok]        = PitchEvaluation.by_brand_by_type( brand, 'ok' )
-    summary[:unhappy]   = PitchEvaluation.by_brand_by_type( brand, 'unhappy' )
-    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_brand( brand )
-    summary[:won]       = PitchEvaluation.get_won_pitches_by_brand( brand )
+    summary[:happitch]  = PitchEvaluation.by_brand_by_type( brand, 'happitch', params[:start_date], params[:end_date] )
+    summary[:happy]     = PitchEvaluation.by_brand_by_type( brand, 'happy', params[:start_date], params[:end_date] )
+    summary[:ok]        = PitchEvaluation.by_brand_by_type( brand, 'ok', params[:start_date], params[:end_date] )
+    summary[:unhappy]   = PitchEvaluation.by_brand_by_type( brand, 'unhappy', params[:start_date], params[:end_date] )
+    summary[:lost]      = PitchEvaluation.get_lost_pitches_by_brand( brand, params[:start_date], params[:end_date] )
+    summary[:won]       = PitchEvaluation.get_won_pitches_by_brand( brand, params[:start_date], params[:end_date] )
 
     render json: summary, status: :ok
   end
