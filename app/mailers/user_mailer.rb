@@ -8,7 +8,7 @@ class UserMailer < ApplicationMailer
   #
   def password_reset( user )
     @user = user
-    mail( to: @user.email, subject: 'Reestablecer contraseña Happitch' )
+    mail( to: @user.email, subject: 'Restablecer contraseña Happitch' )
   end
 
   def new_client_email( user, password, pitch )
