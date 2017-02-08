@@ -151,7 +151,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     summary[:unhappy]   = PitchEvaluation.by_agency_by_type( agency, 'unhappy', params[:start_date], params[:end_date])
     summary[:lost]      = PitchEvaluation.get_lost_pitches_by_agency( agency )
     summary[:won]       = PitchEvaluation.get_won_pitches_by_agency( agency )
-    summary[:users]     = agency.users.select( 'id', 'email', 'first_name', 'last_name' )
+    summary[:users]     = agency.users.select( 'id', 'email' )
     summary[:recommendations] = PitchEvaluation.get_recommendations_by_agency( agency )
 
     render json: summary, status: :ok
@@ -165,10 +165,10 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     end
 
     summary = {}
-    summary[:happitch]  = PitchEvaluation.by_user_by_type( user, 'happitch' )
-    summary[:happy]     = PitchEvaluation.by_user_by_type( user, 'happy' )
-    summary[:ok]        = PitchEvaluation.by_user_by_type( user, 'ok' )
-    summary[:unhappy]   = PitchEvaluation.by_user_by_type( user, 'unhappy' )
+    summary[:happitch]  = PitchEvaluation.by_user_by_type( user, 'happitch', params[:start_date], params[:end_date] )
+    summary[:happy]     = PitchEvaluation.by_user_by_type( user, 'happy', params[:start_date], params[:end_date] )
+    summary[:ok]        = PitchEvaluation.by_user_by_type( user, 'ok', params[:start_date], params[:end_date] )
+    summary[:unhappy]   = PitchEvaluation.by_user_by_type( user, 'unhappy', params[:start_date], params[:end_date] )
     summary[:lost]      = PitchEvaluation.get_lost_pitches_by_user( user )
     summary[:won]       = PitchEvaluation.get_won_pitches_by_user( user )
 
@@ -183,10 +183,10 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     end
 
     summary = {}
-    summary[:happitch]        = PitchEvaluation.by_company_by_type( company, 'happitch' )
-    summary[:happy]           = PitchEvaluation.by_company_by_type( company, 'happy' )
-    summary[:ok]              = PitchEvaluation.by_company_by_type( company, 'ok' )
-    summary[:unhappy]         = PitchEvaluation.by_company_by_type( company, 'unhappy' )
+    summary[:happitch]        = PitchEvaluation.by_company_by_type( company, 'happitch', params[:start_date], params[:end_date] )
+    summary[:happy]           = PitchEvaluation.by_company_by_type( company, 'happy', params[:start_date], params[:end_date] )
+    summary[:ok]              = PitchEvaluation.by_company_by_type( company, 'ok', params[:start_date], params[:end_date] )
+    summary[:unhappy]         = PitchEvaluation.by_company_by_type( company, 'unhappy', params[:start_date], params[:end_date] )
     summary[:lost]            = PitchEvaluation.get_lost_pitches_by_company( company )
     summary[:won]             = PitchEvaluation.get_won_pitches_by_company( company )
     summary[:brands]          = company.brands.select( 'id', 'name' )

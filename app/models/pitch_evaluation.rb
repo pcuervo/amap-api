@@ -260,7 +260,10 @@ class PitchEvaluation < ApplicationRecord
     return PitchEvaluation.where( 'user_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', agency_users.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
-  def self.by_user_by_type( user, type )
+  def self.by_user_by_type( user, type, start_date, end_date )
+    if start_date.present?  && end_date.present?
+      return PitchEvaluation.where( 'user_id = ? AND pitch_type = ? AND pitch_status IN (?) AND created_at BETWEEN ? AND ?', user.id, type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ], start_date, end_date ).count
+    end
     return PitchEvaluation.where( 'user_id = ? AND pitch_type = ? AND pitch_status IN (?)', user.id, type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
 
@@ -316,9 +319,13 @@ class PitchEvaluation < ApplicationRecord
     pitches_info
   end
 
-  def self.by_company_by_type( company, type )
+  def self.by_company_by_type( company, type, start_date, end_date )
     pitches = Pitch.where('brand_id IN (?)', company.brands.pluck(:id))
     return 0 if ! pitches.present?
+
+     if start_date.present?  && end_date.present?
+      return PitchEvaluation.where( 'pitch_id IN (?) AND pitch_type = ? AND pitch_status IN (?) AND created_at BETWEEN ? AND ?', pitches.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ], start_date, end_date ).count
+    end
 
     return PitchEvaluation.where( 'pitch_id IN (?) AND pitch_type = ? AND pitch_status IN (?)', pitches.pluck(:id), type, [ PitchEvaluation::ACTIVE, PitchEvaluation::ARCHIVED ] ).count
   end
