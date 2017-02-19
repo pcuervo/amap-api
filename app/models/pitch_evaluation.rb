@@ -131,7 +131,7 @@ class PitchEvaluation < ApplicationRecord
       info[:pitch_status]             = pe.pitch_status
       info[:has_results]              = pitch_results.present?
       info[:has_pitch_winner_survey]  = pitch_winner_survey.present?
-      info[:recommendations]          = PitchEvaluation.get_recommendations_by_pitch( pe.pitch )
+      info[:recommendations]          = PitchEvaluation.get_recommendations_by_agency_pitch( agency, pe.pitch )
 
       if pitch_results.present?
         info[:pitch_results_id] = pitch_results.first.id
@@ -554,8 +554,67 @@ class PitchEvaluation < ApplicationRecord
     return recommendations
   end
 
-  def self.num_not_clear_objectives_by_agency user_ids
+  def self.get_recommendations_by_agency_pitch( agency, pitch )
+    recommendations = []
+    user_ids = agency.users.pluck(:id)
+
+    if PitchEvaluation.num_not_clear_objectives_by_agency( user_ids, pitch.id ) == 1 
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_communication' ).first )
+    elsif PitchEvaluation.num_not_clear_objectives_by_agency( user_ids, pitch.id ) > 1 
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_list' ).first )
+    end
+
+    # if PitchEvaluation.num_pitches_without_budget( user_ids ) == 1 
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_budget_1' ).first )
+    # elsif PitchEvaluation.num_pitches_without_budget( user_ids ) >= 3
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_budget_3' ).first )
+    # end
+
+    # if PitchEvaluation.num_pitches_without_selection_criteria( user_ids ) >= 2
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_sharing' ).first )
+    # end 
+
+    # if PitchEvaluation.num_pitches_five_seven_agencies( user_ids ) >= 2
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_number_5' ).first )
+    # end 
+
+    # if PitchEvaluation.num_pitches_more_than_seven_agencies( user_ids ) >= 1
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_number_7' ).first )
+    # end 
+
+    # if PitchEvaluation.num_pitches_short_time( user_ids ) >= 1
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_time' ).first )
+    # end 
+
+    # if PitchEvaluation.num_pitches_deliver_copyright( user_ids ) >= 1
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_property' ).first )
+    # end 
+
+    # if PitchEvaluation.num_pitches_without_clear_deliverables( user_ids ) >= 1
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_deliverable' ).first )
+    # end 
+
+    # if PitchEvaluation.num_pitches_without_clear_deliverables( user_ids ) >= 1 && PitchEvaluation.num_not_clear_objectives_by_agency( user_ids, pitch.id ) >= 1 
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_speak' ).first )
+    # end
+
+    # total_unhappy = PitchEvaluation.where('user_id IN (?) AND pitch_type = ?', user_ids, 'unhappy' ).count
+    # total_pitches = PitchEvaluation.where('user_id IN (?) AND pitch_type is not null', user_ids ).count
+    # total_unhappy_percent = total_unhappy.to_f / total_pitches * 100
+    # if total_unhappy_percent > 50
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_alert' ).first )
+    # end
+
+    return recommendations
+  end
+
+  def self.num_not_clear_objectives_by_agency user_ids, pitch_id = -1
     pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    if pitch_id != -1 
+      pe = pe.where('pitch_id = ?', pitch_id )
+    end
     return 0 if ! pe.present?
 
     return pe.where('are_objectives_clear = ?', false).count
