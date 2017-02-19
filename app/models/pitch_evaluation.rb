@@ -586,20 +586,20 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_property' ).first )
     end 
 
-    # if PitchEvaluation.num_pitches_without_clear_deliverables( user_ids ) >= 1
-    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_deliverable' ).first )
-    # end 
+    if PitchEvaluation.num_pitches_without_clear_deliverables( user_ids, pitch.id ) >= 1
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_deliverable' ).first )
+    end 
 
-    # if PitchEvaluation.num_pitches_without_clear_deliverables( user_ids ) >= 1 && PitchEvaluation.num_not_clear_objectives_by_agency( user_ids, pitch.id ) >= 1 
-    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_speak' ).first )
-    # end
+    if PitchEvaluation.num_pitches_without_clear_deliverables( user_ids, pitch.id ) >= 1 && PitchEvaluation.num_not_clear_objectives_by_agency( user_ids, pitch.id ) >= 1 
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_speak' ).first )
+    end
 
-    # total_unhappy = PitchEvaluation.where('user_id IN (?) AND pitch_type = ?', user_ids, 'unhappy' ).count
-    # total_pitches = PitchEvaluation.where('user_id IN (?) AND pitch_type is not null', user_ids ).count
-    # total_unhappy_percent = total_unhappy.to_f / total_pitches * 100
-    # if total_unhappy_percent > 50
-    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_alert' ).first )
-    # end
+    total_unhappy = PitchEvaluation.where('user_id IN (?) AND pitch_type = ? AND pitch_id = ?', user_ids, 'unhappy', pitch.id ).count
+    total_pitches = PitchEvaluation.where('user_id IN (?) AND pitch_type is not null AND pitch_id = ?', user_ids, pitch.id ).count
+    total_unhappy_percent = total_unhappy.to_f / total_pitches * 100
+    if total_unhappy_percent > 50
+      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_alert' ).first )
+    end
 
     return recommendations
   end
@@ -688,8 +688,13 @@ class PitchEvaluation < ApplicationRecord
     return pe.where('deliver_copyright_for_pitching =  ?', true).count
   end
 
-  def self.num_pitches_without_clear_deliverables user_ids
+  def self.num_pitches_without_clear_deliverables user_ids, pitch_id = -1
     pe = PitchEvaluation.where('user_id IN (?)', user_ids)
+    return 0 if ! pe.present?
+
+    if pitch_id != -1 
+      pe = pe.where('pitch_id = ?', pitch_id )
+    end
     return 0 if ! pe.present?
 
     return pe.where('are_deliverables_clear =  ?', false).count
