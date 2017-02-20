@@ -49,16 +49,16 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "amap-api-dev_#{Rails.env}"
   config.action_mailer.perform_caching = false
   config.action_mailer.raise_delivery_errors = true
-  # config.action_mailer.default_url_options = { :host => 'https://amap-dev.herokuapp.com/api/' }
-  # config.action_mailer.smtp_settings = {
-  #   address:              'smtp.sendgrid.net',
-  #   port:                 587,
-  #   domain:               'gmail.com',
-  #   user_name:            'micho_dabba',
-  #   password:             'holama123',
-  #   authentication:       :plain,
-  #   enable_starttls_auto: true
-  # }
+  config.action_mailer.default_url_options = { :host => 'https://amap-dev.herokuapp.com/api/' }
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.sendgrid.net',
+    port:                 587,
+    domain:               'gmail.com',
+    user_name:            'micho_amap',
+    password:             'Holama.99',
+    authentication:       :plain,
+    enable_starttls_auto: true
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
