@@ -60,7 +60,7 @@ class Agency < ApplicationRecord
 
   def self.search keyword, company_id
     agencies = []
-    Agency.where('LOWER(name) LIKE ?', '%' + keyword.downcase + '%' ).each do |a|
+    Agency.where('LOWER(name) LIKE ?', '%' + keyword.downcase + '%' ).order('name').each do |a|
       next if ! a.users.present?
       next if ! a.users.first.is_member_amap
 
