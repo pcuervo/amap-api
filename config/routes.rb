@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       resources :sessions, :only => [:create, :destroy] do
         collection do
           post 'destroy/', :action => 'destroy'
+          post 'is_active', :action => 'is_active'
         end
       end
       resources :success_cases, :only => [:index, :create, :show] do

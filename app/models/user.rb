@@ -25,6 +25,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :companies
   has_and_belongs_to_many :pitches
   has_many :pitch_evaluations
+  has_many :user_tokens
 
   AMAP_ADMIN    = 1
   AGENCY_ADMIN  = 2
@@ -33,8 +34,10 @@ class User < ApplicationRecord
   CLIENT_USER   = 5
   
   def generate_authentication_token!
+    ## ADD TOKEN HERE
     begin
       self.auth_token = Devise.friendly_token
+      UserToken.create( :user_id => self.id, :auth_token => self.auth_token )
     end while self.class.exists?(auth_token: auth_token)
   end
 

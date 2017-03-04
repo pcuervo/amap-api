@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170207224032) do
+ActiveRecord::Schema.define(version: 20170304022522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -238,6 +238,14 @@ ActiveRecord::Schema.define(version: 20170207224032) do
     t.index ["agency_id"], name: "index_success_cases_on_agency_id", using: :btree
   end
 
+  create_table "user_tokens", force: :cascade do |t|
+    t.integer  "users_id"
+    t.string   "auth_token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["users_id"], name: "index_user_tokens_on_users_id", using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "auth_token",             default: ""
     t.integer  "role",                   default: 2,     null: false
@@ -273,4 +281,5 @@ ActiveRecord::Schema.define(version: 20170207224032) do
   add_foreign_key "pitches", "brands"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"
+  add_foreign_key "user_tokens", "users", column: "users_id"
 end
