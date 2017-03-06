@@ -529,9 +529,9 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_number_7' ).first )
     end 
 
-    if PitchEvaluation.num_pitches_short_time( user_ids ) >= 1
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_time' ).first )
-    end 
+    # if PitchEvaluation.num_pitches_short_time( user_ids ) >= 1
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_time' ).first )
+    # end 
 
     if PitchEvaluation.num_pitches_deliver_copyright( user_ids ) >= 1
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_property' ).first )
@@ -579,9 +579,9 @@ class PitchEvaluation < ApplicationRecord
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_number_7' ).first )
     end 
 
-    if PitchEvaluation.num_pitches_short_time( user_ids, pitch.id ) >= 1
-      recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_time' ).first )
-    end 
+    # if PitchEvaluation.num_pitches_short_time( user_ids, pitch.id ) >= 1
+    #   recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_time' ).first )
+    # end 
 
     if PitchEvaluation.num_pitches_deliver_copyright( user_ids, pitch.id ) >= 1
       recommendations.push( Recommendation.select(:body, :reco_id).where( 'reco_id = ?', 'agency_property' ).first )
