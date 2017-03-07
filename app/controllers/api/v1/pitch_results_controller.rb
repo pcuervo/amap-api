@@ -25,7 +25,7 @@ class Api::V1::PitchResultsController < ApplicationController
 
       if ! @pitch_result.when_will_you_get_response.nil? 
         puts 'si hay fallo...'
-        @pitch_result.schedule_response_notification( @pitch_result )
+        @pitch_result.schedule_response_notification
       end
       
       return
@@ -45,7 +45,8 @@ class Api::V1::PitchResultsController < ApplicationController
       @was_won = @pitch_result.was_pitch_won
       render json: @pitch_result, status: :ok
       if ! @pitch_result.when_will_you_get_response.nil? 
-        @pitch_result.schedule_response_notification( @pitch_result )
+        puts 'si hay fallo...'
+        @pitch_result.schedule_response_notification
       end
 
       return 
