@@ -29,10 +29,6 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       @pitch_evaluation.calculate_score
       render json: @pitch_evaluation, status: :created
 
-      if ! @pitch_evaluation.time_to_present.nil?
-        schedule_pitch_results_notification( @pitch_evaluation )
-      end
-
       return
     end
 
@@ -51,6 +47,11 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     if @pitch_evaluation.update(pitch_evaluation_params)
       @pitch_evaluation.calculate_score
       render json: @pitch_evaluation, status: :ok
+
+      if ! @pitch_evaluation.time_to_present.nil?
+        schedule_pitch_results_notification( @pitch_evaluation )
+      end
+      
       return 
     end
     render json: { errors: @pitch_evaluation.errors }, status: :unprocessable_entity
@@ -272,6 +273,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       user = pitch_evaluation.user
       return if user.device_token == ''
 
+      puts "sending this bish now..."
       pitch = pitch_evaluation.pitch
       send_push_notification( user.device_token, '¿Ya presentaste tu propuesta del pitch "' + pitch.name + '"? No olvides completar la encuesta de seguimiento.', pitch.brief_date + pitch_evaluation.time_to_present.to_i  )
     end
