@@ -255,6 +255,9 @@ class Api::V1::PitchEvaluationsController < ApplicationController
         pitch_users.each do |pu|
           user = User.find(pu.id)
           UserMailer.evaluated_pitch( user, pitch ).deliver_now
+          if user.device_token != ''
+            send_push_notification user.device_token, '¡Una agencia acaba de evaluar tu pitch ' + pitch.name + '!'
+          end
         end
         return
       end
