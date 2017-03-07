@@ -24,8 +24,7 @@ class Api::V1::PitchResultsController < ApplicationController
       render json: @pitch_result, status: :created
 
       if ! @pitch_result.when_will_you_get_response.nil? 
-        puts 'si hay fallo...'
-        @pitch_result.schedule_response_notification
+        schedule_response_notification( @pitch_result )
       end
       
       return
@@ -45,8 +44,7 @@ class Api::V1::PitchResultsController < ApplicationController
       @was_won = @pitch_result.was_pitch_won
       render json: @pitch_result, status: :ok
       if ! @pitch_result.when_will_you_get_response.nil? 
-        puts 'si hay fallo...'
-        @pitch_result.schedule_response_notification
+        schedule_response_notification( @pitch_result )
       end
 
       return 
@@ -79,4 +77,13 @@ class Api::V1::PitchResultsController < ApplicationController
       pitch_evaluation.was_won = @was_won 
       pitch_evaluation.save
     end
+
+    def schedule_response_notification pitch_result
+    agency_users = pitch_result.agency.users
+    agency_users.each do |u| 
+      next if u.device_token == ''
+
+      send_push_notification( u.device_token, '¿Has recibido fallo acerca del pitch "' + pitch_result.pitch.name + '"? No olvides actualizar la encuesta de resultados.', pitch_result.when_will_you_get_response  )
+    end
+  end
 end
