@@ -12,6 +12,7 @@ class ApplicationController < ActionController::API
   #protect_from_forgery with: :exception
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format.json? }
   include Authenticable
+  include Pushable
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 

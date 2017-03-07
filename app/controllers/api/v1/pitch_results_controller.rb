@@ -79,11 +79,12 @@ class Api::V1::PitchResultsController < ApplicationController
     end
 
     def schedule_response_notification pitch_result
-    agency_users = pitch_result.agency.users
-    agency_users.each do |u| 
-      next if u.device_token == ''
+      agency_users = pitch_result.agency.users
+      agency_users.each do |u| 
+        next if u.device_token == ''
 
-      send_push_notification( u.device_token, '¿Has recibido fallo acerca del pitch "' + pitch_result.pitch.name + '"? No olvides actualizar la encuesta de resultados.', pitch_result.when_will_you_get_response  )
+
+        send_push_notification( u.device_token, '¿Has recibido fallo acerca del pitch "' + pitch_result.pitch.name + '"? No olvides actualizar la encuesta de resultados.', pitch_result.when_will_you_get_response  )
+      end
     end
-  end
 end
