@@ -28,8 +28,9 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     if @pitch_evaluation.save
       @pitch_evaluation.calculate_score
       render json: @pitch_evaluation, status: :created
-      if ! @pitch_evaluation.time_to_present
-        schedule_response_notification( @pitch_result )
+
+      if ! @pitch_evaluation.time_to_present.nil?
+        schedule_pitch_results_notification( @pitch_evaluation )
       end
 
       return
@@ -265,6 +266,13 @@ class Api::V1::PitchEvaluationsController < ApplicationController
         end
         return
       end
+    end
 
+    def schedule_pitch_results_notification pitch_evaluation
+      user = pitch_evaluation.user
+      return if user.device_token == ''
+
+      pitch = pitch_evaluation.pitch
+      send_push_notification( user.device_token, '¿Ya presentaste tu propuesta del pitch "' + pitch.name + '"? No olvides completar la encuesta de seguimiento.', pitch.brief_date + pitch_evaluation.time_to_present.to_i  )
     end
 end
