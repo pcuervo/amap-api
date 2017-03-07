@@ -22,6 +22,12 @@ class Api::V1::PitchResultsController < ApplicationController
     if @pitch_result.save
       @was_won = @pitch_result.was_pitch_won
       render json: @pitch_result, status: :created
+
+      if ! @pitch_result.when_will_you_get_response.nil? 
+        puts 'si hay fallo...'
+        @pitch_result.schedule_response_notification( @pitch_result )
+      end
+      
       return
     end
 
@@ -38,6 +44,10 @@ class Api::V1::PitchResultsController < ApplicationController
     if @pitch_result.update(pitch_result_params)
       @was_won = @pitch_result.was_pitch_won
       render json: @pitch_result, status: :ok
+      if ! @pitch_result.when_will_you_get_response.nil? 
+        @pitch_result.schedule_response_notification( @pitch_result )
+      end
+
       return 
     end
     render json: { errors: @pitch_result.errors }, status: :unprocessable_entitys

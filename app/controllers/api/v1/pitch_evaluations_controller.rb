@@ -28,6 +28,10 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     if @pitch_evaluation.save
       @pitch_evaluation.calculate_score
       render json: @pitch_evaluation, status: :created
+      if ! @pitch_evaluation.time_to_present
+        schedule_response_notification( @pitch_result )
+      end
+
       return
     end
 
@@ -256,7 +260,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
           user = User.find(pu.id)
           UserMailer.evaluated_pitch( user, pitch ).deliver_now
           if user.device_token != ''
-            send_push_notification user.device_token, '¡Una agencia acaba de evaluar tu pitch ' + pitch.name + '!'
+            send_push_notification( user.device_token, '¡Una agencia acaba de evaluar tu pitch ' + pitch.name + '!' )
           end
         end
         return
