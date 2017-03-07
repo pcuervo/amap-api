@@ -133,6 +133,10 @@ class PitchEvaluation < ApplicationRecord
       info[:has_pitch_winner_survey]  = pitch_winner_survey.present?
       info[:recommendations]          = PitchEvaluation.get_recommendations_by_agency_pitch( agency, pe.pitch )
 
+      if pitch_winner_survey.present?
+        info[:pitch_winner_survey_id] = pitch_winner_survey.first.id
+      end
+
       if pitch_results.present?
         info[:pitch_results_id] = pitch_results.first.id
       end
@@ -323,6 +327,10 @@ class PitchEvaluation < ApplicationRecord
       info[:has_pitch_winner_survey]  = pitch_winner_survey.present?
       info[:recommendations]          = PitchEvaluation.get_recommendations_by_agency_pitch( agency, pe.pitch )
 
+      if pitch_winner_survey.present?
+        info[:pitch_winner_survey_id] = pitch_winner_survey.first.id
+      end
+      
       if pitch_results.present?
         info[:pitch_results_id] = pitch_results.first.id
       end
