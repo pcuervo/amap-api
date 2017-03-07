@@ -18,6 +18,9 @@ class Api::V1::SessionsController < ApplicationController
     if user.valid_password? user_password
       sign_in user, store: false
       user.generate_authentication_token!
+      if params[:user_session][:device_token].present?
+        user.device_token = params[:user_session][:device_token]
+      end
       user.save
       render json: user 
       return

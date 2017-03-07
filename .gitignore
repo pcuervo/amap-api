@@ -63,6 +63,8 @@ bower.json
 config/database.yml
 log/development.log
 config/s3.yml
+config/onesignal.yml
+
 
 
 

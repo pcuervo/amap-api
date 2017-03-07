@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170304022522) do
+ActiveRecord::Schema.define(version: 20170306234131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -239,11 +239,11 @@ ActiveRecord::Schema.define(version: 20170304022522) do
   end
 
   create_table "user_tokens", force: :cascade do |t|
-    t.integer  "users_id"
+    t.integer  "user_id"
     t.string   "auth_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["users_id"], name: "index_user_tokens_on_users_id", using: :btree
+    t.index ["user_id"], name: "index_user_tokens_on_users_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -262,6 +262,7 @@ ActiveRecord::Schema.define(version: 20170304022522) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.boolean  "is_member_amap",         default: false
+    t.string   "user_device_token",      default: ""
     t.index ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
@@ -281,5 +282,5 @@ ActiveRecord::Schema.define(version: 20170304022522) do
   add_foreign_key "pitches", "brands"
   add_foreign_key "skills", "skill_categories"
   add_foreign_key "success_cases", "agencies"
-  add_foreign_key "user_tokens", "users", column: "users_id"
+  add_foreign_key "user_tokens", "users"
 end
