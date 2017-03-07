@@ -48,9 +48,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       @pitch_evaluation.calculate_score
       render json: @pitch_evaluation, status: :ok
 
-      if ! @pitch_evaluation.time_to_present.nil?
-        schedule_pitch_results_notification( @pitch_evaluation )
-      end
+      schedule_pitch_results_notification( @pitch_evaluation )
       
       return 
     end
