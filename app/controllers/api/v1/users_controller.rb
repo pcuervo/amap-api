@@ -114,6 +114,7 @@ module Api::V1
 
       def send_password_to_user
         return if ! User::AMAP_ADMIN == current_user.role
+
         UserMailer.new_user( @user, @password ).deliver_now
       end
   end 

@@ -161,7 +161,12 @@ module Api::V1
       def send_confirmation_email
         return if ! @user.present?
         return if ! @user.valid?
-        UserRequestMailer.new_user_confirmation_email( @user, @password ).deliver_now
+
+        if @user.is_member_amap
+          UserRequestMailer.new_user_confirmation_email( @user, @password ).deliver_now
+          return
+        end
+        UserRequestMailer.new_no_amap_user_confirmation_email( @user, @password ).deliver_now
       end
 
       def send_rejection_email
