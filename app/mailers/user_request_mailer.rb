@@ -1,13 +1,17 @@
 class UserRequestMailer < ApplicationMailer
   # Default Mail Values
-  default from: 'amap.happitch@gmail.com'
+  default from: 'Happitch <amap.happitch@gmail.com>'
 
   # Send a message to AMAP Admin Users when there a new user request
   # * *Params:* 
   #   - +user_request+ -> NewUserRequest
   def new_user_request_email( user_request )
     @user_request = user_request
-    mail( to: 'miguel@pcuervo.com', subject: 'Un nuevo usuario desea registrarse en la app de AMAP.')
+    admins = User.where( 'role = ?', USER::AMAP_ADMIN )
+    admins.each do |admin|
+      mail( to: admin.email, subject: 'Un nuevo usuario ha solicitado una cuenta para Happitch.')
+    end
+    
   end
 
   # Send a message to a user once he/she has been approved (AMAP member)
