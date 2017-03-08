@@ -45,7 +45,7 @@ class PitchEvaluation < ApplicationRecord
       self.score += 2
     elsif days_to_present > 5 && days_to_present <= 10
       self.score += 5
-    elsif days_to_present > 10 && days_to_present <= 15
+    elsif days_to_present > 10 && days_to_present < 15
       self.score += 10
     else
       self.score += 15

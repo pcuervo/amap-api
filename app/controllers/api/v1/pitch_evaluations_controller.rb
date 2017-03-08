@@ -49,7 +49,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
       render json: @pitch_evaluation, status: :ok
 
       schedule_pitch_results_notification( @pitch_evaluation )
-      
+
       return 
     end
     render json: { errors: @pitch_evaluation.errors }, status: :unprocessable_entity
@@ -227,7 +227,7 @@ class Api::V1::PitchEvaluationsController < ApplicationController
     pitch_ids = Pitch.where( 'brand_id IN (?)', company.brands.pluck(:id) ).pluck(:id)
     average_per_month = PitchEvaluation.average_per_month_by_company( pitch_ids.join(","), params[:start_date], params[:end_date] )
     
-    render json: { 'average_per_month': average_per_month, 'brands': company.brands.select( 'id', 'name' ) } , status: :ok
+    render json: { 'average_per_month': average_per_month, 'brands': company.brands.select( 'id', 'name' ), 'users': company.users } , status: :ok
   end
 
   def average_per_month_by_brand
@@ -269,6 +269,8 @@ class Api::V1::PitchEvaluationsController < ApplicationController
 
     def schedule_pitch_results_notification pitch_evaluation
       user = pitch_evaluation.user
+
+      puts 'token: ' + user.device_token
       return if user.device_token == ''
 
       puts "sending this bish now..."
