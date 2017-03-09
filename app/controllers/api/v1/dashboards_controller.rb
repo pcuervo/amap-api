@@ -19,6 +19,7 @@ class Api::V1::DashboardsController < ApplicationController
     # Global stats
     dashboard_data[:total_pitches] = Pitch.all.count
     dashboard_data[:total_agencies] = Agency.all.count
+    dashboard_data[:total_companies] = Company.all.count
     dashboard_data[:total_brands] = Brand.all.count
     # Ranking
     dashboard_data[:worst_pitches] = worst_pitches
