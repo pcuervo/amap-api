@@ -140,7 +140,7 @@ class PitchEvaluation < ApplicationRecord
 
       if pitch_results.present?
         info[:pitch_results_id] = pitch_results.first.id
-        info[:is_winner_survey_closed] = pitch_results.was_contract_signed && pitch_results.was_project_activated
+        info[:is_winner_survey_closed] = pitch_results.first.was_contract_signed && pitch_results.first.was_project_activated
       end
 
       pitches_info.push( info )
