@@ -115,6 +115,7 @@ class PitchEvaluation < ApplicationRecord
     pitch_evaluations.each do |pe|
       pitch_winner_survey = PitchWinnerSurvey.where( 'agency_id = ? AND pitch_id = ?', agency.id, pe.pitch.id )
       pitch_results = PitchResult.where( 'agency_id = ? AND pitch_id = ?', agency.id, pe.pitch.id )
+
       info = {}
       brand = Brand.find( pe.pitch.brand_id )
       info[:pitch_evaluation_id]      = pe.id 
@@ -139,6 +140,7 @@ class PitchEvaluation < ApplicationRecord
 
       if pitch_results.present?
         info[:pitch_results_id] = pitch_results.first.id
+        info[:is_winner_survey_closed] = false
       end
 
       pitches_info.push( info )
