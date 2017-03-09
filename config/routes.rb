@@ -100,7 +100,11 @@ Rails.application.routes.draw do
           post 'update', :action => 'update'
         end
       end
-      resources :pitch_winner_surveys, :only => [:create, :update, :show]
+      resources :pitch_winner_surveys, :only => [:create, :show] do 
+        collection do 
+          post 'update', :action => 'update'
+        end
+      end
       resources :dashboards do
         collection do
           get 'amap', :action => 'amap'
