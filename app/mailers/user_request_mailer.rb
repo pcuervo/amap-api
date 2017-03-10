@@ -7,7 +7,7 @@ class UserRequestMailer < ApplicationMailer
   #   - +user_request+ -> NewUserRequest
   def new_user_request_email( user_request )
     @user_request = user_request
-    admins = User.where( 'role = ?', USER::AMAP_ADMIN )
+    admins = User.where( 'role = ?', User::AMAP_ADMIN )
     admins.each do |admin|
       mail( to: admin.email, subject: 'Un nuevo usuario ha solicitado una cuenta para Happitch.')
     end
