@@ -57,15 +57,18 @@ module Api::V1
 
       @user = User.new( :email => @new_user_request.email, :role => params[:role].to_i, :is_member_amap => params[:is_member_amap] )
 
+      agency_company = 'AMAP'
       if User::AGENCY_ADMIN == params[:role].to_i
         agency = Agency.find(params[:agency_id])
         @user.agencies << agency
+        agency_company = agency.name
       elsif User::CLIENT_ADMIN == params[:role].to_i
         company = Company.find(params[:company_id])
         @user.companies << company
+        agency_company = company.name
       end
 
-      @password = SecureRandom.hex
+      @password = User.generate_friendl_password( agency_company )
       @user.password = @password
       @user.password_confirmation = @password
 

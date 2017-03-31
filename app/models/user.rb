@@ -53,4 +53,8 @@ class User < ApplicationRecord
     save!
     m = UserMailer.password_reset( self ).deliver_now
   end
+
+  def self.generate_friendly_password agency_company
+    return agency_company.gsub(' ', '_') + '_' + rand(10...99).to_s
+  end
 end
