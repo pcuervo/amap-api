@@ -8,7 +8,7 @@ class Api::V1::CompaniesController < ApplicationController
   # GET /companies
   def index
     @companies = Company.all.order(:name)
-    render json: { companies: @companies }, :include => { :brands => { :only => [:name, :id] } }, :except => [:updated_at]
+    render json: { companies: @companies }, :include => { :brands => { :only => [:name, :id, :pitches] } }, :except => [:updated_at]
   end
 
   # GET /companies/1

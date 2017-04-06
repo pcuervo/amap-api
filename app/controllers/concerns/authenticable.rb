@@ -7,7 +7,6 @@ module Authenticable
     user_token = UserToken.find_by(auth_token: user_token) 
     return nil if ! user_token.present?
     
-    puts 'token exists'
     @current_user ||= User.find( user_token.user_id )
     #@current_user ||= User.find_by(auth_token: user_token)
   end
