@@ -139,7 +139,7 @@ class Pitch < ApplicationRecord
   end
   
   def self.pitches_by_month
-    pitches_by_month = Pitch.select("to_char(created_at, 'YYYY-MM') as month_year, count(*) as num_pitches").limit(30).group('month_year').order("to_char(created_at, 'YYYY-MM') DESC")
+    pitches_by_month = Pitch.select("to_char(created_at, 'YYYY-MM') as month_year, count(*) as num_pitches").limit(30).group('month_year').order("to_char(created_at, 'YYYY-MM')")
     pitches_by_month
   end
 end
