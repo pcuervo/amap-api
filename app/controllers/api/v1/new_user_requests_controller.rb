@@ -68,7 +68,7 @@ module Api::V1
         agency_company = company.name
       end
 
-      @password = User.generate_friendl_password( agency_company )
+      @password = User.generate_friendly_password( agency_company )
       @user.password = @password
       @user.password_confirmation = @password
 
