@@ -109,7 +109,8 @@ class Api::V1::CompaniesController < ApplicationController
         pitches.push({
           :id             => pitch.id,
           :name           => pitch.name,
-          :brand          => brand,
+          :brand_name     => brand.name,
+          :brand_id       => brand.id,
           :brief_date     => pitch.brief_date,
           :email_contact  => pitch.brief_email_contact
         })
