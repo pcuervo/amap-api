@@ -116,7 +116,7 @@ class Api::V1::CompaniesController < ApplicationController
         })
       end
     end
-    render json: pitches,status: :unprocessable_entity
+    render json: pitches, status: :ok
   end
 
   private
