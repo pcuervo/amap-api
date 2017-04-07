@@ -24,6 +24,7 @@ class Api::V1::DashboardsController < ApplicationController
     # Ranking
     dashboard_data[:worst_pitches] = worst_pitches
     dashboard_data[:top_pitches] = top_pitches
+    dashboard_data[:pitches_by_month] = Pitch.pitches_by_month
 
     render json: dashboard_data, status: :ok
   end
