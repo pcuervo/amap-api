@@ -1,6 +1,6 @@
 class Api::V1::CompaniesController < ApplicationController
-  before_action :set_company, only: [:show, :update, :destroy, :get_users]
-  before_action only: [:create, :update, :add_favorite_agency, :remove_favorite_agency] do 
+  before_action :set_company, only: [:show, :update, :destroy, :get_users, :get_pitches]
+  before_action only: [:create, :update, :add_favorite_agency, :remove_favorite_agency, :get_pitches] do 
     authenticate_with_token! params[:auth_token]
   end
 
@@ -89,13 +89,34 @@ class Api::V1::CompaniesController < ApplicationController
   end
 
   # POST /companies/get_users
-    def get_users
-      if ! @company.present? 
-        render json: { errors: 'No se encontró el anunciante con id: ' + params[:id] },status: :unprocessable_entity
-        return
-      end
-      render json: @company.users
+  def get_users
+    if ! @company.present? 
+      render json: { errors: 'No se encontró el anunciante con id: ' + params[:id] },status: :unprocessable_entity
+      return
     end
+    render json: @company.users
+  end
+
+  def get_pitches
+    if ! @company.present? 
+      render json: { errors: 'No se encontró el anunciante con id: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+
+    pitches = []
+    company.brands.each do |brand|
+      brand.pitches.each do |pitch|
+        pitches.push({
+          :id             => pitch.id,
+          :name           => pitch.name,
+          :brand          => brand,
+          :brief_date     => pitch.brief_date,
+          :email_contact  => pitch.brief_email_contact
+        })
+      end
+    end
+    render json: { pitches: pitches },status: :unprocessable_entity
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

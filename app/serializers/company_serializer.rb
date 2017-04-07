@@ -1,5 +1,5 @@
 class CompanySerializer < ActiveModel::Serializer
-  attributes :id, :name, :brands, :contact_name, :contact_email, :contact_position, :logo, :favorite_agencies, :users, :pitches
+  attributes :id, :name, :brands, :contact_name, :contact_email, :contact_position, :logo, :favorite_agencies, :users
 
   def favorite_agencies
     favs = []
@@ -7,22 +7,6 @@ class CompanySerializer < ActiveModel::Serializer
       favs.push({:id => fav.id, :name => fav.name})
     end
     favs
-  end
-
-  def pitches
-    pitches = []
-    object.brands.each do |brand|
-      brand.pitches.each do |pitch|
-        pitches.push({
-          :id             => pitch.id,
-          :name           => pitch.name,
-          :brand          => brand,
-          :brief_date     => pitch.brief_date,
-          :email_contact  => pitch.brief_email_contact
-        })
-      end
-    end
-    pitches
   end
 
   def users
