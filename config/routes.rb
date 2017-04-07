@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       resources :pitches, :only => [:index, :show, :create, :update] do 
         collection do
           get 'by_brand/:id', :action => 'by_brand'
+          get 'stats/:id',    :action => 'stats'
           post 'merge',       :action => 'merge'
         end
       end

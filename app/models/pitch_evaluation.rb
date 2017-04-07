@@ -711,6 +711,18 @@ class PitchEvaluation < ApplicationRecord
     return pe.where('are_deliverables_clear =  ?', false).count
   end
 
+  def self.get_pitch_type score
+    if score <= 44
+      return'unhappy'
+    elsif score > 44 && score  <= 58
+      return 'ok'
+    elsif score > 58 && score  <= 69
+      return 'happy'
+    else
+      return 'happitch'
+    end
+  end
+
   # Scopes
   scope :average_per_month_by_user, -> ( user_id, start_date, end_date  ) { 
     if start_date.present? && end_date.present?

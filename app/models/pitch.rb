@@ -138,6 +138,33 @@ class Pitch < ApplicationRecord
     return PitchEvaluation.where('pitch_id = ? AND number_of_agencies = ?', self.id, '7+').present?
   end
   
+  def get_participating_agencies
+    agencies = []
+    agency_user_ids = PitchEvaluation.where('pitch_id = ?', self.id).pluck(:user_id)
+    agency_users = User.where('id IN (?)', agency_user_ids)
+    agency_users.each do |user|
+      agencies.push( user.agencies.first )
+    end
+    agencies
+  end
+
+  def get_average
+    evaluations = PitchEvaluation.where('pitch_id = ?', self.id)
+    return evaluations.average(:score)
+  end
+
+  def lowest_score
+    lowest = PitchEvaluation.where('pitch_id = ?', self.id).order(:score).limit(1).pluck(:score)
+    return 0 if lowest.empty?
+
+    return lowest.first
+  end
+
+  def highest_score
+    evaluations = PitchEvaluation.where('pitch_id = ?', self.id)
+    return evaluations.average(:score)
+  end
+  
   def self.pitches_by_month
     pitches_by_month = Pitch.select("to_char(created_at, 'YYYY-MM') as month_year, count(*) as num_pitches").limit(30).group('month_year').order("to_char(created_at, 'YYYY-MM')")
     pitches_by_month

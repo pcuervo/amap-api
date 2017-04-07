@@ -1,5 +1,5 @@
 class Api::V1::PitchesController < ApplicationController
-  before_action :set_pitch, only: [:show, :update]
+  before_action :set_pitch, only: [:show, :update, :stats]
   before_action only: [:create, :update] do 
     authenticate_with_token! params[:auth_token]
   end
@@ -72,7 +72,25 @@ class Api::V1::PitchesController < ApplicationController
       return
     end
     render json: { errors: 'Ocurrió un error al unificar los pitches' },status: :unprocessable_entity
+  end
+
+  def stats
+    if ! @pitch.present? 
+      render json: { errors: 'No se encontró el pitch con id: ' + params[:id] },status: :unprocessable_entity
+      return
+    end
+
+    stats = {}
+    stats[:recommendations] = PitchEvaluation.get_recommendations_by_pitch( @pitch )
+    stats[:agencies] = @pitch.get_participating_agencies
+    stats[:average] = @pitch.get_average.ceil
+    stats[:average_type] = PitchEvaluation.get_pitch_type( stats[:average] )
+    stats[:lowest] = @pitch.lowest_score
+    stats[:lowest_type] = PitchEvaluation.get_pitch_type( stats[:lowest] )
+    stats[:highest] = @pitch.highest_score
+    stats[:highest_type] = PitchEvaluation.get_pitch_type( stats[:highest] )
     
+    render json: { stats: stats },status: :ok
   end
 
   private
