@@ -104,7 +104,7 @@ class Api::V1::CompaniesController < ApplicationController
     end
 
     pitches = []
-    company.brands.each do |brand|
+    @company.brands.each do |brand|
       brand.pitches.each do |pitch|
         pitches.push({
           :id             => pitch.id,
