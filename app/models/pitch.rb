@@ -161,8 +161,10 @@ class Pitch < ApplicationRecord
   end
 
   def highest_score
-    evaluations = PitchEvaluation.where('pitch_id = ?', self.id)
-    return evaluations.average(:score)
+    highest = PitchEvaluation.where('pitch_id = ?', self.id).order(score: :desc).limit(1).pluck(:score)
+    return 0 if highest.empty?
+
+    return highest.first
   end
   
   def self.pitches_by_month
