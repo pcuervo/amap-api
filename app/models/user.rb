@@ -21,11 +21,11 @@ class User < ApplicationRecord
   #             :length => { :within => 6..40 }, 
   #             :on => :update
 
-  has_and_belongs_to_many :agencies
-  has_and_belongs_to_many :companies
-  has_and_belongs_to_many :pitches
-  has_many :pitch_evaluations
-  has_many :user_tokens
+  has_and_belongs_to_many :agencies, dependent: :destroy
+  has_and_belongs_to_many :companies, dependent: :destroy
+  has_and_belongs_to_many :pitches, dependent: :destroy
+  has_many :pitch_evaluations, dependent: :destroy
+  has_many :user_tokens, dependent: :destroy
 
   AMAP_ADMIN    = 1
   AGENCY_ADMIN  = 2
@@ -55,7 +55,7 @@ class User < ApplicationRecord
   end
 
   def pass_data_to( another_user )
-    if User::AGENCY_ADMIN == self.role 
+    if User::AGENCY_ADMIN == self.role || User::AGENCY_USER == self.role
       self.pass_evaluations_to( another_user )
       return
     end
@@ -65,10 +65,9 @@ class User < ApplicationRecord
     self.pitch_evaluations.each do |evaluation|
       another_user.pitch_evaluations << evaluation
       self.pitch_evaluations.delete(evaluation)
+      another_user.save
+      self.save
     end
-
-    another_user.save
-    self.save
   end
 
   def self.generate_friendly_password agency_company

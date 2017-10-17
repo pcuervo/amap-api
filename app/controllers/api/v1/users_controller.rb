@@ -102,10 +102,7 @@ module Api::V1
     end
 
     def destroy
-      if params[:reassign] == "true" 
-        @new_user = User.find_by_id( params[:new_user_id] )
-      end
-
+      @new_user = User.find_by_id( params[:new_user_id] ) if params[:reassign] == true 
       @user.pass_data_to( @new_user ) if @new_user.present?
 
       if @user
