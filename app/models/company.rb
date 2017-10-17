@@ -48,6 +48,9 @@ class Company < ApplicationRecord
     another_company.brands.each do |brand|
       self.brands << brand
     end
+    another_company.users.each do |user|
+      self.users << user
+    end
     self.save!
     another_company.destroy
   end
