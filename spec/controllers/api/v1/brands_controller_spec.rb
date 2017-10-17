@@ -125,4 +125,32 @@ RSpec.describe Api::V1::BrandsController, :type => :controller do
 
     it { should respond_with 200 }
   end
+
+  describe "POST #unify" do
+    context "when brands are successfully unified" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @correct_brand = FactoryGirl.create :brand
+        @incorrect_brand = FactoryGirl.create :brand
+        3.times.each do |i|
+          p = FactoryGirl.create :pitch
+          @incorrect_brand.pitches << p
+        end
+        @incorrect_brand.save
+        @brand = FactoryGirl.create :brand
+        post :unify, params: { auth_token: @admin.auth_token, id: @brand.id, incorrect_brand_id: @incorrect_brand.id }, format: :json
+      end
+
+      it "returns a Brand object with the new brands added" do
+        brand_response = json_response
+        expect(brand_response[:pitches].count).to eql 3
+        expect{ Brand.find(@incorrect_brand.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it { should respond_with 200 }
+    end
+  end #POST unify
 end

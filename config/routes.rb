@@ -61,11 +61,13 @@ Rails.application.routes.draw do
           post 'remove_favorite_agency',  :action => 'remove_favorite_agency'
           post 'get_users',               :action => 'get_users'
           post 'get_pitches',             :action => 'get_pitches'
+          post 'unify',                   :action => 'unify'
         end
       end
       resources :brands, :only => [:create, :show, :index] do
         collection do
           get 'by_company/:id', :action => 'by_company'
+          post 'unify',         :action => 'unify'
         end
       end
       resources :pitches, :only => [:index, :show, :create, :update] do 

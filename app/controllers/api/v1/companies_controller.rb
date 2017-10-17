@@ -1,13 +1,12 @@
 class Api::V1::CompaniesController < ApplicationController
-  before_action :set_company, only: [:show, :update, :destroy, :get_users, :get_pitches]
+  before_action :set_company, only: [:show, :update, :destroy, :get_users, :get_pitches, :unify]
   before_action only: [:create, :update, :add_favorite_agency, :remove_favorite_agency, :get_pitches] do 
     authenticate_with_token! params[:auth_token]
   end
 
-
   # GET /companies
   def index
-    @companies = Company.all.order(:name)
+    @companies = Company.all.order("LOWER(name)")
     render json: { companies: @companies }, :include => { :brands => { :only => [:name, :id, :pitches] } }, :except => [:updated_at]
   end
 
@@ -117,6 +116,12 @@ class Api::V1::CompaniesController < ApplicationController
       end
     end
     render json: pitches, status: :ok
+  end
+
+  def unify
+    incorrect_company = Company.find( params[:incorrect_company_id] )
+    @company.unify( incorrect_company )
+    render json: @company, status: 200
   end
 
   private

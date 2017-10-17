@@ -1,5 +1,5 @@
 class Api::V1::BrandsController < ApplicationController
-  before_action :set_brand, only: [:show, :update, :destroy]
+  before_action :set_brand, only: [:show, :update, :destroy, :unify]
   before_action only: [:create, :update] do 
     authenticate_with_token! params[:auth_token]
   end
@@ -42,6 +42,12 @@ class Api::V1::BrandsController < ApplicationController
     end
 
     render json: @brands
+  end
+
+  def unify
+    incorrect_brand = Brand.find( params[:incorrect_brand_id] )
+    @brand.unify( incorrect_brand )
+    render json: @brand, status: 200
   end
 
   private

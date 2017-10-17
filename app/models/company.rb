@@ -2,7 +2,7 @@ class Company < ApplicationRecord
   require 'csv'
 
   has_and_belongs_to_many :users
-  has_many :brands
+  has_many :brands, dependent: :delete_all
   has_and_belongs_to_many :agencies
 
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "200x200#" }, default_url: "", :path => ":rails_root/storage/agency/:id/:style/:basename.:extension", :url => ":rails_root/storage/#{Rails.env}#{ENV['RAILS_TEST_NUMBER']}/attachments/:id/:style/:basename.:extension"
@@ -42,6 +42,14 @@ class Company < ApplicationRecord
     puts 'added_items: ' + added_items.to_s
     #WarehouseMailer.csv_locate( 'miguel@pcuervo.com', added_items, errors ).deliver_now
     return { added_items: added_items }
+  end
+
+  def unify( another_company )
+    another_company.brands.each do |brand|
+      self.brands << brand
+    end
+    self.save!
+    another_company.destroy
   end
 
 end

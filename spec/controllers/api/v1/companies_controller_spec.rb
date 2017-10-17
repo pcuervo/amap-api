@@ -129,4 +129,32 @@ RSpec.describe Api::V1::CompaniesController, :type => :controller do
       it { should respond_with 200 }
     end
   end #POST add_favorite
+
+  describe "POST #unify" do
+    context "when companies are successfully unified" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+        @admin = FactoryGirl.create :user
+
+        @correct_company = FactoryGirl.create :company
+        @incorrect_company = FactoryGirl.create :company
+        3.times.each do |i|
+          b = FactoryGirl.create :brand
+          @incorrect_company.brands << b
+        end
+        @incorrect_company.save
+        @company = FactoryGirl.create :company
+        post :unify, params: { auth_token: @admin.auth_token, id: @company.id, incorrect_company_id: @incorrect_company.id }, format: :json
+      end
+
+      it "returns a Company object with the new brands added" do
+        company_response = json_response
+        expect(company_response[:brands].count).to eql 3
+        expect{ Company.find(@incorrect_company.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it { should respond_with 200 }
+    end
+  end #POST unify
 end
