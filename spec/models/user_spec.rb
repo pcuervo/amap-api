@@ -41,10 +41,27 @@ RSpec.describe User, :type => :model do
     end
   end
 
-  describe "#send_password_reset" do
+  describe "#send_password_reset" do 
     it "saves a new password reset token" do
       @user.send_password_reset
       expect(@user.reset_password_token).not_to be_empty
+    end
+  end
+
+  describe "#pass_evaluations_to" do
+    it "passes PitchEvaluations from one user to another" do
+      @pitch_evaluation = FactoryGirl.create :pitch_evaluation
+      pitch = @pitch_evaluation.pitch
+      pitch.save
+      agency_user = FactoryGirl.create :user
+      agency_user.role = User::AGENCY_USER
+      agency_user.save
+      @pitch_evaluation.user_id = agency_user.id
+      @pitch_evaluation.save
+      another_user = FactoryGirl.create :user
+      agency_user.pass_evaluations_to( another_user )
+      expect( another_user.pitch_evaluations.count ).to eql 1
+      expect( agency_user.pitch_evaluations.count ).to eql 0
     end
   end
 end

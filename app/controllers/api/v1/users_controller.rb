@@ -101,6 +101,23 @@ module Api::V1
       render json: { errors: @user.errors }, status: :unprocessable_entity
     end
 
+    def destroy
+      if params[:reassign] == "true" 
+        @new_user = User.find_by_id( params[:new_user_id] )
+      end
+
+      @user.pass_data_to( @new_user ) if @new_user.present?
+
+      if @user
+        @user.destroy
+        render json: { success: 'Se ha eliminado el usuario correctamente.' }, status: 200, location: [:api, @user]
+        return
+      end
+      user = User.new
+      user.errors.add(:email, "No se encontró el usuario con ese ID")
+      render json: { errors: user.errors }, status: :unprocessable_entity
+    end
+
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_user

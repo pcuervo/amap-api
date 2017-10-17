@@ -38,6 +38,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
         api_authorization_header 'Token ' + api_key.access_token
 
         @admin = FactoryGirl.create :user
+        @admin.generate_authentication_token!
         @user_attributes = FactoryGirl.attributes_for :user
         @agency = FactoryGirl.create :agency
         post :create, params: { auth_token: @admin.auth_token, user: @user_attributes, agency_id: @agency.id }, format: :json
@@ -89,6 +90,7 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
         api_key = ApiKey.create
         api_authorization_header 'Token ' + api_key.access_token
         @admin = FactoryGirl.create :user
+        @admin.generate_authentication_token!
 
         @user = FactoryGirl.create :user
         @new_email = FFaker::Internet.email
@@ -171,6 +173,94 @@ RSpec.describe Api::V1::UsersController, :type => :controller do
 
       it { should respond_with 422 }
     end
+
+  end # POST send_password_reset
+
+  describe "POST #destroy" do
+
+    context "when user is successfully deleted without reassigning evaluations" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+
+        @admin = FactoryGirl.create :user
+        @admin.generate_authentication_token!
+        @user = FactoryGirl.create :user
+        post :destroy, params: { auth_token: @admin.auth_token, id: @user.id }, format: :json
+      end
+
+      it "renders a success messsage" do
+        user_response = json_response
+        expect(user_response).to have_key(:success)
+      end
+
+      it "no longer can find the user" do 
+        @user.touch 
+        delete_user = User.find_by_id( @user.id )
+        user_response = json_response
+        expect( delete_user.present? ).to eql false
+      end
+
+      it { should respond_with 200 }
+    end
+
+    context "when user is successfully deleted and its pitches are reassigned" do
+      before(:each) do
+        api_key = ApiKey.create
+        api_authorization_header 'Token ' + api_key.access_token
+
+        @admin = FactoryGirl.create :user
+        @admin.generate_authentication_token!
+        @user = FactoryGirl.create :user
+        @pitch_evaluation = FactoryGirl.create :pitch_evaluation
+        @pitch_evaluation.user = @user
+        @pitch_evaluation.save
+        @another_user = FactoryGirl.create :user
+        @agency = FactoryGirl.create :agency
+        post :destroy, params: { auth_token: @admin.auth_token, id: @user.id, new_user_id: @another_user, reassign: true }, format: :json
+      end
+
+      it "renders a success messsage" do
+        user_response = json_response
+        expect(user_response).to have_key(:success)
+      end
+
+      it "no longer can find the user" do 
+        delete_user = User.find_by_id( @user.id )
+        user_response = json_response
+        expect( delete_user.present? ).to eql false
+      end
+
+      it "should have assigned pitches to new user" do 
+        @another_user
+        user_response = json_response
+        expect( @another_user.pitch_evaluations.count ).to eql 1
+        expect( @user.pitch_evaluations.count ).to eql 0
+      end
+
+      it { should respond_with 200 }
+    end
+
+    # context "when is not created because user does not exist" do
+    #   before(:each) do
+    #     api_key = ApiKey.create
+    #     api_authorization_header 'Token ' + api_key.access_token
+
+    #     post :send_password_reset, params: { email: 'invalid@email.com' }, format: :json
+    #   end
+
+    #   it "renders an errors json" do
+    #     user_response = json_response
+    #     expect(user_response).to have_key(:errors)
+    #   end
+
+    #   it "renders the json errors when no user is present" do
+    #     user_response = json_response
+    #     expect(user_response[:errors][:email]).to include "No existe ningún usuario con ese email"
+    #   end
+
+    #   it { should respond_with 422 }
+    # end
 
   end # POST send_password_reset
 end

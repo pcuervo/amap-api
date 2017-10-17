@@ -15,7 +15,8 @@ Rails.application.routes.draw do
           post 'update',              :action => 'update'
           post 'send_password_reset', :action => 'send_password_reset'
           post 'reset_password',      :action => 'reset_password'
-          get 'admin',               :action => 'admin'
+          get 'admin',                :action => 'admin'
+          post 'destroy',              :action => 'destroy'
         end
       end
       resources :agencies, :only => [:index, :show, :create, :update] do

@@ -54,6 +54,23 @@ class User < ApplicationRecord
     m = UserMailer.password_reset( self ).deliver_now
   end
 
+  def pass_data_to( another_user )
+    if User::AGENCY_ADMIN == self.role 
+      self.pass_evaluations_to( another_user )
+      return
+    end
+  end
+
+  def pass_evaluations_to( another_user )
+    self.pitch_evaluations.each do |evaluation|
+      another_user.pitch_evaluations << evaluation
+      self.pitch_evaluations.delete(evaluation)
+    end
+
+    another_user.save
+    self.save
+  end
+
   def self.generate_friendly_password agency_company
     return agency_company.gsub(' ', '_') + '_' + rand(10...99).to_s
   end
