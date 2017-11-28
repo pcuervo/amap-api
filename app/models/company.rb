@@ -55,4 +55,8 @@ class Company < ApplicationRecord
     another_company.destroy
   end
 
+  def self.search( keyword )
+    return Company.where('LOWER(name) LIKE ?', '%' + keyword.downcase ).order(:name)
+  end
+
 end

@@ -59,7 +59,7 @@ gem 'devise'
 # Serializing API Output
 gem 'active_model_serializers'
 # Enabling CORS (Cross-Origin Resource Sharing)
-gem 'rack-cors'
+gem 'rack-cors', :require => 'rack/cors'
 # Rate limiting and throttling
 gem 'rack-attack'
 

@@ -62,6 +62,7 @@ Rails.application.routes.draw do
           post 'get_users',               :action => 'get_users'
           post 'get_pitches',             :action => 'get_pitches'
           post 'unify',                   :action => 'unify'
+          post 'search',                  :action => 'search'
         end
       end
       resources :brands, :only => [:create, :show, :index] do

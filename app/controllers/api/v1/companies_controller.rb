@@ -124,6 +124,12 @@ class Api::V1::CompaniesController < ApplicationController
     render json: @company, status: 200
   end
 
+  # POST /companies/search
+    def search
+      @companies = Company.search( params[:keyword] )
+      render json: { companies: @companies }
+    end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_company
