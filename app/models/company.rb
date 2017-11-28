@@ -56,7 +56,7 @@ class Company < ApplicationRecord
   end
 
   def self.search( keyword )
-    return Company.where('LOWER(name) LIKE ?', '%' + keyword.downcase ).order(:name)
+    return Company.where('LOWER(name) LIKE ?', keyword.downcase + '%' ).order(:name)
   end
 
 end
