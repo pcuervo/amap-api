@@ -127,7 +127,7 @@ class Api::V1::CompaniesController < ApplicationController
   # POST /companies/search
     def search
       @companies = Company.search( params[:keyword] )
-      render json: { companies: @companies }
+      render json:  @companies 
     end
 
   private
