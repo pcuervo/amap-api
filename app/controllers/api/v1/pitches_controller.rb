@@ -1,6 +1,6 @@
 class Api::V1::PitchesController < ApplicationController
-  before_action :set_pitch, only: [:show, :update, :stats]
-  before_action only: [:create, :update] do 
+  before_action :set_pitch, only: [:show, :update, :stats, :evaluations]
+  before_action only: [:create, :update, :remove_evaluation] do 
     authenticate_with_token! params[:auth_token]
   end
   after_action :add_client_to_pitch, only: [:create]
@@ -82,7 +82,8 @@ class Api::V1::PitchesController < ApplicationController
 
     stats = {}
     stats[:recommendations] = PitchEvaluation.get_recommendations_by_pitch( @pitch )
-    stats[:agencies] = @pitch.get_participating_agencies
+    #stats[:agencies] = @pitch.get_participating_agencies
+    stats[:evaluations] = @pitch.get_evaluations
     stats[:average] = @pitch.get_average.ceil
     stats[:average_type] = PitchEvaluation.get_pitch_type( stats[:average] )
     stats[:lowest] = @pitch.lowest_score
@@ -91,6 +92,15 @@ class Api::V1::PitchesController < ApplicationController
     stats[:highest_type] = PitchEvaluation.get_pitch_type( stats[:highest] )
     
     render json: { stats: stats },status: :ok
+  end
+
+  def remove_evaluation
+    pitch_evaluation = PitchEvaluation.find(params[:evaluation_id])
+    pitch = pitch_evaluation.pitch
+    user = pitch_evaluation.user
+    UserMailer.evaluation_removed( user, pitch.name, params[:reason] ).deliver_now
+
+    render json: { success: 'Se ha eliminado la evaluación del pitch.', pitch_id: pitch.id }, status: :ok
   end
 
   private

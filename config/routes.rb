@@ -76,6 +76,7 @@ Rails.application.routes.draw do
           get 'by_brand/:id', :action => 'by_brand'
           get 'stats/:id',    :action => 'stats'
           post 'merge',       :action => 'merge'
+          post 'remove_evaluation', :action => 'remove_evaluation'
         end
       end
       resources :pitch_evaluations, :only => [:create, :show] do 

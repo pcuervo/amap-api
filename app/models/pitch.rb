@@ -171,4 +171,23 @@ class Pitch < ApplicationRecord
     pitches_by_month = Pitch.select("to_char(created_at, 'YYYY-MM') as month_year, count(*) as num_pitches").limit(30).group('month_year').order("to_char(created_at, 'YYYY-MM')")
     pitches_by_month
   end
+
+  def get_evaluations 
+    evaluations = []
+    agency_evaluations = PitchEvaluation.where('pitch_id = ?', self.id)
+    agency_user_ids = agency_evaluations.pluck(:user_id)
+    agency_users = User.where('id IN (?)', agency_user_ids)
+
+    agency_evaluations.each do |evaluation|
+      ev = {}
+      user = User.find(evaluation.user_id)
+      ev[:agency] = user.agencies.first
+      ev[:evaluation] = {
+        :id => evaluation.id,
+        :score => evaluation.score
+      }
+      evaluations.push(ev)
+    end
+    evaluations
+  end
 end

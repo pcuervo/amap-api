@@ -36,4 +36,12 @@ class UserMailer < ApplicationMailer
     @pitch = pitch
     mail( to: @user.email, subject: 'Se ha evaluado tu pitch dentro de Happitch', bcc: ['miguel@pcuervo.com'] )
   end
+
+  def evaluation_removed( user, pitch_name, reason )
+    @user = user
+    @reason = reason
+    @pitch_name = pitch_name
+    user_email = 'miguel@pcuervo.com'
+    mail( to: user_email, subject: 'Se ha eliminado tu evaluación de pitch dentro de Happitch', bcc: ['miguel@pcuervo.com'] )
+  end
 end
