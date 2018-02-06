@@ -1,5 +1,6 @@
-class Agency < ApplicationRecord
-    extend ActiveModel::Naming
+class Agency < ApplicationRecord 
+  extend ActiveModel::Naming
+  before_save :update_pitch_participation
 
   has_and_belongs_to_many :users
   has_many :success_cases
@@ -86,6 +87,13 @@ class Agency < ApplicationRecord
     #   agencies.push( agency )
     # end
     # return agencies.sort_by{|c| c[:is_favorite].to_s}.reverse
+  end
+
+  def update_pitch_participation
+    self.golden_pitch = true
+    self.silver_pitch = true
+    self.medium_risk_pitch = true
+    self.high_risk_pitch = true
   end
 
 end
